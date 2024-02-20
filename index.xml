@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>My New Hugo Site</title>
+    <link>https://gopherding.github.io/</link>
+    <description>Recent content on My New Hugo Site</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 20 Feb 2024 20:20:29 +0800</lastBuildDate>
+    <atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A.welcome</title>
+      <link>https://gopherding.github.io/post/blog1/</link>
+      <pubDate>Tue, 20 Feb 2024 20:20:29 +0800</pubDate>
+      <guid>https://gopherding.github.io/post/blog1/</guid>
+      <description>WELCOME TO MY BLOG！！！ </description>
+    </item>
+    <item>
+      <title>Blog1</title>
+      <link>https://gopherding.github.io/post/blog2/</link>
+      <pubDate>Tue, 20 Feb 2024 20:20:29 +0800</pubDate>
+      <guid>https://gopherding.github.io/post/blog2/</guid>
+      <description>Hugo PaperMod is a theme based on hugo-paper. The goal of this project is to add more features and customization to the og theme.
+Documentation can be found here: 📚 Wiki
+ExampleSite can be found here: exampleSite. Demo is built up with exampleSite as source.
+Features/Mods 💥 Uses Hugo&amp;rsquo;s asset generator with pipelining, fingerprinting, bundling and minification by default. 3 Modes: Regular Mode. Home-Info Mode. Profile Mode. Table of Content Generation (newer implementation).</description>
+    </item>
+    <item>
+      <title>Blog2</title>
+      <link>https://gopherding.github.io/post/blog3/</link>
+      <pubDate>Tue, 20 Feb 2024 20:20:29 +0800</pubDate>
+      <guid>https://gopherding.github.io/post/blog3/</guid>
+      <description>Hugo PaperMod is a theme based on hugo-paper. The goal of this project is to add more features and customization to the og theme.
+Documentation can be found here: 📚 Wiki
+ExampleSite can be found here: exampleSite. Demo is built up with exampleSite as source.
+Features/Mods 💥 Uses Hugo&amp;rsquo;s asset generator with pipelining, fingerprinting, bundling and minification by default. 3 Modes: Regular Mode. Home-Info Mode. Profile Mode. Table of Content Generation (newer implementation).</description>
+    </item>
+  </channel>
+</rss>
