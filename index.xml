@@ -8,6 +8,15 @@
     <language>zh</language>
     <lastBuildDate>Wed, 30 Nov 2022 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Github Action测试</title>
+      <link>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</guid>
+      <description>Github Action测试</description>
+    </item>
+    
+    <item>
       <title>Golang的PGO优化</title>
       <link>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</link>
       <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
@@ -85,15 +94,6 @@
       <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/blog/%E6%A8%A1%E6%9D%BF/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</guid>
       <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
     </item>
     
