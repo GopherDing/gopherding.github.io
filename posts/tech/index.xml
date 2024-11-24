@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>👨🏻‍💻 技术 on GopherDing&#39;s Blog</title>
+    <link>https://gopherding.github.io/posts/tech/</link>
+    <description>Recent content in 👨🏻‍💻 技术 on GopherDing&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Wed, 30 Nov 2022 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Golang的PGO优化</title>
+      <link>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</guid>
+      <description>为什么不来看一看神奇的PGO呢？</description>
+    </item>
+    
+    <item>
+      <title>Golang内存模型与分配机制</title>
+      <link>https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/</guid>
+      <description>对Golang内存模型与分配机制进行了刨析</description>
+    </item>
+    
+    <item>
+      <title>Golang学习中遇到的那些坑</title>
+      <link>https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/</guid>
+      <description>描述了一下本人学习Golang过程中遇到的问题</description>
+    </item>
+    
+    <item>
+      <title>Goroutine&amp;Channel专题</title>
+      <link>https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/</guid>
+      <description>Goroutine&amp;amp;Channel相关</description>
+    </item>
+    
+    <item>
+      <title>Go的编译执行流程</title>
+      <link>https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/</guid>
+      <description>描述了Go的编译执行流程</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-3/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-3/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>眼前一亮的go思想</title>
+      <link>https://gopherding.github.io/posts/tech/%E7%9C%BC%E5%89%8D%E4%B8%80%E4%BA%AE%E7%9A%84go%E6%80%9D%E6%83%B3/</link>
+      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E7%9C%BC%E5%89%8D%E4%B8%80%E4%BA%AE%E7%9A%84go%E6%80%9D%E6%83%B3/</guid>
+      <description>Go的设计哲学和设计思想</description>
+    </item>
+    
+  </channel>
+</rss>

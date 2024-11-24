@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>毛泽东选集 on GopherDing&#39;s Blog</title>
+    <link>https://gopherding.github.io/tags/%E6%AF%9B%E6%B3%BD%E4%B8%9C%E9%80%89%E9%9B%86/</link>
+    <description>Recent content in 毛泽东选集 on GopherDing&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Wed, 30 Nov 2022 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/%E6%AF%9B%E6%B3%BD%E4%B8%9C%E9%80%89%E9%9B%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>矛盾论</title>
+      <link>https://gopherding.github.io/posts/read/%E7%9F%9B%E7%9B%BE%E8%AE%BA/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/%E7%9F%9B%E7%9B%BE%E8%AE%BA/</guid>
+      <description>事物矛盾的法则，即对立统一的法则，是自然和社会的根本法则，因而也是思维的根本法则。</description>
+    </item>
+    
+    <item>
+      <title>实践论</title>
+      <link>https://gopherding.github.io/posts/read/%E5%AE%9E%E8%B7%B5%E8%AE%BA/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/%E5%AE%9E%E8%B7%B5%E8%AE%BA/</guid>
+      <description>实践、认识、再实践、再认识，这种形式，循环往复以至无穷，而实践和认识之每一循环的内容，都比较地进到了高一级的程度。</description>
+    </item>
+    
+  </channel>
+</rss>

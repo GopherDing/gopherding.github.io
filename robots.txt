@@ -1,0 +1,3 @@
+User-agent: *
+Disallow:
+Sitemap: https://gopherding.github.io/sitemap.xml

@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Golang学习中遇到的那些坑 | GopherDing&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="描述了一下本人学习Golang过程中遇到的问题">
+<meta name="author" content="GopherDing">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Golang学习中遇到的那些坑" />
+<meta property="og:description" content="描述了一下本人学习Golang过程中遇到的问题" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-30T15:55:23+08:00" />
+<meta property="article:modified_time" content="2022-11-30T15:55:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang学习中遇到的那些坑"/>
+<meta name="twitter:description" content="描述了一下本人学习Golang过程中遇到的问题"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://gopherding.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "https://gopherding.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Golang学习中遇到的那些坑",
+      "item": "https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Golang学习中遇到的那些坑",
+  "name": "Golang学习中遇到的那些坑",
+  "description": "描述了一下本人学习Golang过程中遇到的问题",
+  "keywords": [
+    ""
+  ],
+  "articleBody": " := 不支持声明全局变量，作用域为局部变量。\niota，默认值为0，每行的iota都会累加1。\nGolang的自增自减’++’ ‘–‘是语句而非表达式\na := 1 a ++ // 注意：不能写成 ++ a 或 -- a 必须放在右边使用 // b := a++ // 此处为错误的用法，不能写在一行，要单独作为语句使用 对外函数的函数名应该首字母大写，否则外部包无法调用该函数（类、属性亦然）。\n在包中，任何顶级声明前面的注释都将作为该声明的文档注释。在程序中，每个可导出（首字母大写）的名称都应该有文档注释。\n包应当以小写的单个单词来命名，不能使用下划线或驼峰。\nimport _ “fmt” : 给包起匿名别名，无法调用该包的方法但是可以执行当前包内部的init()方法，此即为副作用而导入。\nimport . “fmt” ：将当前包的全部方法导入到当前包的作用中，fmt包中的全部方法可以直接使用API调用，不需要使用fmt.API来调用。\ndefer执行顺序：先写的defer先入栈（代码行在上部的先入栈），然后先进后出，后出栈。\ndefer和return的先后顺序：return语句先执行，当该函数体执行完毕后（当前作用域内），defer语句执行。这是由于在Go语言中，return 语句不是原子操作，分为赋值，和返回值两步操作，最先是所有结果值在进入函数时都会初始化为其类型的零值（姑且称为ret赋值），然后执行defer命令,最后才是return操作。如果是有名返回值，返回值变量其实可视为是引用赋值，可以能被defer修改。而在匿名返回值时，给ret的值相当于拷贝赋值，defer命令时不能直接修改。return最先执行，return负责将结果写入返回值中；接着defer开始执行一些收尾工作；最后函数携带当前返回值退出。\ndefer延迟调用与闭包：defer 调用会在当前函数执行结束前才被执行，这些调用被称为延迟调用。defer 中使用的匿名函数也是一个闭包。重要的是：当defer被声明时，其参数就会被实时解析。\nfunc func1() { a := 1 defer func(r int) { fmt.Println(r) }(a) a = a + 100 fmt.Println(a) } func func2() { a := 1 defer func() { fmt.Println(a) }() a = a + 100 fmt.Println(a) } func1输出结果：\n$go run main.go 101 1 func2输出结果\n$go run main.go 101 101 两个函数的差异在于，func1中的defer定义时就将a=1赋值给了defer，在执行defer函数时执行时用的a是在定义时对a的拷贝并非当前环境变量中的a值，即defer执行的是:\nfunc (r int) { fmt.Println(r) }(1) 而在func2中,在defer定义时并没有完成任何赋值动作，只是注册了在执行完成后调用的函数，使用的a变量是当前环境的变量。\n函数调用时，引用类型（slice, map, interface, channel）都默认使用传递指针的值传递——只是功能类似于引用传递罢了。详见Go语言引用传递与值传递\n在Go中，结构体是一种聚合的数据类型，它包含零个或多个任意类型的值作为成员。由于结构体是值类型，当将一个结构体变量赋值给另一个变量时，会创建一个新的结构体实例，并将原始结构体的值拷贝给新实例。这意味着两个结构体变量将拥有独立的副本，对其中一个变量的修改不会影响另一个变量。\n匿名函数的快速执行：\nfunc(){ fmt.println(\"Hello\") }() //这里加上()是定义并执行函数 闭包：简单来说，闭包 = 函数 + 引用环境\nslice动态数组对其传递可以修改原slice数据是因为使用了slice这个引用类型的指针进行的传递，是值传递（传递指针）而不是引用传递——GO只存在值传递——map类型亦是如此。slice能够通过函数传参后，修改对应的数组值，是因为 slice 内部保存了引用数组的指针，并不是因为引用传递。\n固定长度的数组在传参的时候是严格匹配数据类型的，e.g:[10]int的参数无法传到[5]int中，反之亦然，因为数组的大小是其类型的一部分。\nvar slice []int : 声明slice是一个切片，但是没有给其分配空间，修改其内部元素会报错index out；\n可以通过\nslice = make ([]int, 3) 来分配空间—— 一般通过\nslice := make([]int, 3) 来声明一个切片并开辟内存空间。\n切片保存了对底层数组的引用，若你将切片赋予另一个切片，它们会引用同一个数组。\nvar slice = make([]int, len, cap) ：长度为len，容量为cap;\nslice := arr[startIndex : endIndex] : 初始化切片slice为数组arr的引用。\nslice中的len表示数组空间内存在有效值的数组长度，cap表示这个底层数组空间的大小，当len达到cap时，cap自动扩容一倍；在修改切片中的元素时，需要确保索引不超出切片的长度len范围。\n如果期望容量大于当前容量的两倍就会使用期望容量； 如果当前切片的长度小于阈值（默认 256）就会将容量翻倍； 如果当前切片的长度大于等于阈值（默认 256），就会每次增加 25% 的容量，基准是 newcap + 3*threshold，直到新容量大于期望容量；\n切片截取：slice[x : y] : 截取从索引x（包含）到索引y（不包含）。\n使用 copy 函数要注意对于 copy(dst, src)，要初始化 dst 的 len，否则无法复制。\n切片就像数组的引用 切片并不存储任何数据，它只是描述了底层数组中的一段，更改切片的元素会修改其底层数组中对应的元素，和它共享底层数组的切片都会观测到这些修改。\nvar myMap map[int] string : 声明myMap是一种map类型，key是int型，value是string型，但是没有分配内存空间；\n可以通过myMap = make(map[int]string, 10)来分配空间——一般通过\nmyMap := make(map[int]string) myMap2[1] = \"java\" myMap2[2] = \"c++\" myMap2[3] = \"python\" //或者 myMap := map[string]string{ \"one\": \"php\", \"two\": \"c++\", \"three\": \"python\", } 来进行声明+初始化。\n哪些数据结构可以作为map的key？\n具有可比较性：键的类型必须支持相等性比较；\n可哈希性:键的类型必须支持哈希计算；\n通常使用整数、字符串、浮点数、指针等基本类型作为 map 的键；\n切片和函数不支持比较，不能用作map的键。\n结构体指针：结构体调用成员变量可以使用 变量名.成员名、指针名.成员名 都可以，直接用指针名.成员名的方式，修改原地址的值。\nGo 语言中的接口是隐式实现的，也就是说，如果一个类型实现了一个接口定义的所有方法，那么它就自动地实现了该接口——鸭子类型。\n只包含一个方法的接口应当以该方法的名称加上 -er 后缀来命名。\nGo没有显式的继承，而是通过组合实现继承，内嵌一个（或多个）包含想要的行为（字段和方法）的结构体；多重继承可以通过内嵌多个结构体实现。\n所有的类型包括自定义类型都实现了空接口interface{}，所以空接口interface{}可以被当做任意类型的数值/万能数据类型。\n类型断言用于将接口类型转换为指定类型，其语法为：\nvalue.(type) 或者 value.(T) str, ok := value.(string) 其中 value 是接口类型的变量，type 或 T 是要转换成的类型。\n如果类型断言成功，它将返回转换后的值和一个布尔值，表示转换是否成功；如果断言失败，str将继续存在且为字符串类型，但将拥有零值——即空字符串。\n断言成功的两种情况：两种动态类型是相同的；断言接口值实现了目标接口的所有方法（结构体类型的断言）。\n[对于指针接收器和值接收器方法的一些拙见.md](C:\\Users\\GEORGE DING\\Desktop!\\BLOG\\Golang\\对于指针接收器和值接收器方法的一些拙见.md)\nnew 和 make 均是用于分配内存：new用于值类型的内存分配，并且置为零值。make只用于slice、map以及channel这三种引用数据类型的内存分配和初始化。new(T) 分配类型 T 的零值并返回其地址，也就是指向类型 T 的指针。make(T) 它返回类型T的值（不是* T）。\npanic可以在任何地方引发，但是recover只能在defer的函数中有效。recover只能捕获同一goroutine内发生的panic，对于其他goroutine引发的panic无能为力。\n",
+  "wordCount" : "3048",
+  "inLanguage": "zh",
+  "datePublished": "2022-11-30T15:55:23+08:00",
+  "dateModified": "2022-11-30T15:55:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "GopherDing"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GopherDing's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
+            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
+                 height="50">GopherDing&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                Golang学习中遇到的那些坑
+            </h1>
+            <div class="post-description">
+                描述了一下本人学习Golang过程中遇到的问题
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2022-11-30
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>3048字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>7分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/golang/" style="color: var(--secondary)!important;">Golang</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://gopherding.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> 
+        <div class="post-content"><ol>
+<li>
+<p>:= 不支持声明全局变量，作用域为局部变量。</p>
+</li>
+<li>
+<p>iota，默认值为0，每行的iota都会累加1。</p>
+</li>
+<li>
+<p>Golang的自增自减&rsquo;++&rsquo; &lsquo;&ndash;&lsquo;是语句而非表达式</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">a</span> <span style="color:#f92672">++</span>  <span style="color:#75715e">// 注意：不能写成 ++ a 或 -- a 必须放在右边使用
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// b := a++ // 此处为错误的用法，不能写在一行，要单独作为语句使用
+</span></span></span></code></pre></div></li>
+<li>
+<p>对外函数的函数名应该首字母大写，否则外部包无法调用该函数（类、属性亦然）。</p>
+</li>
+<li>
+<p>在包中，任何顶级声明前面的注释都将作为该声明的文档注释。在程序中，每个可导出（首字母大写）的名称都应该有文档注释。</p>
+</li>
+<li>
+<p>包应当以小写的单个单词来命名，不能使用下划线或驼峰。</p>
+</li>
+<li>
+<p>import  _ &ldquo;fmt&rdquo; : 给包起匿名别名，无法调用该包的方法但是可以执行当前包内部的init()方法，此即为副作用而导入。</p>
+</li>
+<li>
+<p>import . &ldquo;fmt&rdquo; ：将当前包的全部方法导入到当前包的作用中，fmt包中的全部方法可以直接使用API调用，不需要使用fmt.API来调用。</p>
+</li>
+<li>
+<p>defer执行顺序：先写的defer先入栈（代码行在上部的先入栈），然后先进后出，后出栈。</p>
+</li>
+<li>
+<p>defer和return的先后顺序：return语句先执行，当该函数体执行完毕后（当前作用域内），defer语句执行。这是由于在Go语言中，return 语句不是原子操作，分为赋值，和返回值两步操作，最先是所有结果值在进入函数时都会初始化为其类型的零值（姑且称为ret赋值），然后执行defer命令,最后才是return操作。如果是有名返回值，返回值变量其实可视为是引用赋值，可以能被defer修改。而在匿名返回值时，给ret的值相当于拷贝赋值，defer命令时不能直接修改。<strong>return最先执行，return负责将结果写入返回值中；接着defer开始执行一些收尾工作；最后函数携带当前返回值退出。</strong></p>
+</li>
+<li>
+<p>defer延迟调用与闭包：defer 调用会在当前函数执行结束前才被执行，这些调用被称为延迟调用。defer 中使用的匿名函数也是一个闭包。重要的是：当defer被声明时，其参数就会被实时解析。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">func1</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">r</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>  }(<span style="color:#a6e22e">a</span>)
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">a</span> = <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">a</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">func2</span>() {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">defer</span> <span style="color:#66d9ef">func</span>() {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">a</span>)
+</span></span><span style="display:flex;"><span>  }()
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">a</span> = <span style="color:#a6e22e">a</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">100</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">a</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>func1输出结果：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span><span style="color:#66d9ef">go</span> <span style="color:#a6e22e">run</span> <span style="color:#a6e22e">main</span>.<span style="color:#66d9ef">go</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">101</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">1</span>
+</span></span></code></pre></div><p>func2输出结果</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">$</span><span style="color:#66d9ef">go</span> <span style="color:#a6e22e">run</span> <span style="color:#a6e22e">main</span>.<span style="color:#66d9ef">go</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">101</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">101</span>
+</span></span></code></pre></div><p>两个函数的差异在于，func1中的defer定义时就将a=1赋值给了defer，在执行defer函数时执行时用的a是在定义时对a的拷贝并非当前环境变量中的a值，即defer执行的是:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">r</span> <span style="color:#66d9ef">int</span>) {
+</span></span><span style="display:flex;"><span>  <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">r</span>)
+</span></span><span style="display:flex;"><span>}(<span style="color:#ae81ff">1</span>)
+</span></span></code></pre></div><p>而在func2中,在defer定义时并没有完成任何赋值动作，只是注册了在执行完成后调用的函数，使用的a变量是当前环境的变量。</p>
+</li>
+<li>
+<p>函数调用时，引用类型（slice, map, interface, channel）都默认使用传递指针的值传递——只是功能类似于引用传递罢了。详见<a href="https://zhuanlan.zhihu.com/p/162820450#:~:text=GO%E4%B8%AD%E5%8F%AA%E6%9C%89%E5%80%BC%E4%BC%A0,%E9%80%92%EF%BC%8C%E6%B2%A1%E6%9C%89%E5%BC%95%E7%94%A8%E4%BC%A0%E9%80%92">Go语言引用传递与值传递</a></p>
+</li>
+<li>
+<p>在Go中，结构体是一种聚合的数据类型，它包含零个或多个任意类型的值作为成员。由于结构体是值类型，当将一个结构体变量赋值给另一个变量时，会创建一个新的结构体实例，并将原始结构体的值拷贝给新实例。这意味着两个结构体变量将拥有独立的副本，对其中一个变量的修改不会影响另一个变量。</p>
+</li>
+<li>
+<p>匿名函数的快速执行：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span>(){
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.println(<span style="color:#e6db74">&#34;Hello&#34;</span>)
+</span></span><span style="display:flex;"><span>}()  <span style="color:#75715e">//这里加上()是定义并执行函数
+</span></span></span></code></pre></div></li>
+<li>
+<p>闭包：简单来说，闭包 = 函数 + 引用环境</p>
+</li>
+<li>
+<p>slice动态数组对其传递可以修改原slice数据是因为使用了slice这个引用类型的指针进行的传递，是值传递（传递指针）而不是引用传递——GO只存在值传递——map类型亦是如此。slice能够通过函数传参后，修改对应的数组值，是因为 slice 内部保存了引用数组的指针，并不是因为引用传递。</p>
+</li>
+<li>
+<p>固定长度的数组在传参的时候是严格匹配数据类型的，e.g:[10]int的参数无法传到[5]int中，反之亦然，因为数组的大小是其类型的一部分。</p>
+</li>
+<li>
+<p>var slice []int : 声明slice是一个切片，但是没有给其分配空间，修改其内部元素会报错index out；</p>
+<p>可以通过</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>slice = make ([]int,  3)
+</span></span></code></pre></div><p>来分配空间—— 一般通过</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>slice := make([]int, 3)
+</span></span></code></pre></div><p>来声明一个切片并开辟内存空间。</p>
+<p>切片保存了对底层数组的引用，若你将切片赋予另一个切片，它们会引用同一个数组。</p>
+</li>
+<li>
+<p>var slice = make([]int, len, cap) ：长度为len，容量为cap;</p>
+<p>slice := arr[startIndex : endIndex]  :  初始化切片slice为数组arr的引用。</p>
+</li>
+<li>
+<p>slice中的len表示数组空间内存在有效值的数组长度，cap表示这个底层数组空间的大小，当len达到cap时，cap自动扩容一倍；在修改切片中的元素时，需要确保索引不超出切片的长度len范围。</p>
+<p>如果期望容量大于当前容量的两倍就会使用期望容量；
+如果当前切片的长度小于阈值（默认 256）就会将容量翻倍；
+如果当前切片的长度大于等于阈值（默认 256），就会每次增加 25% 的容量，基准是 newcap + 3*threshold，直到新容量大于期望容量；</p>
+</li>
+<li>
+<p>切片截取：slice[x : y]  : 截取从索引x（包含）到索引y（不包含）。</p>
+</li>
+<li>
+<p>使用 copy 函数要注意对于 copy(dst, src)，要初始化 dst 的 len，否则无法复制。</p>
+</li>
+<li>
+<p>切片就像数组的引用 切片并不存储任何数据，它只是描述了底层数组中的一段，更改切片的元素会修改其底层数组中对应的元素，和它共享底层数组的切片都会观测到这些修改。</p>
+</li>
+<li>
+<p>var myMap map[int] string : 声明myMap是一种map类型，key是int型，value是string型，但是没有分配内存空间；</p>
+<p>可以通过myMap = make(map[int]string, 10)来分配空间——一般通过</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">myMap</span> <span style="color:#f92672">:=</span> make(<span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">int</span>]<span style="color:#66d9ef">string</span>)
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">myMap2</span>[<span style="color:#ae81ff">1</span>] = <span style="color:#e6db74">&#34;java&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">myMap2</span>[<span style="color:#ae81ff">2</span>] = <span style="color:#e6db74">&#34;c++&#34;</span>
+</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">myMap2</span>[<span style="color:#ae81ff">3</span>] = <span style="color:#e6db74">&#34;python&#34;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//或者
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">myMap</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;one&#34;</span>:   <span style="color:#e6db74">&#34;php&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;two&#34;</span>:   <span style="color:#e6db74">&#34;c++&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;three&#34;</span>: <span style="color:#e6db74">&#34;python&#34;</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>来进行声明+初始化。</p>
+</li>
+<li>
+<p>哪些数据结构可以作为map的key？</p>
+<p>具有可比较性：键的类型必须支持相等性比较；</p>
+<p>可哈希性:键的类型必须支持哈希计算；</p>
+<p>通常使用整数、字符串、浮点数、指针等基本类型作为 map 的键；</p>
+<p>切片和函数不支持比较，不能用作map的键。</p>
+</li>
+<li>
+<p>结构体指针：结构体调用成员变量可以使用 变量名.成员名、指针名.成员名 都可以，直接用指针名.成员名的方式，修改原地址的值。</p>
+</li>
+<li>
+<p>Go 语言中的接口是隐式实现的，也就是说，如果一个类型实现了一个接口定义的所有方法，那么它就自动地实现了该接口——鸭子类型。</p>
+</li>
+<li>
+<p>只包含一个方法的接口应当以该方法的名称加上 -er 后缀来命名。</p>
+</li>
+<li>
+<p>Go没有显式的继承，而是通过组合实现继承，内嵌一个（或多个）包含想要的行为（字段和方法）的结构体；多重继承可以通过内嵌多个结构体实现。</p>
+</li>
+<li>
+<p>所有的类型包括自定义类型都实现了空接口interface{}，所以空接口interface{}可以被当做任意类型的数值/万能数据类型。</p>
+</li>
+<li>
+<p>类型断言用于将接口类型转换为指定类型，其语法为：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">value</span>.(<span style="color:#66d9ef">type</span>) 
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">或者</span> 
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">value</span>.(<span style="color:#a6e22e">T</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">str</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">value</span>.(<span style="color:#66d9ef">string</span>)
+</span></span></code></pre></div><p>其中 value 是接口类型的变量，type 或 T 是要转换成的类型。</p>
+<p>如果类型断言成功，它将返回转换后的值和一个布尔值，表示转换是否成功；如果断言失败，str将继续存在且为字符串类型，但将拥有零值——即空字符串。</p>
+</li>
+<li>
+<p>断言成功的两种情况：两种动态类型是相同的；断言接口值实现了目标接口的所有方法（结构体类型的断言）。</p>
+</li>
+<li>
+<p>[对于指针接收器和值接收器方法的一些拙见.md](C:\Users\GEORGE DING\Desktop!\BLOG\Golang\对于指针接收器和值接收器方法的一些拙见.md)</p>
+</li>
+<li>
+<p>new 和 make 均是用于分配内存：new用于值类型的内存分配，并且置为零值。make只用于slice、map以及channel这三种引用数据类型的内存分配和初始化。new(T) 分配类型 T 的零值并返回其地址，也就是指向类型 T 的指针。make(T) 它返回类型T的值（不是* T）。</p>
+</li>
+<li>
+<p>panic可以在任何地方引发，但是recover只能在defer的函数中有效。recover只能捕获同一goroutine内发生的panic，对于其他goroutine引发的panic无能为力。</p>
+</li>
+</ol>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>Golang内存模型与分配机制</span>
+  </a>
+  <a class="next" href="https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Goroutine&amp;Channel专题</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://gopherding.github.io/" style="color:#939393;">GopherDing&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

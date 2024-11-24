@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>Golang的PGO优化 | GopherDing&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="为什么不来看一看神奇的PGO呢？">
+<meta name="author" content="GopherDing">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="Golang的PGO优化" />
+<meta property="og:description" content="为什么不来看一看神奇的PGO呢？" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-11-30T15:55:23+08:00" />
+<meta property="article:modified_time" content="2022-11-30T15:55:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Golang的PGO优化"/>
+<meta name="twitter:description" content="为什么不来看一看神奇的PGO呢？"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://gopherding.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "https://gopherding.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "Golang的PGO优化",
+      "item": "https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Golang的PGO优化",
+  "name": "Golang的PGO优化",
+  "description": "为什么不来看一看神奇的PGO呢？",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "看个帖子：\n一、什么是 PGO PGO 即配置文件引导优化。它通过在实际运行场景中收集程序的执行信息，然后利用这些信息来指导编译器进行更有针对性的优化，从而使生成的可执行程序在特定的使用场景下具有更好的性能表现。\n二、工作原理 首先，使用一个特殊的构建标志来编译程序，这个版本的程序在运行时会收集执行信息并生成一个配置文件。 在运行过程中，程序会记录函数的调用次数、执行时间等信息，这些信息会被写入到配置文件中。 然后，使用这个配置文件再次编译程序。 编译器会根据配置文件中的信息，对那些频繁执行的代码路径进行更积极的优化，比如内联函数调用、优化循环等。同时，也可以根据执行频率调整代码布局，以提高缓存命中率。 三、优势 性能提升：通过针对实际使用场景进行优化，可以显著提高程序的执行速度和响应时间。 例如，在一个高并发的网络服务中，PGO 可以优化那些频繁被调用的处理函数，减少处理时间，提高服务的吞吐量。 资源利用效率提高：可以使程序更有效地利用 CPU 和内存等资源。 因为优化后的代码可能会减少不必要的计算和内存访问，从而降低资源消耗。 四、使用方法 收集配置文件（Profiling）：\n确保你的程序中导入了net/http/pprof包，这会在程序运行时自动添加一个用于获取 CPU 配置文件的端点，通常是/debug/pprof/profile。 在程序运行一段时间后，通过访问http://localhost:8080/debug/pprof/profile（其中localhost:8080是你的程序运行的地址和端口，根据实际情况替换），并设置合适的查询参数（如seconds=30表示收集 30 秒的运行数据）来获取配置文件。这会生成一个cpu.pprof文件。 生成 PGO 配置文件：\n将获取到的cpu.pprof文件重命名为default.pgo（或者其他你指定的文件名）。如果使用-pgo参数指定了特定的配置文件路径，就不需要重命名。 编译时开启 PGO：使用go build命令编译程序时，添加\n-pgo 参数来启用 PGO 优化。\n如果使用auto模式（推荐），编译器会自动寻找程序主目录下名为default.pgo的配置文件并应用优化。例如：go build -pgo=auto -o your_program。 也可以手动指定配置文件的路径，如：go build -pgo=/path/to/your/profile.pgo -o your_program，这里/path/to/your/profile.pgo是你指定的配置文件的完整路径。 五、注意事项 配置文件的代表性：为了获得最佳的优化效果，收集配置文件时的运行场景应该尽可能接近实际的生产环境。如果收集配置文件的场景与实际使用场景差异较大，可能会导致优化效果不佳。 重新编译：每次程序的行为发生重大变化时，可能需要重新收集配置文件并进行优化编译，以确保优化的准确性。 兼容性：不同版本的 Go 编译器对 PGO 的支持可能会有所不同。在升级 Go 版本时，需要重新评估 PGO 的效果，并可能需要进行一些调整。 ",
+  "wordCount" : "1176",
+  "inLanguage": "zh",
+  "datePublished": "2022-11-30T15:55:23+08:00",
+  "dateModified": "2022-11-30T15:55:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "GopherDing"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GopherDing's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
+            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
+                 height="50">GopherDing&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                Golang的PGO优化
+            </h1>
+            <div class="post-description">
+                为什么不来看一看神奇的PGO呢？
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2022-11-30
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1176字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/golang/" style="color: var(--secondary)!important;">Golang</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://gopherding.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80%e4%bb%80%e4%b9%88%e6%98%af-pgo" aria-label="一、什么是 PGO"><strong>一、什么是 PGO</strong></a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%b7%a5%e4%bd%9c%e5%8e%9f%e7%90%86" aria-label="二、工作原理"><strong>二、工作原理</strong></a></li>
+                <li>
+                    <a href="#%e4%b8%89%e4%bc%98%e5%8a%bf" aria-label="三、优势"><strong>三、优势</strong></a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e4%bd%bf%e7%94%a8%e6%96%b9%e6%b3%95" aria-label="四、使用方法"><strong>四、使用方法</strong></a></li>
+                <li>
+                    <a href="#%e4%ba%94%e6%b3%a8%e6%84%8f%e4%ba%8b%e9%a1%b9" aria-label="五、注意事项"><strong>五、注意事项</strong></a>
+                </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><p><a href="https://zhuanlan.zhihu.com/p/585640586">看个帖子：</a></p>
+<h3 id="一什么是-pgo"><strong>一、什么是 PGO</strong><a hidden class="anchor" aria-hidden="true" href="#一什么是-pgo">#</a></h3>
+<p>PGO 即配置文件引导优化。它通过在实际运行场景中收集程序的执行信息，然后利用这些信息来指导编译器进行更有针对性的优化，从而使生成的可执行程序在特定的使用场景下具有更好的性能表现。</p>
+<h3 id="二工作原理"><strong>二、工作原理</strong><a hidden class="anchor" aria-hidden="true" href="#二工作原理">#</a></h3>
+<ol>
+<li>首先，使用一个特殊的构建标志来编译程序，这个版本的程序在运行时会收集执行信息并生成一个配置文件。
+<ul>
+<li>在运行过程中，程序会记录函数的调用次数、执行时间等信息，这些信息会被写入到配置文件中。</li>
+</ul>
+</li>
+<li>然后，使用这个配置文件再次编译程序。
+<ul>
+<li>编译器会根据配置文件中的信息，对那些频繁执行的代码路径进行更积极的优化，比如内联函数调用、优化循环等。同时，也可以根据执行频率调整代码布局，以提高缓存命中率。</li>
+</ul>
+</li>
+</ol>
+<h3 id="三优势"><strong>三、优势</strong><a hidden class="anchor" aria-hidden="true" href="#三优势">#</a></h3>
+<ol>
+<li>性能提升：通过针对实际使用场景进行优化，可以显著提高程序的执行速度和响应时间。
+<ul>
+<li>例如，在一个高并发的网络服务中，PGO 可以优化那些频繁被调用的处理函数，减少处理时间，提高服务的吞吐量。</li>
+</ul>
+</li>
+<li>资源利用效率提高：可以使程序更有效地利用 CPU 和内存等资源。
+<ul>
+<li>因为优化后的代码可能会减少不必要的计算和内存访问，从而降低资源消耗。</li>
+</ul>
+</li>
+</ol>
+<h3 id="四使用方法"><strong>四、使用方法</strong><a hidden class="anchor" aria-hidden="true" href="#四使用方法">#</a></h3>
+<ol>
+<li>
+<p>收集配置文件（Profiling）：</p>
+<ul>
+<li>确保你的程序中导入了<code>net/http/pprof</code>包，这会在程序运行时自动添加一个用于获取 CPU 配置文件的端点，通常是<code>/debug/pprof/profile</code>。</li>
+<li>在程序运行一段时间后，通过访问<code>http://localhost:8080/debug/pprof/profile</code>（其中<code>localhost:8080</code>是你的程序运行的地址和端口，根据实际情况替换），并设置合适的查询参数（如<code>seconds=30</code>表示收集 30 秒的运行数据）来获取配置文件。这会生成一个<code>cpu.pprof</code>文件。</li>
+</ul>
+</li>
+<li>
+<p>生成 PGO 配置文件：</p>
+<ul>
+<li>将获取到的<code>cpu.pprof</code>文件重命名为<code>default.pgo</code>（或者其他你指定的文件名）。如果使用<code>-pgo</code>参数指定了特定的配置文件路径，就不需要重命名。</li>
+</ul>
+</li>
+<li>
+<p>编译时开启 PGO：使用go build命令编译程序时，添加</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>-pgo
+</span></span></code></pre></div><p>参数来启用 PGO 优化。</p>
+<ul>
+<li>如果使用<code>auto</code>模式（推荐），编译器会自动寻找程序主目录下名为<code>default.pgo</code>的配置文件并应用优化。例如：<code>go build -pgo=auto -o your_program</code>。</li>
+<li>也可以手动指定配置文件的路径，如：<code>go build -pgo=/path/to/your/profile.pgo -o your_program</code>，这里<code>/path/to/your/profile.pgo</code>是你指定的配置文件的完整路径。</li>
+</ul>
+</li>
+</ol>
+<h3 id="五注意事项"><strong>五、注意事项</strong><a hidden class="anchor" aria-hidden="true" href="#五注意事项">#</a></h3>
+<ol>
+<li>配置文件的代表性：为了获得最佳的优化效果，收集配置文件时的运行场景应该尽可能接近实际的生产环境。如果收集配置文件的场景与实际使用场景差异较大，可能会导致优化效果不佳。</li>
+<li>重新编译：每次程序的行为发生重大变化时，可能需要重新收集配置文件并进行优化编译，以确保优化的准确性。</li>
+<li>兼容性：不同版本的 Go 编译器对 PGO 的支持可能会有所不同。在升级 Go 版本时，需要重新评估 PGO 的效果，并可能需要进行一些调整。</li>
+</ol>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="next" href="https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Golang内存模型与分配机制</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://gopherding.github.io/" style="color:#939393;">GopherDing&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>
