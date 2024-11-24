@@ -6,50 +6,104 @@
     <description>Recent content in 👨🏻‍💻 技术 on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Wed, 30 Nov 2022 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 01 Nov 2024 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>单元化架构在字节跳动的落地实践</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Fri, 01 Nov 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</guid>
+      <description>字节跳动团队在异地单元化架构落地上的一些思考和实践</description>
+    </item>
+    
+    <item>
+      <title>GitLab CICD 和 Argo CD</title>
+      <link>https://gopherding.github.io/posts/tech/gitlab-cicd-%E5%92%8C-argo-cd/</link>
+      <pubDate>Wed, 25 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/gitlab-cicd-%E5%92%8C-argo-cd/</guid>
+      <description>GitLab CICD 和 Argo CD区别与选型</description>
+    </item>
+    
     <item>
       <title>Golang的PGO优化</title>
       <link>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      <pubDate>Tue, 13 Aug 2024 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</guid>
       <description>为什么不来看一看神奇的PGO呢？</description>
     </item>
     
     <item>
-      <title>Golang内存模型与分配机制</title>
-      <link>https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      <title>同步并发&amp;锁</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/</link>
+      <pubDate>Wed, 20 Mar 2024 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/</guid>
-      <description>对Golang内存模型与分配机制进行了刨析</description>
+      <guid>https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/</guid>
+      <description>竞态问题的处理</description>
     </item>
     
     <item>
-      <title>Golang学习中遇到的那些坑</title>
-      <link>https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      <title>对sync.Map的一些看法</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/</link>
+      <pubDate>Sun, 03 Mar 2024 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/</guid>
-      <description>描述了一下本人学习Golang过程中遇到的问题</description>
+      <guid>https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/</guid>
+      <description>解释了为什么sync.Map并发安全</description>
     </item>
     
     <item>
-      <title>Goroutine&amp;Channel专题</title>
-      <link>https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      <title>分布式ID业务需求的区分</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/</link>
+      <pubDate>Thu, 23 Nov 2023 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/</guid>
-      <description>Goroutine&amp;amp;Channel相关</description>
+      <guid>https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/</guid>
+      <description>分布式ID的区分与选型</description>
     </item>
     
     <item>
-      <title>Go的编译执行流程</title>
-      <link>https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      <title>Raft</title>
+      <link>https://gopherding.github.io/posts/tech/raft/</link>
+      <pubDate>Sun, 19 Nov 2023 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/</guid>
-      <description>描述了Go的编译执行流程</description>
+      <guid>https://gopherding.github.io/posts/tech/raft/</guid>
+      <description>粗略介绍一下Raft罢</description>
+    </item>
+    
+    <item>
+      <title>ZAB</title>
+      <link>https://gopherding.github.io/posts/tech/zab/</link>
+      <pubDate>Wed, 15 Nov 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/zab/</guid>
+      <description>粗略介绍一下ZAB罢</description>
+    </item>
+    
+    <item>
+      <title>Gossip</title>
+      <link>https://gopherding.github.io/posts/tech/gossip/</link>
+      <pubDate>Mon, 13 Nov 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/gossip/</guid>
+      <description>粗略介绍一下Gossip罢</description>
+    </item>
+    
+    <item>
+      <title>注册中心选型</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Sat, 11 Nov 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83%E9%80%89%E5%9E%8B/</guid>
+      <description>文章写的真好哇</description>
+    </item>
+    
+    <item>
+      <title>RDS 、DynamoDB的区别</title>
+      <link>https://gopherding.github.io/posts/tech/rds-dynamodb%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Fri, 20 Oct 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/rds-dynamodb%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>RDS 、DynamoDB的区别与选型</description>
     </item>
     
     <item>
@@ -72,10 +126,19 @@
     
     <item>
       <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/</link>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</link>
       <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/</guid>
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-5/</link>
+      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-5/</guid>
       <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
     </item>
     
@@ -89,12 +152,66 @@
     </item>
     
     <item>
+      <title>对于指针接收器和值接收器方法的一些拙见</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%AF%B9%E4%BA%8E%E6%8C%87%E9%92%88%E6%8E%A5%E6%94%B6%E5%99%A8%E5%92%8C%E5%80%BC%E6%8E%A5%E6%94%B6%E5%99%A8%E6%96%B9%E6%B3%95%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8B%99%E8%A7%81/</link>
+      <pubDate>Sat, 20 Aug 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E5%AF%B9%E4%BA%8E%E6%8C%87%E9%92%88%E6%8E%A5%E6%94%B6%E5%99%A8%E5%92%8C%E5%80%BC%E6%8E%A5%E6%94%B6%E5%99%A8%E6%96%B9%E6%B3%95%E7%9A%84%E4%B8%80%E4%BA%9B%E6%8B%99%E8%A7%81/</guid>
+      <description>怎么选择指针接收器还是值接收器——从设计角度出发</description>
+    </item>
+    
+    <item>
       <title>眼前一亮的go思想</title>
       <link>https://gopherding.github.io/posts/tech/%E7%9C%BC%E5%89%8D%E4%B8%80%E4%BA%AE%E7%9A%84go%E6%80%9D%E6%83%B3/</link>
-      <pubDate>Thu, 05 May 2022 00:17:58 +0800</pubDate>
+      <pubDate>Thu, 18 Aug 2022 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/tech/%E7%9C%BC%E5%89%8D%E4%B8%80%E4%BA%AE%E7%9A%84go%E6%80%9D%E6%83%B3/</guid>
       <description>Go的设计哲学和设计思想</description>
+    </item>
+    
+    <item>
+      <title>Golang内存模型与分配机制</title>
+      <link>https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Sun, 13 Mar 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/</guid>
+      <description>对Golang内存模型与分配机制进行了刨析</description>
+    </item>
+    
+    <item>
+      <title>Golang学习中遇到的那些坑</title>
+      <link>https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/</link>
+      <pubDate>Sun, 13 Mar 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/golang%E5%AD%A6%E4%B9%A0%E4%B8%AD%E9%81%87%E5%88%B0%E7%9A%84%E9%82%A3%E4%BA%9B%E5%9D%91/</guid>
+      <description>描述了一下本人学习Golang过程中遇到的问题</description>
+    </item>
+    
+    <item>
+      <title>Goroutine&amp;Channel专题</title>
+      <link>https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/</link>
+      <pubDate>Sun, 13 Mar 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/</guid>
+      <description>Goroutine&amp;amp;Channel相关</description>
+    </item>
+    
+    <item>
+      <title>Go的编译执行流程</title>
+      <link>https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/</link>
+      <pubDate>Sun, 13 Mar 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/</guid>
+      <description>描述了Go的编译执行流程</description>
+    </item>
+    
+    <item>
+      <title>排序算法</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</link>
+      <pubDate>Wed, 11 Aug 2021 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/</guid>
+      <description>选快希堆不稳，冒插归基稳定</description>
     </item>
     
   </channel>

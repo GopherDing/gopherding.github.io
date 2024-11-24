@@ -76,8 +76,8 @@ var _hmt = _hmt || [];
 <meta property="og:description" content="Goroutine&amp;Channel相关" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-11-30T15:55:23+08:00" />
-<meta property="article:modified_time" content="2022-11-30T15:55:23+08:00" />
+<meta property="article:published_time" content="2022-03-13T15:55:23+08:00" />
+<meta property="article:modified_time" content="2022-03-13T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Goroutine&amp;Channel专题"/>
@@ -125,8 +125,8 @@ var _hmt = _hmt || [];
   "articleBody": "Goroutine 单从线程调度讲，Go语言相比起其他语言的优势在于OS线程是由OS内核来调度的， goroutine 则是由Go运行时（runtime）自己的调度器调度的，完全是在用户态下完成的， 不涉及内核态与用户态之间的频繁切换，包括内存的分配与释放，都是在用户态维护着一块大的内存池， 不直接调用系统的malloc函数（除非内存池需要改变），成本比调度OS线程低很多。 另一方面充分利用了多核的硬件资源，近似的把若干goroutine均分在物理线程上， 再加上本身 goroutine 的超轻量级，以上种种特性保证了 goroutine 调度方面的性能。 Go运行时的调度器使用GOMAXPROCS参数来确定需要使用多少个 OS 线程来同时执行 Go 代码。默认值是机器上的 CPU 核心数。例如在一个 8 核心的机器上，GOMAXPROCS 默认为 8。Go语言中可以通过runtime.GOMAXPROCS函数设置当前程序并发时占用的 CPU逻辑核心数。（Go1.5版本之前，默认使用的是单核心执行。Go1.5 版本之后，默认使用全部的CPU 逻辑核心数。） Channel 未初始化的通道类型变量其默认零值是nil。\n关闭后的通道有以下特点：\n对一个关闭的通道再发送值就会导致 panic。 对一个关闭的通道进行接收会一直获取值直到通道为空。(此时若不对 value, ok := \u003c- ch 的ok值进行判定，则该通道转化为一个关闭的并且没有值的通道，继续接收则会输出无限0——规则同下) 对一个关闭的并且没有值的通道执行接收操作会得到对应类型的零值。 关闭一个已经关闭的通道会导致 panic。 使用无缓冲通道进行通信将导致发送和接收的 goroutine 同步化。因此，无缓冲通道也被称为同步通道。\n发生 panic 的情况有三种：向一个关闭的 channel 进行写操作；关闭一个 nil 的 channel；重复关闭一个 channel。\n单向通道：\n\u003c- chan int // 只接收通道，只能接收不能发送 chan \u003c- int // 只发送通道，只能发送不能接收 //在函数传参及任何赋值操作中全向通道（正常通道）可以转换为单向通道，但是无法反向转换。 如图：![image-20240318204746723](C:\\Users\\GEORGE DING\\AppData\\Roaming\\Typora\\typora-user-images\\image-20240318204746723.png)\n不要在数据接收方或者在有多个发送者的情况下关闭通道\nDon’t close a channel from the receiver side and don’t close a channel if the channel has multiple concurrent senders.\n如何优雅地关闭channel？\n一个接收者和N个发送者：增加一个传递关闭信号的 channel，receiver 通过信号 channel 下达关闭数据 channel 指令。senders 监听到关闭信号后，停止发送数据。\nM个接收者和N个发送者：引入一个中间调解者角色并让其关闭额外的信号通道来通知所有的接收者和发送者结束工作。\ntype hchan struct { qcount uint // 环形队列中的（缓冲区中的）总元素个数 dataqsiz uint // 环形队列（缓冲区的）容量大小，即可存放元素的个数 buf unsafe.Pointer // 环形队列指针 elemsize uint16 //每个元素的大小 closed uint32 //标识关闭状态 elemtype *_type // 元素类型 sendx uint // 发送索引，元素写入时存放到队列中的位置 recvx uint // 接收索引，元素从队列的该位置读出 recvq waitq // 等待读消息的goroutine队列 sendq waitq // 等待写消息的goroutine队列 lock mutex //互斥锁，chan不允许并发读写 } 我理解的不好，找到个大佬——Golang Channel 的底层原理\n大佬二号：Golang Channel 的底层原理\n大佬三号：深入 Go 并发原语 — Channel 底层实现\n",
   "wordCount" : "1288",
   "inLanguage": "zh",
-  "datePublished": "2022-11-30T15:55:23+08:00",
-  "dateModified": "2022-11-30T15:55:23+08:00",
+  "datePublished": "2022-03-13T15:55:23+08:00",
+  "dateModified": "2022-03-13T15:55:23+08:00",
   "author":[{
     "@type": "Person",
     "name": "GopherDing"
@@ -275,7 +275,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2022-11-30
+        <span>2022-03-13
             &nbsp;&nbsp;
         </span>
     </span>

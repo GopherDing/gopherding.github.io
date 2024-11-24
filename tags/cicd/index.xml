@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>CI&amp;CD on GopherDing&#39;s Blog</title>
+    <link>https://gopherding.github.io/tags/cicd/</link>
+    <description>Recent content in CI&amp;CD on GopherDing&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Wed, 25 Sep 2024 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/cicd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GitLab CICD 和 Argo CD</title>
+      <link>https://gopherding.github.io/posts/tech/gitlab-cicd-%E5%92%8C-argo-cd/</link>
+      <pubDate>Wed, 25 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/gitlab-cicd-%E5%92%8C-argo-cd/</guid>
+      <description>GitLab CICD 和 Argo CD区别与选型</description>
+    </item>
+    
+  </channel>
+</rss>

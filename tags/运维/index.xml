@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>运维 on GopherDing&#39;s Blog</title>
+    <link>https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/</link>
+    <description>Recent content in 运维 on GopherDing&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Fri, 01 Nov 2024 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>单元化架构在字节跳动的落地实践</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Fri, 01 Nov 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</guid>
+      <description>字节跳动团队在异地单元化架构落地上的一些思考和实践</description>
+    </item>
+    
+  </channel>
+</rss>

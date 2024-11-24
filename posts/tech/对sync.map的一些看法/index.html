@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>对sync.Map的一些看法 | GopherDing&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="解释了为什么sync.Map并发安全">
+<meta name="author" content="GopherDing">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="对sync.Map的一些看法" />
+<meta property="og:description" content="解释了为什么sync.Map并发安全" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-03-03T15:55:23+08:00" />
+<meta property="article:modified_time" content="2024-03-03T15:55:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="对sync.Map的一些看法"/>
+<meta name="twitter:description" content="解释了为什么sync.Map并发安全"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://gopherding.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "https://gopherding.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "对sync.Map的一些看法",
+      "item": "https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "对sync.Map的一些看法",
+  "name": "对sync.Map的一些看法",
+  "description": "解释了为什么sync.Map并发安全",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "一、内部结构 sync.Map主要由两个数据结构组成：\n一个原生的map：用于存储实际的键值对。这个map在读取时无需加锁，但在写入时需要加锁。 一个read结构体：包含一个只读的原生map（称为dirty map）和一个misses计数器。这个read结构体在读取操作时被优先使用，因为读取它无需加锁，只有在发生读未命中且misses计数达到一定阈值时，才会将dirty map中的内容写入到主map中并重置read结构体。 二、读写操作 读操作： 首先尝试从read结构体中的dirty map读取键对应的值。如果找到了值，直接返回。 如果在dirty map中未找到值，再尝试从主map中读取。如果找到了值，更新read结构体中的dirty map并返回值。 如果在主map中也未找到值，增加misses计数器。如果misses计数器达到一定阈值，会将dirty map中的内容写入主map，并重置read结构体和misses计数器。 写操作： 首先锁定主map，然后进行写入操作。 同时，如果read结构体中的dirty map为空，将主map复制一份到dirty map中，以便后续的读操作可以更快地访问。 三、并发安全 一、读写分离设计 内部包含两个主要的数据结构： 一个是普通的map，用于存储实际的键值对，称为 “dirty map”。这个map在写操作时会被锁定，以确保写操作的原子性和一致性。 另一个是只读的map结构，在执行读操作时优先从这个结构中读取数据，无需加锁，从而允许多个线程并发读取。 二、写操作的同步机制 互斥锁保护： 当进行写操作（存储新的键值对、更新现有键值对或删除键值对）时，会获取一个互斥锁，确保同一时刻只有一个线程可以对 “dirty map” 进行写操作。 这样可以防止多个线程同时修改map时可能导致的数据不一致和竞争条件。 三、读操作的优化与同步 优先从只读map读取：\n读操作首先尝试从只读的map中获取键对应的值，因为这个map不需要加锁，所以多个线程可以同时进行读操作，提高了读操作的并发性能。 动态更新只读map：\n如果读操作在只读map中未找到键对应的值，会尝试从 “dirty map” 中读取。如果在 “dirty map” 中找到了值，会将这个值更新到只读map中，以便后续的读操作可以更快地获取到这个值。 misses计数器：\n每次读操作在只读map和 “dirty map” 中都未找到值时，会增加一个misses计数器。当misses计数器达到一定阈值时，会触发将 “dirty map” 中的内容复制到只读map中，并重置misses计数器。这个机制确保了在一段时间内如果读操作频繁未命中，会动态地更新只读map，以提高后续读操作的效率。 四、删除操作的安全处理 标记删除：\n当执行删除操作时，会在 “dirty map” 中标记键值对为已删除状态。这样在后续的读操作中，如果在只读map中未找到键对应的值，并且在 “dirty map” 中发现该键被标记为已删除，就可以确定该键不存在于map中。 ",
+  "wordCount" : "1225",
+  "inLanguage": "zh",
+  "datePublished": "2024-03-03T15:55:23+08:00",
+  "dateModified": "2024-03-03T15:55:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "GopherDing"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GopherDing's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
+            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
+                 height="50">GopherDing&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://gopherding.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                对sync.Map的一些看法
+            </h1>
+            <div class="post-description">
+                解释了为什么sync.Map并发安全
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2024-03-03
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1225字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/golang/" style="color: var(--secondary)!important;">Golang</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://gopherding.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80%e5%86%85%e9%83%a8%e7%bb%93%e6%9e%84" aria-label="一、内部结构"><strong>一、内部结构</strong></a></li>
+                <li>
+                    <a href="#%e4%ba%8c%e8%af%bb%e5%86%99%e6%93%8d%e4%bd%9c" aria-label="二、读写操作"><strong>二、读写操作</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e8%af%bb%e6%93%8d%e4%bd%9c" aria-label="读操作：">读操作：</a></li>
+                <li>
+                    <a href="#%e5%86%99%e6%93%8d%e4%bd%9c" aria-label="写操作：">写操作：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e5%b9%b6%e5%8f%91%e5%ae%89%e5%85%a8" aria-label="三、并发安全"><strong>三、并发安全</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e4%b8%80%e8%af%bb%e5%86%99%e5%88%86%e7%a6%bb%e8%ae%be%e8%ae%a1" aria-label="一、读写分离设计">一、读写分离设计</a><ul>
+                        
+                <li>
+                    <a href="#%e5%86%85%e9%83%a8%e5%8c%85%e5%90%ab%e4%b8%a4%e4%b8%aa%e4%b8%bb%e8%a6%81%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="内部包含两个主要的数据结构：">内部包含两个主要的数据结构：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e5%86%99%e6%93%8d%e4%bd%9c%e7%9a%84%e5%90%8c%e6%ad%a5%e6%9c%ba%e5%88%b6" aria-label="二、写操作的同步机制">二、写操作的同步机制</a><ul>
+                        
+                <li>
+                    <a href="#%e4%ba%92%e6%96%a5%e9%94%81%e4%bf%9d%e6%8a%a4" aria-label="互斥锁保护：">互斥锁保护：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e8%af%bb%e6%93%8d%e4%bd%9c%e7%9a%84%e4%bc%98%e5%8c%96%e4%b8%8e%e5%90%8c%e6%ad%a5" aria-label="三、读操作的优化与同步">三、读操作的优化与同步</a></li>
+                <li>
+                    <a href="#%e5%9b%9b%e5%88%a0%e9%99%a4%e6%93%8d%e4%bd%9c%e7%9a%84%e5%ae%89%e5%85%a8%e5%a4%84%e7%90%86" aria-label="四、删除操作的安全处理">四、删除操作的安全处理</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h3 id="一内部结构"><strong>一、内部结构</strong><a hidden class="anchor" aria-hidden="true" href="#一内部结构">#</a></h3>
+<p><code>sync.Map</code>主要由两个数据结构组成：</p>
+<ol>
+<li>一个原生的<code>map</code>：用于存储实际的键值对。这个<code>map</code>在读取时无需加锁，但在写入时需要加锁。</li>
+<li>一个<code>read</code>结构体：包含一个只读的原生<code>map</code>（称为<code>dirty map</code>）和一个<code>misses</code>计数器。这个<code>read</code>结构体在读取操作时被优先使用，因为读取它无需加锁，只有在发生读未命中且<code>misses</code>计数达到一定阈值时，才会将<code>dirty map</code>中的内容写入到主<code>map</code>中并重置<code>read</code>结构体。</li>
+</ol>
+<h3 id="二读写操作"><strong>二、读写操作</strong><a hidden class="anchor" aria-hidden="true" href="#二读写操作">#</a></h3>
+<ol>
+<li>
+<h4 id="读操作">读操作：<a hidden class="anchor" aria-hidden="true" href="#读操作">#</a></h4>
+<ul>
+<li>首先尝试从<code>read</code>结构体中的<code>dirty map</code>读取键对应的值。如果找到了值，直接返回。</li>
+<li>如果在<code>dirty map</code>中未找到值，再尝试从主<code>map</code>中读取。如果找到了值，更新<code>read</code>结构体中的<code>dirty map</code>并返回值。</li>
+<li>如果在主<code>map</code>中也未找到值，增加<code>misses</code>计数器。如果<code>misses</code>计数器达到一定阈值，会将<code>dirty map</code>中的内容写入主<code>map</code>，并重置<code>read</code>结构体和<code>misses</code>计数器。</li>
+</ul>
+</li>
+<li>
+<h4 id="写操作">写操作：<a hidden class="anchor" aria-hidden="true" href="#写操作">#</a></h4>
+<ul>
+<li>首先锁定主<code>map</code>，然后进行写入操作。</li>
+<li>同时，如果<code>read</code>结构体中的<code>dirty map</code>为空，将主<code>map</code>复制一份到<code>dirty map</code>中，以便后续的读操作可以更快地访问。</li>
+</ul>
+</li>
+</ol>
+<h3 id="三并发安全"><strong>三、并发安全</strong><a hidden class="anchor" aria-hidden="true" href="#三并发安全">#</a></h3>
+<h4 id="一读写分离设计">一、读写分离设计<a hidden class="anchor" aria-hidden="true" href="#一读写分离设计">#</a></h4>
+<ol>
+<li>
+<h5 id="内部包含两个主要的数据结构">内部包含两个主要的数据结构：<a hidden class="anchor" aria-hidden="true" href="#内部包含两个主要的数据结构">#</a></h5>
+<ul>
+<li>一个是普通的<code>map</code>，用于存储实际的键值对，称为 “dirty map”。这个<code>map</code>在写操作时会被锁定，以确保写操作的原子性和一致性。</li>
+<li>另一个是只读的<code>map</code>结构，在执行读操作时优先从这个结构中读取数据，无需加锁，从而允许多个线程并发读取。</li>
+</ul>
+</li>
+</ol>
+<h4 id="二写操作的同步机制">二、写操作的同步机制<a hidden class="anchor" aria-hidden="true" href="#二写操作的同步机制">#</a></h4>
+<ol>
+<li>
+<h5 id="互斥锁保护">互斥锁保护：<a hidden class="anchor" aria-hidden="true" href="#互斥锁保护">#</a></h5>
+<ul>
+<li>当进行写操作（存储新的键值对、更新现有键值对或删除键值对）时，会获取一个互斥锁，确保同一时刻只有一个线程可以对 “dirty map” 进行写操作。</li>
+<li>这样可以防止多个线程同时修改<code>map</code>时可能导致的数据不一致和竞争条件。</li>
+</ul>
+</li>
+</ol>
+<h4 id="三读操作的优化与同步">三、读操作的优化与同步<a hidden class="anchor" aria-hidden="true" href="#三读操作的优化与同步">#</a></h4>
+<ol>
+<li>
+<p>优先从只读map读取：</p>
+<ul>
+<li>读操作首先尝试从只读的<code>map</code>中获取键对应的值，因为这个<code>map</code>不需要加锁，所以多个线程可以同时进行读操作，提高了读操作的并发性能。</li>
+</ul>
+</li>
+<li>
+<p>动态更新只读map：</p>
+<ul>
+<li>如果读操作在只读<code>map</code>中未找到键对应的值，会尝试从 “dirty map” 中读取。如果在 “dirty map” 中找到了值，会将这个值更新到只读<code>map</code>中，以便后续的读操作可以更快地获取到这个值。</li>
+</ul>
+</li>
+<li>
+<p>misses计数器：</p>
+<ul>
+<li>每次读操作在只读<code>map</code>和 “dirty map” 中都未找到值时，会增加一个<code>misses</code>计数器。当<code>misses</code>计数器达到一定阈值时，会触发将 “dirty map” 中的内容复制到只读<code>map</code>中，并重置<code>misses</code>计数器。这个机制确保了在一段时间内如果读操作频繁未命中，会动态地更新只读<code>map</code>，以提高后续读操作的效率。</li>
+</ul>
+</li>
+</ol>
+<h4 id="四删除操作的安全处理">四、删除操作的安全处理<a hidden class="anchor" aria-hidden="true" href="#四删除操作的安全处理">#</a></h4>
+<p>标记删除：</p>
+<ul>
+<li>当执行删除操作时，会在 “dirty map” 中标记键值对为已删除状态。这样在后续的读操作中，如果在只读<code>map</code>中未找到键对应的值，并且在 “dirty map” 中发现该键被标记为已删除，就可以确定该键不存在于<code>map</code>中。</li>
+</ul>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>同步并发&amp;锁</span>
+  </a>
+  <a class="next" href="https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>分布式ID业务需求的区分</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://gopherding.github.io/" style="color:#939393;">GopherDing&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

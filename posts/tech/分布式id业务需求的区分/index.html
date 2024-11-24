@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>分布式ID业务需求的区分 | GopherDing&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="分布式ID的区分与选型">
+<meta name="author" content="GopherDing">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="分布式ID业务需求的区分" />
+<meta property="og:description" content="分布式ID的区分与选型" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-11-23T15:55:23+08:00" />
+<meta property="article:modified_time" content="2022-11-23T15:55:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="分布式ID业务需求的区分"/>
+<meta name="twitter:description" content="分布式ID的区分与选型"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://gopherding.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "https://gopherding.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "分布式ID业务需求的区分",
+      "item": "https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "分布式ID业务需求的区分",
+  "name": "分布式ID业务需求的区分",
+  "description": "分布式ID的区分与选型",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "一、UUID（通用唯一识别码） 原理 UUID 是一种由数字和字母组成的 128 位标识符。它通过一定的算法生成，通常基于时间戳、MAC 地址（网卡物理地址）等信息。最常用的 UUID 版本是基于随机数生成的版本 4，其生成的 ID 具有全球唯一性。 优点 唯一性高：在全球范围内几乎不可能出现重复的 ID，适合用于分布式系统中不同节点产生的标识。 简单易用：生成算法相对简单，大多数编程语言都有现成的库来生成 UUID。 缺点 不具备顺序性：生成的 ID 是随机的，没有时间顺序或者其他有意义的顺序。这在一些需要根据 ID 排序的场景下，如数据库索引优化，会带来不便。 占用空间较大：128 位的长度在存储和传输时相对占用较多的空间，可能会增加系统的存储成本和网络开销。 二、数据库自增 ID 原理 利用数据库（如 MySQL）的自增主键特性。在数据库中创建一个包含自增主键的表，每次需要生成 ID 时，插入一条记录，数据库会自动为其分配一个唯一的自增 ID。这个 ID 可以作为分布式 ID 使用，多个应用节点可以共享这个数据库来获取 ID。 优点 简单高效：对于小型分布式系统或者对 ID 顺序性有严格要求的场景，数据库自增 ID 是一种简单直接的解决方案。生成的 ID 是顺序递增的，有利于数据库索引和查询性能。 缺点 单点瓶颈：所有 ID 生成请求都依赖于数据库，当系统并发量高时，数据库可能会成为性能瓶颈。因为数据库的写入操作需要加锁来保证自增 ID 的唯一性，大量并发请求可能会导致锁竞争，影响性能。 扩展性差：在分布式环境下，随着系统规模的扩大，单个数据库可能无法满足 ID 生成的需求，需要考虑数据库的高可用和横向扩展问题。 三、雪花算法（Snowflake） 原理 雪花算法是一种分布式 ID 生成算法，它生成的 ID 是一个 64 位的长整型数字。其结构主要包括以下几个部分： 符号位（1 位）：最高位是符号位，通常为 0，表示正数。 时间戳（41 位）：记录了从一个固定的起始时间（如 2016 年 1 月 1 日）到 ID 生成时刻的毫秒数。这部分保证了 ID 的时间顺序性。 工作机器 ID（10 位）：用于区分不同的工作机器，最多可以支持 1024 台机器。 序列号（12 位）：在同一毫秒内，同一机器可以生成的不同 ID，最多可以生成 4096 个不同的 ID。 优点 高并发支持：可以在分布式系统中高并发地生成唯一 ID。在同一毫秒内，不同机器和同一机器都可以生成多个不同的 ID，满足高并发场景的需求。 有序性好：生成的 ID 按照时间顺序递增，这对于数据库索引、日志排序等场景非常有利，可以提高系统的查询和处理效率。 缺点 依赖时间戳：如果系统的时钟出现回拨（如服务器时间被手动调整或者时钟同步出现问题），可能会导致生成的 ID 出现重复或者不符合预期的顺序。需要采取一定的措施来应对时钟回拨问题，如使用备用时间源或者拒绝生成 ID 直到时钟恢复正常。 机器 ID 分配复杂：在大规模分布式系统中，需要合理地分配工作机器 ID，否则可能会出现机器 ID 冲突或者浪费的情况。 四、Redis 自增 ID 原理 利用 Redis 的原子性自增命令（如INCR）来生成 ID。在 Redis 中设置一个键（Key），每次需要生成 ID 时，通过INCR命令对这个键的值进行自增操作。多个应用节点可以共享这个 Redis 实例来获取 ID。 优点 性能高：Redis 是基于内存的高性能数据库，INCR命令是原子操作，能够在高并发环境下快速生成 ID，避免了数据库自增 ID 的锁竞争问题。 简单易用：和数据库自增 ID 类似，实现相对简单，只需要调用 Redis 的自增命令即可。 缺点 单点故障风险：如果 Redis 实例出现故障，可能会导致 ID 生成服务中断。虽然可以通过 Redis 的主从复制和哨兵模式来提高可用性，但仍然存在一定的风险。 数据持久化问题：如果 Redis 没有正确地进行持久化设置，在重启或者故障恢复后，可能会出现 ID 重复或者丢失的情况。 看个大佬\n",
+  "wordCount" : "1485",
+  "inLanguage": "zh",
+  "datePublished": "2023-11-23T15:55:23+08:00",
+  "dateModified": "2022-11-23T15:55:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "GopherDing"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://gopherding.github.io/posts/tech/%E5%88%86%E5%B8%83%E5%BC%8Fid%E4%B8%9A%E5%8A%A1%E9%9C%80%E6%B1%82%E7%9A%84%E5%8C%BA%E5%88%86/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GopherDing's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
+            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
+                 height="50">GopherDing&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://gopherding.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                分布式ID业务需求的区分
+            </h1>
+            <div class="post-description">
+                分布式ID的区分与选型
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-11-23
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1485字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" style="color: var(--secondary)!important;">分布式系统</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://gopherding.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80uuid%e9%80%9a%e7%94%a8%e5%94%af%e4%b8%80%e8%af%86%e5%88%ab%e7%a0%81" aria-label="一、UUID（通用唯一识别码）">一、UUID（通用唯一识别码）</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8e%9f%e7%90%86" aria-label="原理">原理</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e7%82%b9" aria-label="优点">优点</a></li>
+                <li>
+                    <a href="#%e7%bc%ba%e7%82%b9" aria-label="缺点">缺点</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e6%95%b0%e6%8d%ae%e5%ba%93%e8%87%aa%e5%a2%9e-id" aria-label="二、数据库自增 ID">二、数据库自增 ID</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8e%9f%e7%90%86-1" aria-label="原理">原理</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e7%82%b9-1" aria-label="优点">优点</a></li>
+                <li>
+                    <a href="#%e7%bc%ba%e7%82%b9-1" aria-label="缺点">缺点</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e9%9b%aa%e8%8a%b1%e7%ae%97%e6%b3%95snowflake" aria-label="三、雪花算法（Snowflake）">三、雪花算法（Snowflake）</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8e%9f%e7%90%86-2" aria-label="原理">原理</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e7%82%b9-2" aria-label="优点">优点</a></li>
+                <li>
+                    <a href="#%e7%bc%ba%e7%82%b9-2" aria-label="缺点">缺点</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%9b%9bredis-%e8%87%aa%e5%a2%9e-id" aria-label="四、Redis 自增 ID">四、Redis 自增 ID</a><ul>
+                        
+                <li>
+                    <a href="#%e5%8e%9f%e7%90%86-3" aria-label="原理">原理</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e7%82%b9-3" aria-label="优点">优点</a></li>
+                <li>
+                    <a href="#%e7%bc%ba%e7%82%b9-3" aria-label="缺点">缺点</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><h3 id="一uuid通用唯一识别码">一、UUID（通用唯一识别码）<a hidden class="anchor" aria-hidden="true" href="#一uuid通用唯一识别码">#</a></h3>
+<ol>
+<li>
+<h4 id="原理">原理<a hidden class="anchor" aria-hidden="true" href="#原理">#</a></h4>
+<ul>
+<li>UUID 是一种由数字和字母组成的 128 位标识符。它通过一定的算法生成，通常基于时间戳、MAC 地址（网卡物理地址）等信息。最常用的 UUID 版本是基于随机数生成的版本 4，其生成的 ID 具有全球唯一性。</li>
+</ul>
+</li>
+<li>
+<h4 id="优点">优点<a hidden class="anchor" aria-hidden="true" href="#优点">#</a></h4>
+<ul>
+<li><strong>唯一性高</strong>：在全球范围内几乎不可能出现重复的 ID，适合用于分布式系统中不同节点产生的标识。</li>
+<li><strong>简单易用</strong>：生成算法相对简单，大多数编程语言都有现成的库来生成 UUID。</li>
+</ul>
+</li>
+<li>
+<h4 id="缺点">缺点<a hidden class="anchor" aria-hidden="true" href="#缺点">#</a></h4>
+<ul>
+<li><strong>不具备顺序性</strong>：生成的 ID 是随机的，没有时间顺序或者其他有意义的顺序。这在一些需要根据 ID 排序的场景下，如数据库索引优化，会带来不便。</li>
+<li><strong>占用空间较大</strong>：128 位的长度在存储和传输时相对占用较多的空间，可能会增加系统的存储成本和网络开销。</li>
+</ul>
+</li>
+</ol>
+<h3 id="二数据库自增-id">二、数据库自增 ID<a hidden class="anchor" aria-hidden="true" href="#二数据库自增-id">#</a></h3>
+<ol>
+<li>
+<h4 id="原理-1">原理<a hidden class="anchor" aria-hidden="true" href="#原理-1">#</a></h4>
+<ul>
+<li>利用数据库（如 MySQL）的自增主键特性。在数据库中创建一个包含自增主键的表，每次需要生成 ID 时，插入一条记录，数据库会自动为其分配一个唯一的自增 ID。这个 ID 可以作为分布式 ID 使用，多个应用节点可以共享这个数据库来获取 ID。</li>
+</ul>
+</li>
+<li>
+<h4 id="优点-1">优点<a hidden class="anchor" aria-hidden="true" href="#优点-1">#</a></h4>
+<ul>
+<li><strong>简单高效</strong>：对于小型分布式系统或者对 ID 顺序性有严格要求的场景，数据库自增 ID 是一种简单直接的解决方案。生成的 ID 是顺序递增的，有利于数据库索引和查询性能。</li>
+</ul>
+</li>
+<li>
+<h4 id="缺点-1">缺点<a hidden class="anchor" aria-hidden="true" href="#缺点-1">#</a></h4>
+<ul>
+<li><strong>单点瓶颈</strong>：所有 ID 生成请求都依赖于数据库，当系统并发量高时，数据库可能会成为性能瓶颈。因为数据库的写入操作需要加锁来保证自增 ID 的唯一性，大量并发请求可能会导致锁竞争，影响性能。</li>
+<li><strong>扩展性差</strong>：在分布式环境下，随着系统规模的扩大，单个数据库可能无法满足 ID 生成的需求，需要考虑数据库的高可用和横向扩展问题。</li>
+</ul>
+</li>
+</ol>
+<h3 id="三雪花算法snowflake">三、雪花算法（Snowflake）<a hidden class="anchor" aria-hidden="true" href="#三雪花算法snowflake">#</a></h3>
+<ol>
+<li>
+<h4 id="原理-2">原理<a hidden class="anchor" aria-hidden="true" href="#原理-2">#</a></h4>
+<ul>
+<li>雪花算法是一种分布式 ID 生成算法，它生成的 ID 是一个 64 位的长整型数字。其结构主要包括以下几个部分：
+<ul>
+<li><strong>符号位（1 位）</strong>：最高位是符号位，通常为 0，表示正数。</li>
+<li><strong>时间戳（41 位）</strong>：记录了从一个固定的起始时间（如 2016 年 1 月 1 日）到 ID 生成时刻的毫秒数。这部分保证了 ID 的时间顺序性。</li>
+<li><strong>工作机器 ID（10 位）</strong>：用于区分不同的工作机器，最多可以支持 1024 台机器。</li>
+<li><strong>序列号（12 位）</strong>：在同一毫秒内，同一机器可以生成的不同 ID，最多可以生成 4096 个不同的 ID。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="优点-2">优点<a hidden class="anchor" aria-hidden="true" href="#优点-2">#</a></h4>
+<ul>
+<li><strong>高并发支持</strong>：可以在分布式系统中高并发地生成唯一 ID。在同一毫秒内，不同机器和同一机器都可以生成多个不同的 ID，满足高并发场景的需求。</li>
+<li><strong>有序性好</strong>：生成的 ID 按照时间顺序递增，这对于数据库索引、日志排序等场景非常有利，可以提高系统的查询和处理效率。</li>
+</ul>
+</li>
+<li>
+<h4 id="缺点-2">缺点<a hidden class="anchor" aria-hidden="true" href="#缺点-2">#</a></h4>
+<ul>
+<li><strong>依赖时间戳</strong>：如果系统的时钟出现回拨（如服务器时间被手动调整或者时钟同步出现问题），可能会导致生成的 ID 出现重复或者不符合预期的顺序。需要采取一定的措施来应对时钟回拨问题，如使用备用时间源或者拒绝生成 ID 直到时钟恢复正常。</li>
+<li><strong>机器 ID 分配复杂</strong>：在大规模分布式系统中，需要合理地分配工作机器 ID，否则可能会出现机器 ID 冲突或者浪费的情况。</li>
+</ul>
+</li>
+</ol>
+<h3 id="四redis-自增-id">四、Redis 自增 ID<a hidden class="anchor" aria-hidden="true" href="#四redis-自增-id">#</a></h3>
+<ol>
+<li>
+<h4 id="原理-3">原理<a hidden class="anchor" aria-hidden="true" href="#原理-3">#</a></h4>
+<ul>
+<li>利用 Redis 的原子性自增命令（如<code>INCR</code>）来生成 ID。在 Redis 中设置一个键（Key），每次需要生成 ID 时，通过<code>INCR</code>命令对这个键的值进行自增操作。多个应用节点可以共享这个 Redis 实例来获取 ID。</li>
+</ul>
+</li>
+<li>
+<h4 id="优点-3">优点<a hidden class="anchor" aria-hidden="true" href="#优点-3">#</a></h4>
+<ul>
+<li><strong>性能高</strong>：Redis 是基于内存的高性能数据库，<code>INCR</code>命令是原子操作，能够在高并发环境下快速生成 ID，避免了数据库自增 ID 的锁竞争问题。</li>
+<li><strong>简单易用</strong>：和数据库自增 ID 类似，实现相对简单，只需要调用 Redis 的自增命令即可。</li>
+</ul>
+</li>
+<li>
+<h4 id="缺点-3">缺点<a hidden class="anchor" aria-hidden="true" href="#缺点-3">#</a></h4>
+<ul>
+<li><strong>单点故障风险</strong>：如果 Redis 实例出现故障，可能会导致 ID 生成服务中断。虽然可以通过 Redis 的主从复制和哨兵模式来提高可用性，但仍然存在一定的风险。</li>
+<li><strong>数据持久化问题</strong>：如果 Redis 没有正确地进行持久化设置，在重启或者故障恢复后，可能会出现 ID 重复或者丢失的情况。</li>
+</ul>
+</li>
+</ol>
+<p><a href="https://segmentfault.com/a/1190000022717820">看个大佬</a></p>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>对sync.Map的一些看法</span>
+  </a>
+  <a class="next" href="https://gopherding.github.io/posts/tech/raft/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>Raft</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://gopherding.github.io/" style="color:#939393;">GopherDing&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>
