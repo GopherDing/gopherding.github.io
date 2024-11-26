@@ -71,6 +71,15 @@
     </item>
     
     <item>
+      <title>Kubernetes</title>
+      <link>https://gopherding.github.io/tags/kubernetes/</link>
+      <pubDate>Tue, 16 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>云技术</title>
       <link>https://gopherding.github.io/tags/%E4%BA%91%E6%8A%80%E6%9C%AF/</link>
       <pubDate>Fri, 20 Oct 2023 15:55:23 +0800</pubDate>
@@ -85,6 +94,24 @@
       <pubDate>Fri, 05 May 2023 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/tags/speech/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>BigData</title>
+      <link>https://gopherding.github.io/tags/bigdata/</link>
+      <pubDate>Tue, 02 May 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/tags/bigdata/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://gopherding.github.io/tags/docker/</link>
+      <pubDate>Sat, 11 Mar 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/tags/docker/</guid>
       <description></description>
     </item>
     
@@ -121,6 +148,15 @@
       <pubDate>Sat, 01 Oct 2022 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/tags/%E6%AF%9B%E6%B3%BD%E4%B8%9C%E9%80%89%E9%9B%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Git</title>
+      <link>https://gopherding.github.io/tags/git/</link>
+      <pubDate>Sun, 22 May 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/tags/git/</guid>
       <description></description>
     </item>
     

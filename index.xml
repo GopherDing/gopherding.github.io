@@ -6,7 +6,16 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 01 Nov 2024 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Nov 2024 14:57:28 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>🙋🏻‍♂️关于</title>
+      <link>https://gopherding.github.io/about/</link>
+      <pubDate>Wed, 06 Nov 2024 14:57:28 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/about/</guid>
+      <description>道路曲折，前途光明！</description>
+    </item>
+    
     <item>
       <title>单元化架构在字节跳动的落地实践</title>
       <link>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</link>
@@ -53,6 +62,15 @@
     </item>
     
     <item>
+      <title>如何设计一个高并发系统</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F/</link>
+      <pubDate>Sat, 01 Jun 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E5%A6%82%E4%BD%95%E8%AE%BE%E8%AE%A1%E4%B8%80%E4%B8%AA%E9%AB%98%E5%B9%B6%E5%8F%91%E7%B3%BB%E7%BB%9F/</guid>
+      <description>给出了若干种Golang高并发系统的实现/优化方式</description>
+    </item>
+    
+    <item>
       <title>Here’s to the crazy ones</title>
       <link>https://gopherding.github.io/posts/read/heres-to-the-crazy-ones/</link>
       <pubDate>Mon, 20 May 2024 15:55:23 +0800</pubDate>
@@ -77,6 +95,114 @@
       
       <guid>https://gopherding.github.io/posts/tech/%E5%AF%B9sync.map%E7%9A%84%E4%B8%80%E4%BA%9B%E7%9C%8B%E6%B3%95/</guid>
       <description>解释了为什么sync.Map并发安全</description>
+    </item>
+    
+    <item>
+      <title>Cluster Autoscaler和Horizontal Pod Autoscaler的区别</title>
+      <link>https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Tue, 16 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>Cluster Autoscaler和Horizontal Pod Autoscaler的区别</description>
+    </item>
+    
+    <item>
+      <title>自动监控报警的实现</title>
+      <link>https://gopherding.github.io/posts/tech/%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7%E6%8A%A5%E8%AD%A6%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Tue, 09 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7%E6%8A%A5%E8%AD%A6%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+      <description>Prometheus自动监控报警的实现</description>
+    </item>
+    
+    <item>
+      <title>HPA和Prometheus联动自动扩容</title>
+      <link>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</link>
+      <pubDate>Mon, 08 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</guid>
+      <description>HPA和Prometheus联动自动扩容</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/</link>
+      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-7/</link>
+      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-7/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>XXXXXXXXXXXXXX</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/</link>
+      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/</guid>
+      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>版本更新发布策略</title>
+      <link>https://gopherding.github.io/posts/tech/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%8F%91%E5%B8%83%E7%AD%96%E7%95%A5/</link>
+      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%8F%91%E5%B8%83%E7%AD%96%E7%95%A5/</guid>
+      <description>粗略描述了版本更新发布策略</description>
+    </item>
+    
+    <item>
+      <title>金丝雀发布的使用方法</title>
+      <link>https://gopherding.github.io/posts/tech/%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+      <description>Kubernetes实现金丝雀发布</description>
+    </item>
+    
+    <item>
+      <title>3-PC和2-PC的区别</title>
+      <link>https://gopherding.github.io/posts/tech/3-pc%E5%92%8C2-pc%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Thu, 14 Dec 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/3-pc%E5%92%8C2-pc%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>3-PC or 2-PC? That is a question!</description>
+    </item>
+    
+    <item>
+      <title>柔性事务</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%9F%94%E6%80%A7%E4%BA%8B%E5%8A%A1/</link>
+      <pubDate>Wed, 13 Dec 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%9F%94%E6%80%A7%E4%BA%8B%E5%8A%A1/</guid>
+      <description>宏观概括了柔性事务的分类和常见模式</description>
+    </item>
+    
+    <item>
+      <title>两阶段提交</title>
+      <link>https://gopherding.github.io/posts/tech/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/</link>
+      <pubDate>Tue, 12 Dec 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E4%B8%A4%E9%98%B6%E6%AE%B5%E6%8F%90%E4%BA%A4/</guid>
+      <description>详述了2-PC的流程和应用场景选择</description>
+    </item>
+    
+    <item>
+      <title>服务网格</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC/</link>
+      <pubDate>Sat, 02 Dec 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%9C%8D%E5%8A%A1%E7%BD%91%E6%A0%BC/</guid>
+      <description>对服务网格进行了概念上的介绍</description>
     </item>
     
     <item>
@@ -143,6 +269,15 @@
     </item>
     
     <item>
+      <title>EditLog&#43;FsImage和AOF&#43;RDB设计哲学</title>
+      <link>https://gopherding.github.io/posts/tech/editlog-&#43;-fsimage-%E5%92%8C-aof-&#43;-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/</link>
+      <pubDate>Tue, 02 May 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/editlog-&#43;-fsimage-%E5%92%8C-aof-&#43;-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/</guid>
+      <description>EditLog&#43;FsImage和AOF&#43;RDB在某些方面的共同之处</description>
+    </item>
+    
+    <item>
       <title>再论雷峰塔的倒掉</title>
       <link>https://gopherding.github.io/posts/read/%E5%86%8D%E8%AE%BA%E9%9B%B7%E5%B3%B0%E5%A1%94%E7%9A%84%E5%80%92%E6%8E%89/</link>
       <pubDate>Fri, 07 Apr 2023 15:55:23 +0800</pubDate>
@@ -158,6 +293,24 @@
       
       <guid>https://gopherding.github.io/posts/read/%E6%88%98%E5%A3%AB%E5%92%8C%E8%8B%8D%E8%9D%87/</guid>
       <description>然而，有缺点的战士终竟是战士，完美的苍蝇也终竟不过是苍蝇。</description>
+    </item>
+    
+    <item>
+      <title>dockerfile 的命令摘要</title>
+      <link>https://gopherding.github.io/posts/tech/dockerfile-%E7%9A%84%E5%91%BD%E4%BB%A4%E6%91%98%E8%A6%81/</link>
+      <pubDate>Sat, 11 Mar 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/dockerfile-%E7%9A%84%E5%91%BD%E4%BB%A4%E6%91%98%E8%A6%81/</guid>
+      <description>列举了一些dockerfile的常见项</description>
+    </item>
+    
+    <item>
+      <title>Docker命令速查表</title>
+      <link>https://gopherding.github.io/posts/tech/docker%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</link>
+      <pubDate>Wed, 08 Mar 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/docker%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</guid>
+      <description>Docker的命令速查</description>
     </item>
     
     <item>
@@ -242,51 +395,6 @@
     </item>
     
     <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-3/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-3/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-5/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-5/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
       <title>矛盾论</title>
       <link>https://gopherding.github.io/posts/read/%E7%9F%9B%E7%9B%BE%E8%AE%BA/</link>
       <pubDate>Sat, 01 Oct 2022 15:55:23 +0800</pubDate>
@@ -320,6 +428,24 @@
       
       <guid>https://gopherding.github.io/posts/tech/%E7%9C%BC%E5%89%8D%E4%B8%80%E4%BA%AE%E7%9A%84go%E6%80%9D%E6%83%B3/</guid>
       <description>Go的设计哲学和设计思想</description>
+    </item>
+    
+    <item>
+      <title>Git:merge or rebase?</title>
+      <link>https://gopherding.github.io/posts/tech/git-merge%E5%92%8Crebase/</link>
+      <pubDate>Sun, 22 May 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/git-merge%E5%92%8Crebase/</guid>
+      <description>merge or rebase?</description>
+    </item>
+    
+    <item>
+      <title>Git命令速查表</title>
+      <link>https://gopherding.github.io/posts/tech/git%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</link>
+      <pubDate>Fri, 20 May 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/git%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</guid>
+      <description>Git的命令速查</description>
     </item>
     
     <item>
@@ -364,16 +490,7 @@
       <pubDate>Sat, 06 Nov 2021 15:15:53 +0800</pubDate>
       
       <guid>https://gopherding.github.io/links/</guid>
-      <description>uublog | 博识笔记 一只youdama的博客 👉友链格式 名称： uublog 网址： https://uublog.xyz/ 图标： https://uublog.xyz/avatar.jpg 描述： 一只youdama的博客 👉友链申请要求 喜欢youdama的都可以来爆破他的web，大水管不怕爆破：）</description>
-    </item>
-    
-    <item>
-      <title>🙋🏻‍♂️关于</title>
-      <link>https://gopherding.github.io/about/</link>
-      <pubDate>Sat, 06 Nov 2021 14:57:28 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/about/</guid>
-      <description>关于我 英文名: Gopher Ding 职业: 程序员 运动: 跑步、乒乓球、爬山</description>
+      <description>人生得一知己足矣，斯世当以同怀视之。</description>
     </item>
     
     <item>

@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>EditLog&#43;FsImage和AOF&#43;RDB设计哲学 | GopherDing&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="EditLog&#43;FsImage和AOF&#43;RDB在某些方面的共同之处">
+<meta name="author" content="GopherDing">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/editlog-&#43;-fsimage-%E5%92%8C-aof-&#43;-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/editlog-&#43;-fsimage-%E5%92%8C-aof-&#43;-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="EditLog&#43;FsImage和AOF&#43;RDB设计哲学" />
+<meta property="og:description" content="EditLog&#43;FsImage和AOF&#43;RDB在某些方面的共同之处" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/editlog-&#43;-fsimage-%E5%92%8C-aof-&#43;-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2023-05-02T15:55:23+08:00" />
+<meta property="article:modified_time" content="2023-05-02T15:55:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="EditLog&#43;FsImage和AOF&#43;RDB设计哲学"/>
+<meta name="twitter:description" content="EditLog&#43;FsImage和AOF&#43;RDB在某些方面的共同之处"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://gopherding.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "https://gopherding.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "EditLog+FsImage和AOF+RDB设计哲学",
+      "item": "https://gopherding.github.io/posts/tech/editlog-+-fsimage-%E5%92%8C-aof-+-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "EditLog+FsImage和AOF+RDB设计哲学",
+  "name": "EditLog\u002bFsImage和AOF\u002bRDB设计哲学",
+  "description": "EditLog+FsImage和AOF+RDB在某些方面的共同之处",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "Hadoop 的 EditLog 和 FsImage 与 Redis 的 AOF（Append Only File）和 RDB（Redis Database）在某些方面有相似的设计思想。\n一、Redis 的 AOF 和 RDB RDB（Redis Database） 功能与特点： RDB 是 Redis 用来进行数据持久化的一种方式，它是在某个时间点将 Redis 内存中的数据以快照的形式写入到磁盘文件中。这个过程类似于对 Redis 数据的一个完整备份。 例如，当执行 SAVE 或 BGSAVE 命令时，Redis 会将当前内存中的所有数据序列化并写入到一个.rdb 文件中。下次 Redis 启动时，可以通过加载这个.rdb 文件来恢复数据。 存储与恢复： RDB 文件通常存储在磁盘上指定的目录中。在 Redis 启动时，如果配置了使用 RDB 进行数据恢复，它会首先尝试加载这个文件，将其中的数据恢复到内存中，从而快速恢复到上次保存的状态。 例如，如果 Redis 因为某些原因崩溃了，在重新启动时，它可以通过加载最新的.rdb 文件来恢复数据，使得数据的丢失最小化。 AOF（Append Only File） 功能与特点： AOF 则是以日志的形式记录 Redis 服务器所执行的所有写命令。每当 Redis 执行一个写命令时，这个命令就会被追加到 AOF 文件的末尾。这样，即使 Redis 发生故障，也可以通过重新执行 AOF 文件中的命令来恢复数据。 例如，当执行 SET key value 命令时，这个命令会被立即记录到 AOF 文件中。如果 Redis 服务器在后续的运行过程中出现故障，重新启动后，Redis 会读取 AOF 文件，并重新执行其中的所有写命令，以恢复数据到故障发生前的状态。 存储与恢复： AOF 文件也是存储在磁盘上，并且以追加的方式不断增长。为了防止 AOF 文件过大，Redis 提供了一些机制来对 AOF 文件进行重写和压缩，例如可以使用 BGREWRITEAOF 命令来启动 AOF 文件的重写过程。 在 Redis 启动时，如果同时配置了 AOF 和 RDB 进行数据恢复，通常会优先使用 AOF 文件进行恢复，因为 AOF 文件记录了更完整的写命令历史，可以更准确地恢复数据到故障发生前的状态。 二、相似的设计思想 数据持久化与恢复： 共同目标： EditLog + FsImage 和 AOF + RDB 组合的主要目的都是为了实现数据的持久化和故障恢复。在 Hadoop 的 HDFS 中，EditLog 记录元数据的变更操作，FsImage 提供元数据的快照，通过它们可以在 NameNode 故障后恢复文件系统的状态。同样，在 Redis 中，AOF 记录写命令历史，RDB 提供数据的快照，用于在 Redis 服务器故障后恢复数据。 恢复过程相似： 在恢复过程中，两者都需要读取存储在磁盘上的文件来重建数据状态。对于 HDFS，NameNode 读取 FsImage 和 EditLog 来恢复文件系统的元数据；对于 Redis，服务器读取 RDB 文件或重放 AOF 文件中的命令来恢复数据。 例如，如果 HDFS 的 NameNode 或 Redis 服务器发生故障，在重新启动时，它们都可以依靠存储在磁盘上的持久化文件来恢复到故障发生前的状态，确保数据的可用性和完整性。\n动态更新与静态快照结合： 设计理念相似： EditLog 和 AOF 都是用于记录动态的变更操作，而 FsImage 和 RDB 则是提供静态的快照。这种设计思想是将动态的变更记录与静态的快照相结合，既可以快速获取某个时间点的状态（通过快照），又可以通过记录变更操作来实现对数据的逐步更新和恢复。 性能与可靠性平衡： 通过这种方式，可以在一定程度上平衡性能和可靠性。例如，在 HDFS 中，频繁地更新 FsImage 可能会影响性能，而通过 EditLog 记录变更操作并定期合并到 FsImage 中，可以减少对 FsImage 的直接更新，提高性能。在 Redis 中，RDB 可以快速进行数据恢复，但可能会丢失一些最近的写操作，而 AOF 可以记录所有的写命令，保证数据的完整性，但可能会导致 AOF 文件过大。通过合理配置两者的使用，可以在性能和可靠性之间找到平衡。 定期合并与重写： 优化机制类似： HDFS 中的 EditLog 会定期合并到 FsImage 中，以生成新的 FsImage 文件并清空 EditLog，从而减少 EditLog 的大小和提高系统性能。同样，Redis 的 AOF 文件也可以通过重写机制来压缩文件大小，去除重复的和无效的命令，提高数据恢复的效率。 触发条件相似： 两者的合并和重写操作通常都是基于一定的条件触发的。例如，在 HDFS 中，NameNode 可能会定期触发检查点操作来合并 EditLog 和 FsImage；在 Redis 中，可以通过配置自动触发 AOF 重写的条件，如当 AOF 文件大小超过一定阈值或经过一定时间没有重写时。 ",
+  "wordCount" : "1617",
+  "inLanguage": "zh",
+  "datePublished": "2023-05-02T15:55:23+08:00",
+  "dateModified": "2023-05-02T15:55:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "GopherDing"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://gopherding.github.io/posts/tech/editlog-+-fsimage-%E5%92%8C-aof-+-rdb-%E8%AE%BE%E8%AE%A1%E5%93%B2%E5%AD%A6/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GopherDing's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
+            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
+                 height="50">GopherDing&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://gopherding.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                EditLog&#43;FsImage和AOF&#43;RDB设计哲学
+            </h1>
+            <div class="post-description">
+                EditLog&#43;FsImage和AOF&#43;RDB在某些方面的共同之处
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2023-05-02
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1617字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>4分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/bigdata/" style="color: var(--secondary)!important;">BigData</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://gopherding.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80redis-%e7%9a%84-aof-%e5%92%8c-rdb" aria-label="一、Redis 的 AOF 和 RDB"><strong>一、Redis 的 AOF 和 RDB</strong></a><ul>
+                        
+                <li>
+                    <a href="#rdbredis-database" aria-label="RDB（Redis Database）"><strong>RDB（Redis Database）</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e5%8a%9f%e8%83%bd%e4%b8%8e%e7%89%b9%e7%82%b9" aria-label="功能与特点：">功能与特点：</a></li>
+                <li>
+                    <a href="#%e5%ad%98%e5%82%a8%e4%b8%8e%e6%81%a2%e5%a4%8d" aria-label="存储与恢复：">存储与恢复：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#aofappend-only-file" aria-label="AOF（Append Only File）"><strong>AOF（Append Only File）</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e5%8a%9f%e8%83%bd%e4%b8%8e%e7%89%b9%e7%82%b9-1" aria-label="功能与特点：">功能与特点：</a></li>
+                <li>
+                    <a href="#%e5%ad%98%e5%82%a8%e4%b8%8e%e6%81%a2%e5%a4%8d-1" aria-label="存储与恢复：">存储与恢复：</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e7%9b%b8%e4%bc%bc%e7%9a%84%e8%ae%be%e8%ae%a1%e6%80%9d%e6%83%b3" aria-label="二、相似的设计思想"><strong>二、相似的设计思想</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e6%95%b0%e6%8d%ae%e6%8c%81%e4%b9%85%e5%8c%96%e4%b8%8e%e6%81%a2%e5%a4%8d" aria-label="数据持久化与恢复："><strong>数据持久化与恢复</strong>：</a><ul>
+                        
+                <li>
+                    <a href="#%e5%85%b1%e5%90%8c%e7%9b%ae%e6%a0%87" aria-label="共同目标：">共同目标：</a></li>
+                <li>
+                    <a href="#%e6%81%a2%e5%a4%8d%e8%bf%87%e7%a8%8b%e7%9b%b8%e4%bc%bc" aria-label="恢复过程相似：">恢复过程相似：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%8a%a8%e6%80%81%e6%9b%b4%e6%96%b0%e4%b8%8e%e9%9d%99%e6%80%81%e5%bf%ab%e7%85%a7%e7%bb%93%e5%90%88" aria-label="动态更新与静态快照结合："><strong>动态更新与静态快照结合</strong>：</a><ul>
+                        
+                <li>
+                    <a href="#%e8%ae%be%e8%ae%a1%e7%90%86%e5%bf%b5%e7%9b%b8%e4%bc%bc" aria-label="设计理念相似：">设计理念相似：</a></li>
+                <li>
+                    <a href="#%e6%80%a7%e8%83%bd%e4%b8%8e%e5%8f%af%e9%9d%a0%e6%80%a7%e5%b9%b3%e8%a1%a1" aria-label="性能与可靠性平衡：">性能与可靠性平衡：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e5%ae%9a%e6%9c%9f%e5%90%88%e5%b9%b6%e4%b8%8e%e9%87%8d%e5%86%99" aria-label="定期合并与重写："><strong>定期合并与重写</strong>：</a><ul>
+                        
+                <li>
+                    <a href="#%e4%bc%98%e5%8c%96%e6%9c%ba%e5%88%b6%e7%b1%bb%e4%bc%bc" aria-label="优化机制类似：">优化机制类似：</a></li>
+                <li>
+                    <a href="#%e8%a7%a6%e5%8f%91%e6%9d%a1%e4%bb%b6%e7%9b%b8%e4%bc%bc" aria-label="触发条件相似：">触发条件相似：</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><p>Hadoop 的 EditLog 和 FsImage 与 Redis 的 AOF（Append Only File）和 RDB（Redis Database）在某些方面有相似的设计思想。</p>
+<h3 id="一redis-的-aof-和-rdb"><strong>一、Redis 的 AOF 和 RDB</strong><a hidden class="anchor" aria-hidden="true" href="#一redis-的-aof-和-rdb">#</a></h3>
+<ol>
+<li>
+<h4 id="rdbredis-database"><strong>RDB（Redis Database）</strong><a hidden class="anchor" aria-hidden="true" href="#rdbredis-database">#</a></h4>
+<ul>
+<li>
+<h5 id="功能与特点">功能与特点：<a hidden class="anchor" aria-hidden="true" href="#功能与特点">#</a></h5>
+<ul>
+<li>RDB 是 Redis 用来进行数据持久化的一种方式，它是在某个时间点将 Redis 内存中的数据以快照的形式写入到磁盘文件中。这个过程类似于对 Redis 数据的一个完整备份。</li>
+<li>例如，当执行 <code>SAVE</code> 或 <code>BGSAVE</code> 命令时，Redis 会将当前内存中的所有数据序列化并写入到一个.rdb 文件中。下次 Redis 启动时，可以通过加载这个.rdb 文件来恢复数据。</li>
+</ul>
+</li>
+<li>
+<h5 id="存储与恢复">存储与恢复：<a hidden class="anchor" aria-hidden="true" href="#存储与恢复">#</a></h5>
+<ul>
+<li>RDB 文件通常存储在磁盘上指定的目录中。在 Redis 启动时，如果配置了使用 RDB 进行数据恢复，它会首先尝试加载这个文件，将其中的数据恢复到内存中，从而快速恢复到上次保存的状态。</li>
+<li>例如，如果 Redis 因为某些原因崩溃了，在重新启动时，它可以通过加载最新的.rdb 文件来恢复数据，使得数据的丢失最小化。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="aofappend-only-file"><strong>AOF（Append Only File）</strong><a hidden class="anchor" aria-hidden="true" href="#aofappend-only-file">#</a></h4>
+<ul>
+<li>
+<h5 id="功能与特点-1">功能与特点：<a hidden class="anchor" aria-hidden="true" href="#功能与特点-1">#</a></h5>
+<ul>
+<li>AOF 则是以日志的形式记录 Redis 服务器所执行的所有写命令。每当 Redis 执行一个写命令时，这个命令就会被追加到 AOF 文件的末尾。这样，即使 Redis 发生故障，也可以通过重新执行 AOF 文件中的命令来恢复数据。</li>
+<li>例如，当执行 <code>SET key value</code> 命令时，这个命令会被立即记录到 AOF 文件中。如果 Redis 服务器在后续的运行过程中出现故障，重新启动后，Redis 会读取 AOF 文件，并重新执行其中的所有写命令，以恢复数据到故障发生前的状态。</li>
+</ul>
+</li>
+<li>
+<h5 id="存储与恢复-1">存储与恢复：<a hidden class="anchor" aria-hidden="true" href="#存储与恢复-1">#</a></h5>
+<ul>
+<li>AOF 文件也是存储在磁盘上，并且以追加的方式不断增长。为了防止 AOF 文件过大，Redis 提供了一些机制来对 AOF 文件进行重写和压缩，例如可以使用 <code>BGREWRITEAOF</code> 命令来启动 AOF 文件的重写过程。</li>
+<li>在 Redis 启动时，如果同时配置了 AOF 和 RDB 进行数据恢复，通常会优先使用 AOF 文件进行恢复，因为 AOF 文件记录了更完整的写命令历史，可以更准确地恢复数据到故障发生前的状态。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="二相似的设计思想"><strong>二、相似的设计思想</strong><a hidden class="anchor" aria-hidden="true" href="#二相似的设计思想">#</a></h3>
+<ol>
+<li>
+<h4 id="数据持久化与恢复"><strong>数据持久化与恢复</strong>：<a hidden class="anchor" aria-hidden="true" href="#数据持久化与恢复">#</a></h4>
+<ul>
+<li>
+<h5 id="共同目标">共同目标：<a hidden class="anchor" aria-hidden="true" href="#共同目标">#</a></h5>
+<ul>
+<li>EditLog + FsImage 和 AOF + RDB 组合的主要目的都是为了实现数据的持久化和故障恢复。在 Hadoop 的 HDFS 中，EditLog 记录元数据的变更操作，FsImage 提供元数据的快照，通过它们可以在 NameNode 故障后恢复文件系统的状态。同样，在 Redis 中，AOF 记录写命令历史，RDB 提供数据的快照，用于在 Redis 服务器故障后恢复数据。</li>
+</ul>
+</li>
+<li>
+<h5 id="恢复过程相似">恢复过程相似：<a hidden class="anchor" aria-hidden="true" href="#恢复过程相似">#</a></h5>
+<ul>
+<li>在恢复过程中，两者都需要读取存储在磁盘上的文件来重建数据状态。对于 HDFS，NameNode 读取 FsImage 和 EditLog 来恢复文件系统的元数据；对于 Redis，服务器读取 RDB 文件或重放 AOF 文件中的命令来恢复数据。</li>
+</ul>
+</li>
+<li>
+<p>例如，如果 HDFS 的 NameNode 或 Redis 服务器发生故障，在重新启动时，它们都可以依靠存储在磁盘上的持久化文件来恢复到故障发生前的状态，确保数据的可用性和完整性。</p>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="动态更新与静态快照结合"><strong>动态更新与静态快照结合</strong>：<a hidden class="anchor" aria-hidden="true" href="#动态更新与静态快照结合">#</a></h4>
+<ul>
+<li>
+<h5 id="设计理念相似">设计理念相似：<a hidden class="anchor" aria-hidden="true" href="#设计理念相似">#</a></h5>
+<ul>
+<li>EditLog 和 AOF 都是用于记录动态的变更操作，而 FsImage 和 RDB 则是提供静态的快照。这种设计思想是将动态的变更记录与静态的快照相结合，既可以快速获取某个时间点的状态（通过快照），又可以通过记录变更操作来实现对数据的逐步更新和恢复。</li>
+</ul>
+</li>
+<li>
+<h5 id="性能与可靠性平衡">性能与可靠性平衡：<a hidden class="anchor" aria-hidden="true" href="#性能与可靠性平衡">#</a></h5>
+<ul>
+<li>通过这种方式，可以在一定程度上平衡性能和可靠性。例如，在 HDFS 中，频繁地更新 FsImage 可能会影响性能，而通过 EditLog 记录变更操作并定期合并到 FsImage 中，可以减少对 FsImage 的直接更新，提高性能。在 Redis 中，RDB 可以快速进行数据恢复，但可能会丢失一些最近的写操作，而 AOF 可以记录所有的写命令，保证数据的完整性，但可能会导致 AOF 文件过大。通过合理配置两者的使用，可以在性能和可靠性之间找到平衡。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<h4 id="定期合并与重写"><strong>定期合并与重写</strong>：<a hidden class="anchor" aria-hidden="true" href="#定期合并与重写">#</a></h4>
+<ul>
+<li>
+<h5 id="优化机制类似">优化机制类似：<a hidden class="anchor" aria-hidden="true" href="#优化机制类似">#</a></h5>
+<ul>
+<li>HDFS 中的 EditLog 会定期合并到 FsImage 中，以生成新的 FsImage 文件并清空 EditLog，从而减少 EditLog 的大小和提高系统性能。同样，Redis 的 AOF 文件也可以通过重写机制来压缩文件大小，去除重复的和无效的命令，提高数据恢复的效率。</li>
+</ul>
+</li>
+<li>
+<h5 id="触发条件相似">触发条件相似：<a hidden class="anchor" aria-hidden="true" href="#触发条件相似">#</a></h5>
+<ul>
+<li>两者的合并和重写操作通常都是基于一定的条件触发的。例如，在 HDFS 中，NameNode 可能会定期触发检查点操作来合并 EditLog 和 FsImage；在 Redis 中，可以通过配置自动触发 AOF 重写的条件，如当 AOF 文件大小超过一定阈值或经过一定时间没有重写时。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>We choose to go to the moon</span>
+  </a>
+  <a class="next" href="https://gopherding.github.io/posts/read/%E5%86%8D%E8%AE%BA%E9%9B%B7%E5%B3%B0%E5%A1%94%E7%9A%84%E5%80%92%E6%8E%89/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>再论雷峰塔的倒掉</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://gopherding.github.io/" style="color:#939393;">GopherDing&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>Git on GopherDing&#39;s Blog</title>
+    <link>https://gopherding.github.io/tags/git/</link>
+    <description>Recent content in Git on GopherDing&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Sun, 22 May 2022 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/git/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Git:merge or rebase?</title>
+      <link>https://gopherding.github.io/posts/tech/git-merge%E5%92%8Crebase/</link>
+      <pubDate>Sun, 22 May 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/git-merge%E5%92%8Crebase/</guid>
+      <description>merge or rebase?</description>
+    </item>
+    
+    <item>
+      <title>Git命令速查表</title>
+      <link>https://gopherding.github.io/posts/tech/git%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</link>
+      <pubDate>Fri, 20 May 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/git%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</guid>
+      <description>Git的命令速查</description>
+    </item>
+    
+  </channel>
+</rss>

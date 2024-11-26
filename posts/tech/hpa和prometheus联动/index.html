@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="zh" dir="auto">
+
+<head><meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="robots" content="index, follow">
+<title>HPA和Prometheus联动自动扩容 | GopherDing&#39;s Blog</title>
+<meta name="keywords" content="">
+<meta name="description" content="HPA和Prometheus联动自动扩容">
+<meta name="author" content="GopherDing">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/">
+<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
+<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
+<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
+<meta name="theme-color" content="#2e2e33">
+<meta name="msapplication-TileColor" content="#2e2e33">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/">
+<noscript>
+    <style>
+        #theme-toggle,
+        .top-link {
+            display: none;
+        }
+
+    </style>
+    <style>
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --theme: rgb(29, 30, 32);
+                --entry: rgb(46, 46, 51);
+                --primary: rgb(218, 218, 219);
+                --secondary: rgb(155, 156, 157);
+                --tertiary: rgb(65, 66, 68);
+                --content: rgb(196, 196, 197);
+                --hljs-bg: rgb(46, 46, 51);
+                --code-bg: rgb(55, 56, 62);
+                --border: rgb(51, 51, 51);
+            }
+
+            .list {
+                background: var(--theme);
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-track {
+                background: 0 0;
+            }
+
+            .list:not(.dark)::-webkit-scrollbar-thumb {
+                border-color: var(--theme);
+            }
+        }
+
+    </style>
+</noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+<script src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.6.3/dist/jquery.min.js"></script>
+
+
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = ""; 
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<meta property="og:title" content="HPA和Prometheus联动自动扩容" />
+<meta property="og:description" content="HPA和Prometheus联动自动扩容" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-01-08T15:55:23+08:00" />
+<meta property="article:modified_time" content="2024-01-08T15:55:23+08:00" />
+
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="HPA和Prometheus联动自动扩容"/>
+<meta name="twitter:description" content="HPA和Prometheus联动自动扩容"/>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+        {
+          "@type": "ListItem",
+          "position":  1 ,
+          "name": "📚文章",
+          "item": "https://gopherding.github.io/posts/"
+        },
+
+        {
+          "@type": "ListItem",
+          "position":  2 ,
+          "name": "👨🏻‍💻 技术",
+          "item": "https://gopherding.github.io/posts/tech/"
+        }, 
+    {
+      "@type": "ListItem",
+      "position":  3 ,
+      "name": "HPA和Prometheus联动自动扩容",
+      "item": "https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "HPA和Prometheus联动自动扩容",
+  "name": "HPA和Prometheus联动自动扩容",
+  "description": "HPA和Prometheus联动自动扩容",
+  "keywords": [
+    ""
+  ],
+  "articleBody": "在 Kubernetes 中使用自定义的应用程序指标（通过 Prometheus 等监控系统暴露的指标）结合 Horizontal Pod Autoscaler（HPA）进行自动扩容，可以按照以下步骤进行操作：\n一、准备工作 安装 Prometheus 和相关组件： 在 Kubernetes 集群中安装 Prometheus 服务器、服务发现组件（如 Prometheus Operator）等，以便收集和存储应用程序的指标数据。 确保 Prometheus 能够正确地发现和监控目标应用程序的指标。 应用程序暴露指标： 在应用程序中集成指标暴露功能，例如使用 Prometheus client libraries 来暴露自定义的应用程序指标。 确保应用程序能够正确地将指标数据暴露给 Prometheus。 二、配置 Prometheus 和 HPA 创建 ServiceMonitor： 如果使用 Prometheus Operator，创建一个 ServiceMonitor 对象来定义 Prometheus 应该监控的目标服务。 ServiceMonitor 通常指定要监控的服务的标签选择器、端口和指标路径等信息。 例如： apiVersion: monitoring.coreos.com/v1 # 声明此资源对象的 API 版本来自 CoreOS 的监控组件 kind: ServiceMonitor # 表明这是一个 ServiceMonitor（服务监控器）资源对象 metadata: name: my-app-monitor # 此服务监控器的名称为 my-app-monitor spec: selector: # 用于选择要监控的服务的标签选择器 matchLabels: app: my-app # 选择具有标签 app: my-app 的服务进行监控 endpoints: # 定义要监控的服务的端点信息 - port: web # 要监控的服务的端口名为 web path: /metrics # 指标数据的路径为 /metrics，即 Prometheus 从这里获取指标数据 创建 HPA： 使用自定义指标创建一个 HPA 对象，指定要监控的指标名称、目标值和扩缩容规则。 例如： apiVersion: autoscaling/v2beta2 # 声明此资源对象的 API 版本为 autoscaling/v2beta2 kind: HorizontalPodAutoscaler # 表明这是一个 HorizontalPodAutoscaler（水平 Pod 自动扩缩器）资源对象 metadata: name: my-app-hpa # 此自动扩缩器的名称为 my-app-hpa spec: scaleTargetRef: # 指定要进行自动扩缩的目标资源 apiVersion: apps/v1 # 目标资源的 API 版本为 apps/v1 kind: Deployment # 目标资源的种类是 Deployment（部署） name: my-app # 目标 Deployment 的名称为 my-app metrics: - type: Pods # 指标类型为 Pods，表示基于 Pod 的指标进行扩缩容 pods: metric: name: my_custom_metric # 要使用的自定义指标名称为 my_custom_metric target: type: AverageValue # 目标值的类型为平均值 averageValue: 100 # 目标平均值为 100，即当自定义指标的平均值达到 100 时触发扩缩容操作 三、验证和调整 验证指标收集： 通过 Prometheus 的 Web UI 或查询接口验证 Prometheus 是否正确地收集了应用程序的自定义指标。 可以使用 PromQL 查询语言来检查指标的可用性和值。 观察自动扩容： 模拟应用程序的负载变化，观察 HPA 是否根据自定义指标自动调整 Pod 的数量。 可以通过增加负载生成工具（如ab、hey等）的并发请求数量来模拟高负载情况，观察 Pod 数量是否自动增加。 调整参数： 根据实际应用的需求和性能测试结果，调整 HPA 的参数，如目标值、最大和最小副本数等。 同时，也可以调整应用程序的指标暴露方式和阈值，以确保自动扩容机制能够有效地响应负载变化。 总之，使用自定义的应用程序指标结合 Prometheus 和 HPA 可以实现更加灵活和精确的自动扩容机制。通过正确地配置 Prometheus 和 HPA，并验证指标的收集和自动扩容的效果，可以提高应用程序的可用性和资源利用率。\n",
+  "wordCount" : "1110",
+  "inLanguage": "zh",
+  "datePublished": "2024-01-08T15:55:23+08:00",
+  "dateModified": "2024-01-08T15:55:23+08:00",
+  "author":[{
+    "@type": "Person",
+    "name": "GopherDing"
+  }],
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "GopherDing's Blog",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
+    }
+  }
+}
+</script>
+</head>
+
+<body class="" id="top">
+<script>
+    (function () {
+        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
+        if(arr = document.cookie.match(reg)) {
+        } else {
+            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
+                document.body.classList.add('dark');
+                localStorage.setItem("pref-theme", 'dark');
+            } else {
+                document.body.classList.remove('dark');
+                localStorage.setItem("pref-theme", 'light');
+            }
+        }
+    })()
+
+    if (localStorage.getItem("pref-theme") === "dark") {
+        document.body.classList.add('dark');
+    } else if (localStorage.getItem("pref-theme") === "light") {
+        document.body.classList.remove('dark')
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.body.classList.add('dark');
+    }
+</script>
+
+<header class="header">
+    <nav class="nav">
+        <div class="logo">
+            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
+            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
+                 height="50">GopherDing&#39;s Blog</a>
+            <div class="logo-switches">
+                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
+                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <ul class="lang-switch"><li>|</li>
+                </ul>
+            </div>
+        </div>
+        <ul id="menu">
+            <li>
+                <a href="https://gopherding.github.io/" title="🏠 主页">
+                <span>🏠 主页</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
+                <span>🔍 搜索</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/tags" title="🧩 标签">
+                <span>🧩 标签</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
+                <span>⏱️ 时间轴</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
+                <span>🙋🏻‍♂️ 关于</span>
+                </a>
+            </li>
+            <li>
+                <a href="https://gopherding.github.io/links" title="🤝 友链">
+                <span>🤝 友链</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+<main class="main page">
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+</style>
+
+<article class="post-single">
+    <div id="single-content">
+        <header class="post-header">
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <h1 class="post-title">
+                HPA和Prometheus联动自动扩容
+            </h1>
+            <div class="post-description">
+                HPA和Prometheus联动自动扩容
+            </div>
+            <div class="post-meta">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2024-01-08
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1110字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
+            </span>
+        </span>
+    </span>
+</span>
+<span style="opacity: 0.8;">
+                    <span id="post_meta_style_7">
+                        &nbsp;&nbsp;
+                        <span class="fa fa-eye" ></span>
+                        <span>
+                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
+                            &nbsp;&nbsp;
+                        </span>
+                    </span>
+                    <span id="post_meta_style_8">
+                        <span class="fa fa-commenting-o"></span>
+                        <span>
+                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
+                            <script>
+                                let url = document.documentURI
+                                
+                                let dnsUrl = "https://gopherding.github.io/"
+                                let urlSplit = url.split(dnsUrl)
+                                let finalUrl = urlSplit[1]
+                                if (finalUrl[0] !== '/') {
+                                    finalUrl = '/'+finalUrl
+                                }
+                                twikoo.getCommentsCount({
+                                    envId:  null , 
+                                region:  null , 
+                                urls: [ 
+                                    
+                                    finalUrl,
+                                ],
+                                    includeReply: false 
+                                }).then(function (res) {
+                                    let count = res[0].count
+                                    const obj = document.getElementById("comment_count");
+                                    obj.innerText = count
+                                    
+                                    
+                                    
+                                }).catch(function (err) {
+                                    
+                                    console.error(err);
+                                });
+                            </script>
+                            <span id="comment_count"></span>
+                        </span>
+                    </span>
+                </span>
+
+</div>
+        </header> <aside id="toc-container" class="toc-container wide">
+    <div class="toc">
+        <details  open>
+        <summary accesskey="c" title="(Alt + C)">
+            <span class="details">目录</span>
+        </summary>
+
+        <div class="inner"><ul>
+                <li>
+                    <a href="#%e4%b8%80%e5%87%86%e5%a4%87%e5%b7%a5%e4%bd%9c" aria-label="一、准备工作"><strong>一、准备工作</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e5%ae%89%e8%a3%85-prometheus-%e5%92%8c%e7%9b%b8%e5%85%b3%e7%bb%84%e4%bb%b6" aria-label="安装 Prometheus 和相关组件：">安装 Prometheus 和相关组件：</a></li>
+                <li>
+                    <a href="#%e5%ba%94%e7%94%a8%e7%a8%8b%e5%ba%8f%e6%9a%b4%e9%9c%b2%e6%8c%87%e6%a0%87" aria-label="应用程序暴露指标：">应用程序暴露指标：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%ba%8c%e9%85%8d%e7%bd%ae-prometheus-%e5%92%8c-hpa" aria-label="二、配置 Prometheus 和 HPA"><strong>二、配置 Prometheus 和 HPA</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e5%88%9b%e5%bb%ba-servicemonitor" aria-label="创建 ServiceMonitor：">创建 ServiceMonitor：</a></li>
+                <li>
+                    <a href="#%e5%88%9b%e5%bb%ba-hpa" aria-label="创建 HPA：">创建 HPA：</a></li></ul>
+                </li>
+                <li>
+                    <a href="#%e4%b8%89%e9%aa%8c%e8%af%81%e5%92%8c%e8%b0%83%e6%95%b4" aria-label="三、验证和调整"><strong>三、验证和调整</strong></a><ul>
+                        
+                <li>
+                    <a href="#%e9%aa%8c%e8%af%81%e6%8c%87%e6%a0%87%e6%94%b6%e9%9b%86" aria-label="验证指标收集：">验证指标收集：</a></li>
+                <li>
+                    <a href="#%e8%a7%82%e5%af%9f%e8%87%aa%e5%8a%a8%e6%89%a9%e5%ae%b9" aria-label="观察自动扩容：">观察自动扩容：</a></li>
+                <li>
+                    <a href="#%e8%b0%83%e6%95%b4%e5%8f%82%e6%95%b0" aria-label="调整参数：">调整参数：</a>
+                </li>
+            </ul>
+            </li>
+            </ul>
+        </div>
+        </details>
+    </div>
+</aside>
+<script>
+    let activeElement;
+    let elements;
+    window.addEventListener('DOMContentLoaded', function (event) {
+        checkTocPosition();
+
+        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
+        
+        activeElement = elements[0];
+        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
+        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+    }, false);
+
+    window.addEventListener('resize', function(event) {
+        checkTocPosition();
+    }, false);
+
+    window.addEventListener('scroll', () => {
+        
+        if (elements) {
+            activeElement = Array.from(elements).find((element) => {
+                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
+                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
+                    return element;
+                }
+            }) || activeElement
+
+            elements.forEach(element => {
+                const id = encodeURI(element.getAttribute('id')).toLowerCase();
+                if (element === activeElement){
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
+                } else {
+                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
+                }
+            })
+        }
+    }, false);
+
+    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
+    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
+    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
+
+    function checkTocPosition() {
+        const width = document.body.scrollWidth;
+        if (width - main - (toc * 2) - (gap * 4) > 0) {
+            document.getElementById("toc-container").classList.add("wide");
+        } else {
+            document.getElementById("toc-container").classList.remove("wide");
+        }
+    }
+
+    function getOffsetTop(element) {
+        if (!element.getClientRects().length) {
+            return 0;
+        }
+        let rect = element.getBoundingClientRect();
+        let win = element.ownerDocument.defaultView;
+        return rect.top + win.pageYOffset;
+    }
+</script>
+        <div class="post-content"><p>在 Kubernetes 中使用自定义的应用程序指标（通过 Prometheus 等监控系统暴露的指标）结合 Horizontal Pod Autoscaler（HPA）进行自动扩容，可以按照以下步骤进行操作：</p>
+<h3 id="一准备工作"><strong>一、准备工作</strong><a hidden class="anchor" aria-hidden="true" href="#一准备工作">#</a></h3>
+<ol>
+<li>
+<h4 id="安装-prometheus-和相关组件">安装 Prometheus 和相关组件：<a hidden class="anchor" aria-hidden="true" href="#安装-prometheus-和相关组件">#</a></h4>
+<ul>
+<li>在 Kubernetes 集群中安装 Prometheus 服务器、服务发现组件（如 Prometheus Operator）等，以便收集和存储应用程序的指标数据。</li>
+<li>确保 Prometheus 能够正确地发现和监控目标应用程序的指标。</li>
+</ul>
+</li>
+<li>
+<h4 id="应用程序暴露指标">应用程序暴露指标：<a hidden class="anchor" aria-hidden="true" href="#应用程序暴露指标">#</a></h4>
+<ul>
+<li>在应用程序中集成指标暴露功能，例如使用 Prometheus client libraries 来暴露自定义的应用程序指标。</li>
+<li>确保应用程序能够正确地将指标数据暴露给 Prometheus。</li>
+</ul>
+</li>
+</ol>
+<h3 id="二配置-prometheus-和-hpa"><strong>二、配置 Prometheus 和 HPA</strong><a hidden class="anchor" aria-hidden="true" href="#二配置-prometheus-和-hpa">#</a></h3>
+<ol>
+<li>
+<h4 id="创建-servicemonitor">创建 ServiceMonitor：<a hidden class="anchor" aria-hidden="true" href="#创建-servicemonitor">#</a></h4>
+<ul>
+<li>如果使用 Prometheus Operator，创建一个 ServiceMonitor 对象来定义 Prometheus 应该监控的目标服务。</li>
+<li>ServiceMonitor 通常指定要监控的服务的标签选择器、端口和指标路径等信息。</li>
+<li>例如：</li>
+</ul>
+</li>
+</ol>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">monitoring.coreos.com/v1 </span> <span style="color:#75715e"># 声明此资源对象的 API 版本来自 CoreOS 的监控组件</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">ServiceMonitor </span> <span style="color:#75715e"># 表明这是一个 ServiceMonitor（服务监控器）资源对象</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">my-app-monitor </span> <span style="color:#75715e"># 此服务监控器的名称为 my-app-monitor</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">selector</span>:  <span style="color:#75715e"># 用于选择要监控的服务的标签选择器</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">matchLabels</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">app: my-app  # 选择具有标签 app</span>: <span style="color:#ae81ff">my-app 的服务进行监控</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">endpoints</span>:  <span style="color:#75715e"># 定义要监控的服务的端点信息</span>
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">port</span>: <span style="color:#ae81ff">web </span> <span style="color:#75715e"># 要监控的服务的端口名为 web</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">path</span>: <span style="color:#ae81ff">/metrics </span> <span style="color:#75715e"># 指标数据的路径为 /metrics，即 Prometheus 从这里获取指标数据</span>
+</span></span></code></pre></div><ol start="2">
+<li>
+<h4 id="创建-hpa">创建 HPA：<a hidden class="anchor" aria-hidden="true" href="#创建-hpa">#</a></h4>
+</li>
+</ol>
+<ul>
+<li>使用自定义指标创建一个 HPA 对象，指定要监控的指标名称、目标值和扩缩容规则。</li>
+<li>例如：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">autoscaling/v2beta2 </span> <span style="color:#75715e"># 声明此资源对象的 API 版本为 autoscaling/v2beta2</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">kind</span>: <span style="color:#ae81ff">HorizontalPodAutoscaler </span> <span style="color:#75715e"># 表明这是一个 HorizontalPodAutoscaler（水平 Pod 自动扩缩器）资源对象</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">metadata</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">name</span>: <span style="color:#ae81ff">my-app-hpa </span> <span style="color:#75715e"># 此自动扩缩器的名称为 my-app-hpa</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">spec</span>:
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">scaleTargetRef</span>:  <span style="color:#75715e"># 指定要进行自动扩缩的目标资源</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">apiVersion</span>: <span style="color:#ae81ff">apps/v1 </span> <span style="color:#75715e"># 目标资源的 API 版本为 apps/v1</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">kind</span>: <span style="color:#ae81ff">Deployment </span> <span style="color:#75715e"># 目标资源的种类是 Deployment（部署）</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">name</span>: <span style="color:#ae81ff">my-app </span> <span style="color:#75715e"># 目标 Deployment 的名称为 my-app</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">metrics</span>:
+</span></span><span style="display:flex;"><span>  - <span style="color:#f92672">type</span>: <span style="color:#ae81ff">Pods </span> <span style="color:#75715e"># 指标类型为 Pods，表示基于 Pod 的指标进行扩缩容</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">pods</span>:
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">metric</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">name</span>: <span style="color:#ae81ff">my_custom_metric </span> <span style="color:#75715e"># 要使用的自定义指标名称为 my_custom_metric</span>
+</span></span><span style="display:flex;"><span>      <span style="color:#f92672">target</span>:
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">type</span>: <span style="color:#ae81ff">AverageValue </span> <span style="color:#75715e"># 目标值的类型为平均值</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">averageValue</span>: <span style="color:#ae81ff">100</span>  <span style="color:#75715e"># 目标平均值为 100，即当自定义指标的平均值达到 100 时触发扩缩容操作</span>
+</span></span></code></pre></div><h3 id="三验证和调整"><strong>三、验证和调整</strong><a hidden class="anchor" aria-hidden="true" href="#三验证和调整">#</a></h3>
+<ol>
+<li>
+<h4 id="验证指标收集">验证指标收集：<a hidden class="anchor" aria-hidden="true" href="#验证指标收集">#</a></h4>
+<ul>
+<li>通过 Prometheus 的 Web UI 或查询接口验证 Prometheus 是否正确地收集了应用程序的自定义指标。</li>
+<li>可以使用 PromQL 查询语言来检查指标的可用性和值。</li>
+</ul>
+</li>
+<li>
+<h4 id="观察自动扩容">观察自动扩容：<a hidden class="anchor" aria-hidden="true" href="#观察自动扩容">#</a></h4>
+<ul>
+<li>模拟应用程序的负载变化，观察 HPA 是否根据自定义指标自动调整 Pod 的数量。</li>
+<li>可以通过增加负载生成工具（如<code>ab</code>、<code>hey</code>等）的并发请求数量来模拟高负载情况，观察 Pod 数量是否自动增加。</li>
+</ul>
+</li>
+<li>
+<h4 id="调整参数">调整参数：<a hidden class="anchor" aria-hidden="true" href="#调整参数">#</a></h4>
+<ul>
+<li>根据实际应用的需求和性能测试结果，调整 HPA 的参数，如目标值、最大和最小副本数等。</li>
+<li>同时，也可以调整应用程序的指标暴露方式和阈值，以确保自动扩容机制能够有效地响应负载变化。</li>
+</ul>
+</li>
+</ol>
+<p>总之，使用自定义的应用程序指标结合 Prometheus 和 HPA 可以实现更加灵活和精确的自动扩容机制。通过正确地配置 Prometheus 和 HPA，并验证指标的收集和自动扩容的效果，可以提高应用程序的可用性和资源利用率。</p>
+
+
+        </div>
+
+        <footer class="post-footer">
+            
+<nav class="paginav">
+  <a class="prev" href="https://gopherding.github.io/posts/tech/%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7%E6%8A%A5%E8%AD%A6%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+    <span class="title">« 上一页</span>
+    <br>
+    <span>自动监控报警的实现</span>
+  </a>
+  <a class="next" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/">
+    <span class="title">下一页 »</span>
+    <br>
+    <span>XXXXXXXXXXXXXX</span>
+  </a>
+</nav>
+
+        </footer>
+    </div>
+
+<style>
+    .comments_details summary::marker {
+        font-size: 20px;
+        content: '👉展开评论';
+        color: var(--content);
+    }
+    .comments_details[open] summary::marker{
+        font-size: 20px;
+        content: '👇关闭评论';
+        color: var(--content);
+    }
+</style>
+
+
+<div>
+    <details class="comments_details">
+        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
+            <span style="font-size: 20px;color: var(--content);">...</span>
+        </summary>
+        <div id="tcomment"></div>
+    </details>
+    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
+    </script>
+    <script>
+        twikoo.init({
+            envId:  null ,
+        el: "#tcomment",
+            lang: 'zh-CN',
+            region:  null ,
+        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
+        })
+    </script>
+</div>
+</article>
+</main>
+
+<footer class="footer">
+    <span>
+        Copyright
+        &copy;
+        -2024
+        <a href="https://gopherding.github.io/" style="color:#939393;">GopherDing&#39;s Blog</a>
+        All Rights Reserved
+    </span>
+    <a href="https://beian.miit.gov.cn/" target="_blank" style="color:#939393;"></a>&nbsp;
+    <span>
+        <a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=null"
+           style="display:inline-block;text-decoration:none;height:20px;color:#939393;">
+            <img src="" style="float:left;margin: 0px 5px 0px 0px;"/>
+            
+        </a>
+    </span>
+    <span id="busuanzi_container">
+        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
+        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
+    </span>
+</footer>
+<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
+    <span class="topInner">
+        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
+            <path d="M12 6H0l6-6z"/>
+        </svg>
+        <span id="read_progress"></span>
+    </span>
+</a>
+
+<script>
+    document.addEventListener('scroll', function (e) {
+        const readProgress = document.getElementById("read_progress");
+        const scrollHeight = document.documentElement.scrollHeight;
+        const clientHeight = document.documentElement.clientHeight;
+        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
+    })
+</script>
+
+<script>
+    let menu = document.getElementById('menu')
+    if (menu) {
+        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
+        menu.onscroll = function () {
+            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
+        }
+    }
+
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener("click", function (e) {
+            e.preventDefault();
+            var id = this.getAttribute("href").substr(1);
+            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
+                    behavior: "smooth"
+                });
+            } else {
+                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
+            }
+            if (id === "top") {
+                history.replaceState(null, null, " ");
+            } else {
+                history.pushState(null, null, `#${id}`);
+            }
+        });
+    });
+</script>
+<script>
+    let mybutton = document.getElementById("top-link");
+    window.onscroll = function () {
+        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+            mybutton.style.visibility = "visible";
+            mybutton.style.opacity = "1";
+        } else {
+            mybutton.style.visibility = "hidden";
+            mybutton.style.opacity = "0";
+        }
+    };
+</script>
+<script>
+    document.getElementById("theme-toggle").addEventListener("click", () => {
+        (function() {
+            document.cookie = "change-themes" + "="+ escape ("false");
+        })()
+
+        if (document.body.className.includes("dark")) {
+            document.body.classList.remove('dark');
+            localStorage.setItem("pref-theme", 'light');
+        } else {
+            document.body.classList.add('dark');
+            localStorage.setItem("pref-theme", 'dark');
+        }
+    });
+</script>
+
+<script>
+    document.body.addEventListener('copy', function (e) {
+        if (window.getSelection().toString() && window.getSelection().toString().length > 50) {
+            let clipboardData = e.clipboardData || window.clipboardData;
+            if (clipboardData) {
+                e.preventDefault();
+                let htmlData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                let textData = window.getSelection().toString() +
+                    '\r\n\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                clipboardData.setData('text/html', htmlData);
+                clipboardData.setData('text/plain', textData);
+            }
+        }
+    });
+</script>
+<script>
+    document.querySelectorAll('pre > code').forEach((codeblock) => {
+        const container = codeblock.parentNode.parentNode;
+        const copybutton = document.createElement('button');
+        copybutton.classList.add('copy-code');
+        copybutton.innerText = '复制';
+
+        function copyingDone() {
+            copybutton.innerText = '已复制！';
+            setTimeout(() => {
+                copybutton.innerText = '复制';
+            }, 2000);
+        }
+
+        copybutton.addEventListener('click', (cb) => {
+            if ('clipboard' in navigator) {
+                let text = codeblock.textContent +
+                    '\r\n————————————————\r\n' +
+                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
+                '\r\n原文链接：' + location.href;
+                navigator.clipboard.writeText(text);
+                copyingDone();
+                return;
+            }
+
+            const range = document.createRange();
+            range.selectNodeContents(codeblock);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            try {
+                document.execCommand('copy');
+                copyingDone();
+            } catch (e) {}
+            selection.removeRange(range);
+        });
+
+        let language = codeblock.className.replaceAll("language-", "")
+        let macTool = document.createElement("div")
+        let macTool1 = document.createElement("div")
+        let macTool2 = document.createElement("div")
+        let macTool3 = document.createElement("div")
+        let languageType = document.createElement("div")
+        languageType.innerText = language
+        macTool.setAttribute('class', 'mac-tool')
+        macTool1.setAttribute('class', 'mac bb1')
+        macTool2.setAttribute('class', 'mac bb2')
+        macTool3.setAttribute('class', 'mac bb3')
+        languageType.setAttribute('class', 'language-type')
+        macTool.appendChild(macTool1)
+        macTool.appendChild(macTool2)
+        macTool.appendChild(macTool3)
+        macTool.appendChild(languageType)
+
+        if (container.classList.contains("highlight")) {
+            container.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else if (container.parentNode.firstChild == container) {
+            
+        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
+            
+            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        } else {
+            
+            codeblock.parentNode.appendChild(copybutton);
+            container.appendChild(macTool)
+        }
+    });
+</script>
+</body>
+
+</html>
