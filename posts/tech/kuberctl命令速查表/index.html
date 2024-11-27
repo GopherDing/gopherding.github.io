@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>XXXXXXXXXXXXXX | GopherDing&#39;s Blog</title>
+<title>kuberctl命令速查表 | GopherDing&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="XXXXXXXXXXXXXXXXXXXXXXX">
+<meta name="description" content="kuberctl的命令速查">
 <meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
@@ -19,7 +19,7 @@
 <link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/">
 <noscript>
     <style>
         #theme-toggle,
@@ -72,16 +72,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="XXXXXXXXXXXXXX" />
-<meta property="og:description" content="XXXXXXXXXXXXXXXXXXXXXXX" />
+<meta property="og:title" content="kuberctl命令速查表" />
+<meta property="og:description" content="kuberctl的命令速查" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-01-06T15:55:23+08:00" />
-<meta property="article:modified_time" content="2024-01-06T15:55:23+08:00" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-01-03T15:55:23+08:00" />
+<meta property="article:modified_time" content="2024-01-03T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="XXXXXXXXXXXXXX"/>
-<meta name="twitter:description" content="XXXXXXXXXXXXXXXXXXXXXXX"/>
+<meta name="twitter:title" content="kuberctl命令速查表"/>
+<meta name="twitter:description" content="kuberctl的命令速查"/>
 
 
 <script type="application/ld+json">
@@ -106,8 +106,8 @@ var _hmt = _hmt || [];
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "XXXXXXXXXXXXXX",
-      "item": "https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/"
+      "name": "kuberctl命令速查表",
+      "item": "https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/"
     }
   ]
 }
@@ -116,24 +116,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "XXXXXXXXXXXXXX",
-  "name": "XXXXXXXXXXXXXX",
-  "description": "XXXXXXXXXXXXXXXXXXXXXXX",
+  "headline": "kuberctl命令速查表",
+  "name": "kuberctl命令速查表",
+  "description": "kuberctl的命令速查",
   "keywords": [
     ""
   ],
-  "articleBody": "",
-  "wordCount" : "0",
+  "articleBody": " 命令 用途 示例 kubectl get 获取 Kubernetes 资源的信息。 kubectl get pods（列出所有 Pod）；kubectl get services（列出所有 Service）。 kubectl describe 提供特定 Kubernetes 资源的详细信息。 kubectl describe pod （描述特定 Pod）；kubectl describe service （描述特定 Service）。 kubectl create 创建 Kubernetes 资源。 kubectl create -f deployment.yaml（从 YAML 文件创建 Deployment）；kubectl create service clusterip my-service --tcp=80:8080（创建 ClusterIP 类型 Service）。 kubectl delete 删除 Kubernetes 资源。 kubectl delete pod （删除特定 Pod）；kubectl delete -f deployment.yaml（根据 YAML 文件删除相应资源）。 kubectl logs 查看 Pod 中容器的日志。 kubectl logs 。 kubectl exec 在 Pod 中的容器中执行命令。 kubectl exec -it -- /bin/bash（在特定 Pod 的容器中启动交互式 Bash shell）。 kubectl rollout status 查看 Deployment 的滚动更新状态。 kubectl rollout status deployment/。 kubectl rollout undo 回滚 Deployment 到上一个版本。 kubectl rollout undo deployment/。 kubectl get namespaces 列出所有的命名空间。 kubectl create namespace 创建一个新的命名空间。 kubectl -n 在特定的命名空间中执行命令。 kubectl -n my-namespace get pods（在 “my-namespace” 命名空间中列出 Pod）。 kubectl get nodes 列出所有的 Kubernetes 节点。 kubectl describe node 描述特定的节点，包括其状态、资源使用情况等信息。 ",
+  "wordCount" : "615",
   "inLanguage": "zh",
-  "datePublished": "2024-01-06T15:55:23+08:00",
-  "dateModified": "2024-01-06T15:55:23+08:00",
+  "datePublished": "2024-01-03T15:55:23+08:00",
+  "dateModified": "2024-01-03T15:55:23+08:00",
   "author":[{
     "@type": "Person",
     "name": "GopherDing"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/"
+    "@id": "https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/"
   },
   "publisher": {
     "@type": "Organization",
@@ -251,10 +251,10 @@ var _hmt = _hmt || [];
         <header class="post-header">
             <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
             <h1 class="post-title">
-                XXXXXXXXXXXXXX
+                kuberctl命令速查表
             </h1>
             <div class="post-description">
-                XXXXXXXXXXXXXXXXXXXXXXX
+                kuberctl的命令速查
             </div>
             <div class="post-meta">
 
@@ -275,7 +275,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-06
+        <span>2024-01-03
             &nbsp;&nbsp;
         </span>
     </span>
@@ -288,13 +288,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>0字
+        <span>615字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>0分钟
+        <span>2分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -309,6 +309,7 @@ var _hmt = _hmt || [];
         <span>
             <span class="post-tags-meta">
                 <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
+                &nbsp;<a href="https://gopherding.github.io/tags/%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/" style="color: var(--secondary)!important;">命令速查表</a>
             </span>
         </span>
     </span>
@@ -362,19 +363,98 @@ var _hmt = _hmt || [];
 
 </div>
         </header> 
+        <div class="post-content"><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>用途</th>
+<th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kubectl get</code></td>
+<td>获取 Kubernetes 资源的信息。</td>
+<td><code>kubectl get pods</code>（列出所有 Pod）；<code>kubectl get services</code>（列出所有 Service）。</td>
+</tr>
+<tr>
+<td><code>kubectl describe</code></td>
+<td>提供特定 Kubernetes 资源的详细信息。</td>
+<td><code>kubectl describe pod &lt;pod-name&gt;</code>（描述特定 Pod）；<code>kubectl describe service &lt;service-name&gt;</code>（描述特定 Service）。</td>
+</tr>
+<tr>
+<td><code>kubectl create</code></td>
+<td>创建 Kubernetes 资源。</td>
+<td><code>kubectl create -f deployment.yaml</code>（从 YAML 文件创建 Deployment）；<code>kubectl create service clusterip my-service --tcp=80:8080</code>（创建 ClusterIP 类型 Service）。</td>
+</tr>
+<tr>
+<td><code>kubectl delete</code></td>
+<td>删除 Kubernetes 资源。</td>
+<td><code>kubectl delete pod &lt;pod-name&gt;</code>（删除特定 Pod）；<code>kubectl delete -f deployment.yaml</code>（根据 YAML 文件删除相应资源）。</td>
+</tr>
+<tr>
+<td><code>kubectl logs</code></td>
+<td>查看 Pod 中容器的日志。</td>
+<td><code>kubectl logs &lt;pod-name&gt;</code>。</td>
+</tr>
+<tr>
+<td><code>kubectl exec</code></td>
+<td>在 Pod 中的容器中执行命令。</td>
+<td><code>kubectl exec -it &lt;pod-name&gt; -- /bin/bash</code>（在特定 Pod 的容器中启动交互式 Bash shell）。</td>
+</tr>
+<tr>
+<td><code>kubectl rollout status</code></td>
+<td>查看 Deployment 的滚动更新状态。</td>
+<td><code>kubectl rollout status deployment/&lt;deployment-name&gt;</code>。</td>
+</tr>
+<tr>
+<td><code>kubectl rollout undo</code></td>
+<td>回滚 Deployment 到上一个版本。</td>
+<td><code>kubectl rollout undo deployment/&lt;deployment-name&gt;</code>。</td>
+</tr>
+<tr>
+<td><code>kubectl get namespaces</code></td>
+<td>列出所有的命名空间。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kubectl create namespace &lt;namespace-name&gt;</code></td>
+<td>创建一个新的命名空间。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kubectl -n &lt;namespace-name&gt; &lt;command&gt;</code></td>
+<td>在特定的命名空间中执行命令。</td>
+<td><code>kubectl -n my-namespace get pods</code>（在 “my-namespace” 命名空间中列出 Pod）。</td>
+</tr>
+<tr>
+<td><code>kubectl get nodes</code></td>
+<td>列出所有的 Kubernetes 节点。</td>
+<td></td>
+</tr>
+<tr>
+<td><code>kubectl describe node &lt;node-name&gt;</code></td>
+<td>描述特定的节点，包括其状态、资源使用情况等信息。</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+
+        </div>
 
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/">
+  <a class="prev" href="https://gopherding.github.io/posts/tech/k8s%E7%9A%84yaml%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/">
     <span class="title">« 上一页</span>
     <br>
-    <span>HPA和Prometheus联动自动扩容</span>
+    <span>K8s的Yaml文件内容解析</span>
   </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-7/">
+  <a class="next" href="https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E7%BB%84%E4%BB%B6%E6%9E%84%E6%88%90/">
     <span class="title">下一页 »</span>
     <br>
-    <span>XXXXXXXXXXXXXX</span>
+    <span>K8s的组件构成</span>
   </a>
 </nav>
 

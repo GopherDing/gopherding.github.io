@@ -16,5 +16,14 @@
       <description>字节跳动团队在异地单元化架构落地上的一些思考和实践</description>
     </item>
     
+    <item>
+      <title>Rancher&#43;Helm3 &#43; ConfigMap集群配置项热更新</title>
+      <link>https://gopherding.github.io/posts/tech/rancher&#43;helm3&#43;-configmap%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%83%AD%E6%9B%B4%E6%96%B0/</link>
+      <pubDate>Fri, 26 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/rancher&#43;helm3&#43;-configmap%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%83%AD%E6%9B%B4%E6%96%B0/</guid>
+      <description>实现Rancher&#43;Helm3 &#43; ConfigMap集群配置项热更新的方式详解</description>
+    </item>
+    
   </channel>
 </rss>

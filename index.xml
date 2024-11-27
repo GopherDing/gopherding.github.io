@@ -35,6 +35,15 @@
     </item>
     
     <item>
+      <title>常见消息队列的技术选型</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%B8%B8%E8%A7%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Thu, 26 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E5%B8%B8%E8%A7%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
+      <description>常见消息队列的技术选型</description>
+    </item>
+    
+    <item>
       <title>GitLab CICD 和 Argo CD</title>
       <link>https://gopherding.github.io/posts/tech/gitlab-cicd-%E5%92%8C-argo-cd/</link>
       <pubDate>Wed, 25 Sep 2024 15:55:23 +0800</pubDate>
@@ -98,12 +107,66 @@
     </item>
     
     <item>
+      <title>K8s针对pod资源对象的健康监测机制</title>
+      <link>https://gopherding.github.io/posts/tech/k8s%E9%92%88%E5%AF%B9pod%E8%B5%84%E6%BA%90%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%81%A5%E5%BA%B7%E7%9B%91%E6%B5%8B%E6%9C%BA%E5%88%B6/</link>
+      <pubDate>Fri, 02 Feb 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/k8s%E9%92%88%E5%AF%B9pod%E8%B5%84%E6%BA%90%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%81%A5%E5%BA%B7%E7%9B%91%E6%B5%8B%E6%9C%BA%E5%88%B6/</guid>
+      <description>K8s针对pod资源对象的两类探针</description>
+    </item>
+    
+    <item>
+      <title>Rancher&#43;Helm3 &#43; ConfigMap集群配置项热更新</title>
+      <link>https://gopherding.github.io/posts/tech/rancher&#43;helm3&#43;-configmap%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%83%AD%E6%9B%B4%E6%96%B0/</link>
+      <pubDate>Fri, 26 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/rancher&#43;helm3&#43;-configmap%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%83%AD%E6%9B%B4%E6%96%B0/</guid>
+      <description>实现Rancher&#43;Helm3 &#43; ConfigMap集群配置项热更新的方式详解</description>
+    </item>
+    
+    <item>
+      <title>Helm3的使用方法</title>
+      <link>https://gopherding.github.io/posts/tech/helm3%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</link>
+      <pubDate>Sat, 20 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/helm3%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
+      <description>Helm3的使用及其与Helm2的区别</description>
+    </item>
+    
+    <item>
       <title>Cluster Autoscaler和Horizontal Pod Autoscaler的区别</title>
       <link>https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
       <pubDate>Tue, 16 Jan 2024 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
       <description>Cluster Autoscaler和Horizontal Pod Autoscaler的区别</description>
+    </item>
+    
+    <item>
+      <title>K8s的配置中心选型</title>
+      <link>https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Sun, 14 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E9%80%89%E5%9E%8B/</guid>
+      <description>几种K8s的配置中心的功能特点和使用场景</description>
+    </item>
+    
+    <item>
+      <title>无头服务(Headless Service)</title>
+      <link>https://gopherding.github.io/posts/tech/%E6%97%A0%E5%A4%B4%E6%9C%8D%E5%8A%A1headless-service/</link>
+      <pubDate>Thu, 11 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E6%97%A0%E5%A4%B4%E6%9C%8D%E5%8A%A1headless-service/</guid>
+      <description>无头服务的使用注意</description>
+    </item>
+    
+    <item>
+      <title>K8s的几种服务访问的技术选型</title>
+      <link>https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E5%87%A0%E7%A7%8D%E6%9C%8D%E5%8A%A1%E8%AE%BF%E9%97%AE%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Wed, 10 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E5%87%A0%E7%A7%8D%E6%9C%8D%E5%8A%A1%E8%AE%BF%E9%97%AE%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
+      <description>K8s的几种服务访问的技术选型</description>
     </item>
     
     <item>
@@ -122,24 +185,6 @@
       
       <guid>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</guid>
       <description>HPA和Prometheus联动自动扩容</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/</link>
-      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-6/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-7/</link>
-      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-7/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
     </item>
     
     <item>
@@ -167,6 +212,33 @@
       
       <guid>https://gopherding.github.io/posts/tech/%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/</guid>
       <description>Kubernetes实现金丝雀发布</description>
+    </item>
+    
+    <item>
+      <title>K8s的Yaml文件内容解析</title>
+      <link>https://gopherding.github.io/posts/tech/k8s%E7%9A%84yaml%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/</link>
+      <pubDate>Wed, 03 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/k8s%E7%9A%84yaml%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/</guid>
+      <description>K8s的Yaml文件内容解析</description>
+    </item>
+    
+    <item>
+      <title>kuberctl命令速查表</title>
+      <link>https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</link>
+      <pubDate>Wed, 03 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/</guid>
+      <description>kuberctl的命令速查</description>
+    </item>
+    
+    <item>
+      <title>K8s的组件构成</title>
+      <link>https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E7%BB%84%E4%BB%B6%E6%9E%84%E6%88%90/</link>
+      <pubDate>Tue, 02 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E7%BB%84%E4%BB%B6%E6%9E%84%E6%88%90/</guid>
+      <description>简述master节点和node节点构成</description>
     </item>
     
     <item>
@@ -392,6 +464,24 @@
       
       <guid>https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF/</guid>
       <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
+    </item>
+    
+    <item>
+      <title>NSQ组件介绍</title>
+      <link>https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/</link>
+      <pubDate>Sun, 06 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/</guid>
+      <description>NSQ的组件简介和特性介绍</description>
+    </item>
+    
+    <item>
+      <title>NSQ和kafka的技术选型</title>
+      <link>https://gopherding.github.io/posts/tech/nsq%E5%92%8Ckafka%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Thu, 03 Nov 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/nsq%E5%92%8Ckafka%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
+      <description>NSQ和kafka的特点和选型</description>
     </item>
     
     <item>
