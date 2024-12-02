@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Go的编译执行流程 | GopherDing&#39;s Blog</title>
+<title>XXXXXXXXXXXXXX | GopherDing&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="描述了Go的编译执行流程">
+<meta name="description" content="XXXXXXXXXXXXXXXXXXXXXXX">
 <meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
@@ -19,7 +19,7 @@
 <link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/">
 <noscript>
     <style>
         #theme-toggle,
@@ -72,16 +72,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="Go的编译执行流程" />
-<meta property="og:description" content="描述了Go的编译执行流程" />
+<meta property="og:title" content="XXXXXXXXXXXXXX" />
+<meta property="og:description" content="XXXXXXXXXXXXXXXXXXXXXXX" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-03-13T15:55:23+08:00" />
-<meta property="article:modified_time" content="2022-03-13T15:55:23+08:00" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-01-06T15:55:23+08:00" />
+<meta property="article:modified_time" content="2024-01-06T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Go的编译执行流程"/>
-<meta name="twitter:description" content="描述了Go的编译执行流程"/>
+<meta name="twitter:title" content="XXXXXXXXXXXXXX"/>
+<meta name="twitter:description" content="XXXXXXXXXXXXXXXXXXXXXXX"/>
 
 
 <script type="application/ld+json">
@@ -106,8 +106,8 @@ var _hmt = _hmt || [];
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "Go的编译执行流程",
-      "item": "https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/"
+      "name": "XXXXXXXXXXXXXX",
+      "item": "https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/"
     }
   ]
 }
@@ -116,24 +116,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Go的编译执行流程",
-  "name": "Go的编译执行流程",
-  "description": "描述了Go的编译执行流程",
+  "headline": "XXXXXXXXXXXXXX",
+  "name": "XXXXXXXXXXXXXX",
+  "description": "XXXXXXXXXXXXXXXXXXXXXXX",
   "keywords": [
     ""
   ],
-  "articleBody": "Go的编译执行流程主要包括编译和执行两个阶段。 编译阶段：╰(艹皿艹 ) 前端编译：这个阶段的主要任务是将Go源代码转换成抽象语法树（AST, Abstract syntax tree）。首先，词法分析器将源代码转换成token序列，即将代码按关键字、标识符、运算符等分割成单个单元。然后，语法分析器将这些token序列转换成AST，即将代码按照语法规则进行解析，构建出语法树。在构建AST的过程中，还会进行语义分析，检查语法是否合法，例如变量是否被定义等。 后端编译：这个阶段的主要任务是将AST转换成机器码。编译器会将AST转换成中间代码，然后优化这些中间代码，最后生成目标机器能够运行的二进制机器码。\n执行阶段：o(￣┰￣*)ゞ 执行阶段则直接运行编译阶段生成的机器码。当程序被加载到内存中并执行时，CPU会按照机器码中的指令执行相应的操作，从而完成程序的功能。\n总的来说，Go的编译执行流程是一个典型的编译型语言的流程，先通过编译器将源代码转换成机器码，然后再由执行器执行这些机器码。在这个过程中，编译器会进行一系列的优化操作，以提高程序的运行效率。\ngo build之后发生了甚么事？😁 创建临时目录，mkdir -p $WORK/b001/ 查找依赖信息，cat \u003e$WORK/b001/importcfg « … 执行源代码编译，/usr/local/go/pkg/tool/darwin_amd64/compile … 收集链接库文件，cat \u003e$WORK/b001/importcfg.link « … 生成可执行文件，/usr/local/go/pkg/tool/darwin_amd64/link -o … 移动可执行文件，mv $WORK/b001/exe/a.out hello go run后又发生了甚么事？😀 与build不同的是，在link生成hello文件后，并没有把它移动到当前目录，而是通过$WORK/b001/exe/hello执行了程序。\n",
-  "wordCount" : "712",
+  "articleBody": "",
+  "wordCount" : "0",
   "inLanguage": "zh",
-  "datePublished": "2022-03-13T15:55:23+08:00",
-  "dateModified": "2022-03-13T15:55:23+08:00",
+  "datePublished": "2024-01-06T15:55:23+08:00",
+  "dateModified": "2024-01-06T15:55:23+08:00",
   "author":[{
     "@type": "Person",
     "name": "GopherDing"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/"
+    "@id": "https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-2/"
   },
   "publisher": {
     "@type": "Organization",
@@ -251,10 +251,10 @@ var _hmt = _hmt || [];
         <header class="post-header">
             <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
             <h1 class="post-title">
-                Go的编译执行流程
+                XXXXXXXXXXXXXX
             </h1>
             <div class="post-description">
-                描述了Go的编译执行流程
+                XXXXXXXXXXXXXXXXXXXXXXX
             </div>
             <div class="post-meta">
 
@@ -275,7 +275,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2022-03-13
+        <span>2024-01-06
             &nbsp;&nbsp;
         </span>
     </span>
@@ -288,13 +288,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>712字
+        <span>0字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>2分钟
+        <span>0分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -308,7 +308,7 @@ var _hmt = _hmt || [];
         <span class="fa fa-tags" style="opacity: 0.8"></span>
         <span>
             <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/golang/" style="color: var(--secondary)!important;">Golang</a>
+                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
             </span>
         </span>
     </span>
@@ -361,134 +361,20 @@ var _hmt = _hmt || [];
                 </span>
 
 </div>
-        </header> <aside id="toc-container" class="toc-container wide">
-    <div class="toc">
-        <details  open>
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">目录</span>
-        </summary>
-
-        <div class="inner"><ul>
-                <li>
-                    <a href="#go%e7%9a%84%e7%bc%96%e8%af%91%e6%89%a7%e8%a1%8c%e6%b5%81%e7%a8%8b%e4%b8%bb%e8%a6%81%e5%8c%85%e6%8b%ac%e7%bc%96%e8%af%91%e5%92%8c%e6%89%a7%e8%a1%8c%e4%b8%a4%e4%b8%aa%e9%98%b6%e6%ae%b5" aria-label="Go的编译执行流程主要包括编译和执行两个阶段。">Go的编译执行流程主要包括编译和执行两个阶段。</a><ul>
-                        
-                <li>
-                    <a href="#%e7%bc%96%e8%af%91%e9%98%b6%e6%ae%b5%e8%89%b9%e7%9a%bf%e8%89%b9-" aria-label="编译阶段：╰(艹皿艹 )">编译阶段：╰(艹皿艹 )</a></li>
-                <li>
-                    <a href="#%e6%89%a7%e8%a1%8c%e9%98%b6%e6%ae%b5o%e3%82%9e" aria-label="执行阶段：o(￣┰￣*)ゞ">执行阶段：o(￣┰￣*)ゞ</a></li></ul>
-                </li>
-                <li>
-                    <a href="#go-build%e4%b9%8b%e5%90%8e%e5%8f%91%e7%94%9f%e4%ba%86%e7%94%9a%e4%b9%88%e4%ba%8b" aria-label="go build之后发生了甚么事？😁">go build之后发生了甚么事？😁</a></li>
-                <li>
-                    <a href="#go-run%e5%90%8e%e5%8f%88%e5%8f%91%e7%94%9f%e4%ba%86%e7%94%9a%e4%b9%88%e4%ba%8b" aria-label="go run后又发生了甚么事？😀">go run后又发生了甚么事？😀</a>
-                </li>
-            </ul>
-        </div>
-        </details>
-    </div>
-</aside>
-<script>
-    let activeElement;
-    let elements;
-    window.addEventListener('DOMContentLoaded', function (event) {
-        checkTocPosition();
-
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
-        
-        activeElement = elements[0];
-        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-    }, false);
-
-    window.addEventListener('resize', function(event) {
-        checkTocPosition();
-    }, false);
-
-    window.addEventListener('scroll', () => {
-        
-        if (elements) {
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
-                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
-                    return element;
-                }
-            }) || activeElement
-
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                if (element === activeElement){
-                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-                } else {
-                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
-                }
-            })
-        }
-    }, false);
-
-    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
-    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
-    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-
-    function checkTocPosition() {
-        const width = document.body.scrollWidth;
-        if (width - main - (toc * 2) - (gap * 4) > 0) {
-            document.getElementById("toc-container").classList.add("wide");
-        } else {
-            document.getElementById("toc-container").classList.remove("wide");
-        }
-    }
-
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;
-    }
-</script>
-        <div class="post-content"><h3 id="go的编译执行流程主要包括编译和执行两个阶段">Go的编译执行流程主要包括编译和执行两个阶段。<a hidden class="anchor" aria-hidden="true" href="#go的编译执行流程主要包括编译和执行两个阶段">#</a></h3>
-<ol>
-<li>
-<h4 id="编译阶段艹皿艹-">编译阶段：╰(艹皿艹 )<a hidden class="anchor" aria-hidden="true" href="#编译阶段艹皿艹-">#</a></h4>
-</li>
-</ol>
-<p>前端编译：这个阶段的主要任务是将Go源代码转换成抽象语法树（AST, Abstract syntax tree）。首先，词法分析器将源代码转换成token序列，即将代码按关键字、标识符、运算符等分割成单个单元。然后，语法分析器将这些token序列转换成AST，即将代码按照语法规则进行解析，构建出语法树。在构建AST的过程中，还会进行语义分析，检查语法是否合法，例如变量是否被定义等。
-后端编译：这个阶段的主要任务是将AST转换成机器码。编译器会将AST转换成中间代码，然后优化这些中间代码，最后生成目标机器能够运行的二进制机器码。</p>
-<ol start="2">
-<li>
-<h4 id="执行阶段oゞ">执行阶段：o(￣┰￣*)ゞ<a hidden class="anchor" aria-hidden="true" href="#执行阶段oゞ">#</a></h4>
-</li>
-</ol>
-<p>执行阶段则直接运行编译阶段生成的机器码。当程序被加载到内存中并执行时，CPU会按照机器码中的指令执行相应的操作，从而完成程序的功能。</p>
-<p>总的来说，Go的编译执行流程是一个典型的编译型语言的流程，先通过编译器将源代码转换成机器码，然后再由执行器执行这些机器码。在这个过程中，编译器会进行一系列的优化操作，以提高程序的运行效率。</p>
-<h3 id="go-build之后发生了甚么事">go build之后发生了甚么事？😁<a hidden class="anchor" aria-hidden="true" href="#go-build之后发生了甚么事">#</a></h3>
-<ul>
-<li>创建临时目录，mkdir -p $WORK/b001/</li>
-<li>查找依赖信息，cat &gt;$WORK/b001/importcfg &laquo; &hellip;</li>
-<li>执行源代码编译，/usr/local/go/pkg/tool/darwin_amd64/compile &hellip;</li>
-<li>收集链接库文件，cat &gt;$WORK/b001/importcfg.link &laquo; &hellip;</li>
-<li>生成可执行文件，/usr/local/go/pkg/tool/darwin_amd64/link -o &hellip;</li>
-<li>移动可执行文件，mv $WORK/b001/exe/a.out hello</li>
-</ul>
-<h3 id="go-run后又发生了甚么事">go run后又发生了甚么事？😀<a hidden class="anchor" aria-hidden="true" href="#go-run后又发生了甚么事">#</a></h3>
-<p>与build不同的是，在link生成hello文件后，并没有把它移动到当前目录，而是通过$WORK/b001/exe/hello执行了程序。</p>
-
-
-        </div>
+        </header> 
 
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/">
+  <a class="prev" href="https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/">
     <span class="title">« 上一页</span>
     <br>
-    <span>Goroutine&amp;Channel专题</span>
+    <span>HPA和Prometheus联动自动扩容</span>
   </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8%E5%92%8C%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95/">
+  <a class="next" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/">
     <span class="title">下一页 »</span>
     <br>
-    <span>索引下推和覆盖索引</span>
+    <span>XXXXXXXXXXXXXX</span>
   </a>
 </nav>
 
