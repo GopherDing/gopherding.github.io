@@ -2,20 +2,26 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gopherding.github.io/about/</loc>
-    <lastmod>2024-11-06T14:57:28+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/</loc>
-    <lastmod>2024-11-06T15:55:23+08:00</lastmod>
-  </url><url>
     <loc>https://gopherding.github.io/posts/tech/</loc>
-    <lastmod>2024-11-06T15:55:23+08:00</lastmod>
+    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/</loc>
-    <lastmod>2024-11-06T15:55:23+08:00</lastmod>
+    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/golang/</loc>
+    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/</loc>
+    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</loc>
+    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/</loc>
-    <lastmod>2024-11-06T15:55:23+08:00</lastmod>
+    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/about/</loc>
+    <lastmod>2024-11-06T14:57:28+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</loc>
     <lastmod>2024-11-01T15:55:23+08:00</lastmod>
@@ -58,9 +64,6 @@
   </url><url>
     <loc>https://gopherding.github.io/posts/read/%E4%B8%AD%E5%9B%BD%E4%BA%BA%E5%A4%B1%E6%8E%89%E8%87%AA%E4%BF%A1%E5%8A%9B%E4%BA%86%E5%90%97/</loc>
     <lastmod>2024-09-07T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/tags/golang/</loc>
-    <lastmod>2024-08-13T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</loc>
     <lastmod>2024-08-13T15:55:23+08:00</lastmod>
@@ -127,9 +130,6 @@
   </url><url>
     <loc>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</loc>
     <lastmod>2024-01-08T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</loc>
-    <lastmod>2024-01-06T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/</loc>
     <lastmod>2024-01-06T15:55:23+08:00</lastmod>

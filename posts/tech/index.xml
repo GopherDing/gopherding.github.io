@@ -6,7 +6,16 @@
     <description>Recent content in 👨🏻‍💻 技术 on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Fri, 01 Nov 2024 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Jan 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/tech/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go读写锁的实现</title>
+      <link>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Mon, 06 Jan 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+      <description>以人话和鬼话两种方式解释了一下go的读写锁</description>
+    </item>
+    
     <item>
       <title>单元化架构在字节跳动的落地实践</title>
       <link>https://gopherding.github.io/posts/tech/%E5%8D%95%E5%85%83%E5%8C%96%E6%9E%B6%E6%9E%84%E5%9C%A8%E5%AD%97%E8%8A%82%E8%B7%B3%E5%8A%A8%E7%9A%84%E8%90%BD%E5%9C%B0%E5%AE%9E%E8%B7%B5/</link>
@@ -158,15 +167,6 @@
       
       <guid>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</guid>
       <description>HPA和Prometheus联动自动扩容</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</link>
-      <pubDate>Sat, 06 Jan 2024 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
     </item>
     
     <item>

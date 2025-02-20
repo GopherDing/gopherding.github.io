@@ -6,7 +6,16 @@
     <description>Recent content in Golang on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Tue, 13 Aug 2024 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Jan 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/golang/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Go读写锁的实现</title>
+      <link>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Mon, 06 Jan 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+      <description>以人话和鬼话两种方式解释了一下go的读写锁</description>
+    </item>
+    
     <item>
       <title>Golang的PGO优化</title>
       <link>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</link>
