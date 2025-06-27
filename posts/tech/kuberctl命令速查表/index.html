@@ -366,80 +366,80 @@ var _hmt = _hmt || [];
 </div>
         </header> 
         <div class="post-content"><table>
-<thead>
-<tr>
-<th>命令</th>
-<th>用途</th>
-<th>示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>kubectl get</code></td>
-<td>获取 Kubernetes 资源的信息。</td>
-<td><code>kubectl get pods</code>（列出所有 Pod）；<code>kubectl get services</code>（列出所有 Service）。</td>
-</tr>
-<tr>
-<td><code>kubectl describe</code></td>
-<td>提供特定 Kubernetes 资源的详细信息。</td>
-<td><code>kubectl describe pod &lt;pod-name&gt;</code>（描述特定 Pod）；<code>kubectl describe service &lt;service-name&gt;</code>（描述特定 Service）。</td>
-</tr>
-<tr>
-<td><code>kubectl create</code></td>
-<td>创建 Kubernetes 资源。</td>
-<td><code>kubectl create -f deployment.yaml</code>（从 YAML 文件创建 Deployment）；<code>kubectl create service clusterip my-service --tcp=80:8080</code>（创建 ClusterIP 类型 Service）。</td>
-</tr>
-<tr>
-<td><code>kubectl delete</code></td>
-<td>删除 Kubernetes 资源。</td>
-<td><code>kubectl delete pod &lt;pod-name&gt;</code>（删除特定 Pod）；<code>kubectl delete -f deployment.yaml</code>（根据 YAML 文件删除相应资源）。</td>
-</tr>
-<tr>
-<td><code>kubectl logs</code></td>
-<td>查看 Pod 中容器的日志。</td>
-<td><code>kubectl logs &lt;pod-name&gt;</code>。</td>
-</tr>
-<tr>
-<td><code>kubectl exec</code></td>
-<td>在 Pod 中的容器中执行命令。</td>
-<td><code>kubectl exec -it &lt;pod-name&gt; -- /bin/bash</code>（在特定 Pod 的容器中启动交互式 Bash shell）。</td>
-</tr>
-<tr>
-<td><code>kubectl rollout status</code></td>
-<td>查看 Deployment 的滚动更新状态。</td>
-<td><code>kubectl rollout status deployment/&lt;deployment-name&gt;</code>。</td>
-</tr>
-<tr>
-<td><code>kubectl rollout undo</code></td>
-<td>回滚 Deployment 到上一个版本。</td>
-<td><code>kubectl rollout undo deployment/&lt;deployment-name&gt;</code>。</td>
-</tr>
-<tr>
-<td><code>kubectl get namespaces</code></td>
-<td>列出所有的命名空间。</td>
-<td></td>
-</tr>
-<tr>
-<td><code>kubectl create namespace &lt;namespace-name&gt;</code></td>
-<td>创建一个新的命名空间。</td>
-<td></td>
-</tr>
-<tr>
-<td><code>kubectl -n &lt;namespace-name&gt; &lt;command&gt;</code></td>
-<td>在特定的命名空间中执行命令。</td>
-<td><code>kubectl -n my-namespace get pods</code>（在 “my-namespace” 命名空间中列出 Pod）。</td>
-</tr>
-<tr>
-<td><code>kubectl get nodes</code></td>
-<td>列出所有的 Kubernetes 节点。</td>
-<td></td>
-</tr>
-<tr>
-<td><code>kubectl describe node &lt;node-name&gt;</code></td>
-<td>描述特定的节点，包括其状态、资源使用情况等信息。</td>
-<td></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>命令</th>
+          <th>用途</th>
+          <th>示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><code>kubectl get</code></td>
+          <td>获取 Kubernetes 资源的信息。</td>
+          <td><code>kubectl get pods</code>（列出所有 Pod）；<code>kubectl get services</code>（列出所有 Service）。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl describe</code></td>
+          <td>提供特定 Kubernetes 资源的详细信息。</td>
+          <td><code>kubectl describe pod &lt;pod-name&gt;</code>（描述特定 Pod）；<code>kubectl describe service &lt;service-name&gt;</code>（描述特定 Service）。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl create</code></td>
+          <td>创建 Kubernetes 资源。</td>
+          <td><code>kubectl create -f deployment.yaml</code>（从 YAML 文件创建 Deployment）；<code>kubectl create service clusterip my-service --tcp=80:8080</code>（创建 ClusterIP 类型 Service）。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl delete</code></td>
+          <td>删除 Kubernetes 资源。</td>
+          <td><code>kubectl delete pod &lt;pod-name&gt;</code>（删除特定 Pod）；<code>kubectl delete -f deployment.yaml</code>（根据 YAML 文件删除相应资源）。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl logs</code></td>
+          <td>查看 Pod 中容器的日志。</td>
+          <td><code>kubectl logs &lt;pod-name&gt;</code>。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl exec</code></td>
+          <td>在 Pod 中的容器中执行命令。</td>
+          <td><code>kubectl exec -it &lt;pod-name&gt; -- /bin/bash</code>（在特定 Pod 的容器中启动交互式 Bash shell）。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl rollout status</code></td>
+          <td>查看 Deployment 的滚动更新状态。</td>
+          <td><code>kubectl rollout status deployment/&lt;deployment-name&gt;</code>。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl rollout undo</code></td>
+          <td>回滚 Deployment 到上一个版本。</td>
+          <td><code>kubectl rollout undo deployment/&lt;deployment-name&gt;</code>。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl get namespaces</code></td>
+          <td>列出所有的命名空间。</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><code>kubectl create namespace &lt;namespace-name&gt;</code></td>
+          <td>创建一个新的命名空间。</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><code>kubectl -n &lt;namespace-name&gt; &lt;command&gt;</code></td>
+          <td>在特定的命名空间中执行命令。</td>
+          <td><code>kubectl -n my-namespace get pods</code>（在 “my-namespace” 命名空间中列出 Pod）。</td>
+      </tr>
+      <tr>
+          <td><code>kubectl get nodes</code></td>
+          <td>列出所有的 Kubernetes 节点。</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><code>kubectl describe node &lt;node-name&gt;</code></td>
+          <td>描述特定的节点，包括其状态、资源使用情况等信息。</td>
+          <td></td>
+      </tr>
+  </tbody>
 </table>
 
 

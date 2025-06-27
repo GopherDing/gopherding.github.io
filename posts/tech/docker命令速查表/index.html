@@ -366,124 +366,124 @@ var _hmt = _hmt || [];
 </div>
         </header> 
         <div class="post-content"><table>
-<thead>
-<tr>
-<th style="text-align:center">命令分类</th>
-<th style="text-align:left">命令</th>
-<th style="text-align:left">功能描述</th>
-<th style="text-align:left">示例</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">镜像操作</td>
-<td style="text-align:left"><code>docker pull</code></td>
-<td style="text-align:left">从镜像仓库下载镜像</td>
-<td style="text-align:left"><code>docker pull ubuntu:latest</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker images</code></td>
-<td style="text-align:left">列出本地镜像</td>
-<td style="text-align:left"><code>docker images</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker rmi</code></td>
-<td style="text-align:left">删除本地镜像</td>
-<td style="text-align:left"><code>docker rmi ubuntu:latest</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker build</code></td>
-<td style="text-align:left">根据 Dockerfile 构建镜像</td>
-<td style="text-align:left"><code>docker build -t my - app:1.0.</code></td>
-</tr>
-<tr>
-<td style="text-align:center">容器操作</td>
-<td style="text-align:left"><code>docker run</code></td>
-<td style="text-align:left">创建并运行容器</td>
-<td style="text-align:left"><code>docker run -it ubuntu:latest /bin/bash</code> <code>docker run -d nginx</code> <code>docker run -p 8080:80 nginx</code> <code>docker run -v /host - dir:/container - dir ubuntu</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker ps</code></td>
-<td style="text-align:left">列出正在运行的容器</td>
-<td style="text-align:left"><code>docker ps</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker stop</code></td>
-<td style="text-align:left">停止正在运行的容器</td>
-<td style="text-align:left"><code>docker stop 1234567890ab</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker start</code></td>
-<td style="text-align:left">启动已停止的容器</td>
-<td style="text-align:left"><code>docker start 1234567890ab</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker restart</code></td>
-<td style="text-align:left">重启容器</td>
-<td style="text-align:left"><code>docker restart 1234567890ab</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker rm</code></td>
-<td style="text-align:left">删除容器</td>
-<td style="text-align:left"><code>docker rm 1234567890ab</code>或<code>docker rm -f</code>（强制删除运行中的容器）</td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker exec</code></td>
-<td style="text-align:left">在运行容器内执行命令</td>
-<td style="text-align:left"><code>docker exec -it 1234567890ab /bin/bash</code></td>
-</tr>
-<tr>
-<td style="text-align:center">容器网络操作</td>
-<td style="text-align:left"><code>docker network create</code></td>
-<td style="text-align:left">创建新的 Docker 网络</td>
-<td style="text-align:left"><code>docker network create my - network</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker network ls</code></td>
-<td style="text-align:left">列出所有 Docker 网络</td>
-<td style="text-align:left"><code>docker network ls</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker network connect</code></td>
-<td style="text-align:left">将容器连接到网络</td>
-<td style="text-align:left"><code>docker network connect my - network 1234567890ab</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker network disconnect</code></td>
-<td style="text-align:left">将容器从网络断开连接</td>
-<td style="text-align:left"><code>docker network disconnect my - network 1234567890ab</code></td>
-</tr>
-<tr>
-<td style="text-align:center">其他操作</td>
-<td style="text-align:left"><code>docker login</code></td>
-<td style="text-align:left">登录到 Docker Hub 或其他镜像仓库</td>
-<td style="text-align:left"><code>docker login</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker logout</code></td>
-<td style="text-align:left">从 Docker Hub 或其他镜像仓库注销</td>
-<td style="text-align:left"><code>docker logout</code></td>
-</tr>
-<tr>
-<td style="text-align:center"></td>
-<td style="text-align:left"><code>docker info</code></td>
-<td style="text-align:left">显示 Docker 系统信息</td>
-<td style="text-align:left"><code>docker info</code></td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">命令分类</th>
+          <th style="text-align: left">命令</th>
+          <th style="text-align: left">功能描述</th>
+          <th style="text-align: left">示例</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">镜像操作</td>
+          <td style="text-align: left"><code>docker pull</code></td>
+          <td style="text-align: left">从镜像仓库下载镜像</td>
+          <td style="text-align: left"><code>docker pull ubuntu:latest</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker images</code></td>
+          <td style="text-align: left">列出本地镜像</td>
+          <td style="text-align: left"><code>docker images</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker rmi</code></td>
+          <td style="text-align: left">删除本地镜像</td>
+          <td style="text-align: left"><code>docker rmi ubuntu:latest</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker build</code></td>
+          <td style="text-align: left">根据 Dockerfile 构建镜像</td>
+          <td style="text-align: left"><code>docker build -t my - app:1.0.</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center">容器操作</td>
+          <td style="text-align: left"><code>docker run</code></td>
+          <td style="text-align: left">创建并运行容器</td>
+          <td style="text-align: left"><code>docker run -it ubuntu:latest /bin/bash</code> <code>docker run -d nginx</code> <code>docker run -p 8080:80 nginx</code> <code>docker run -v /host - dir:/container - dir ubuntu</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker ps</code></td>
+          <td style="text-align: left">列出正在运行的容器</td>
+          <td style="text-align: left"><code>docker ps</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker stop</code></td>
+          <td style="text-align: left">停止正在运行的容器</td>
+          <td style="text-align: left"><code>docker stop 1234567890ab</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker start</code></td>
+          <td style="text-align: left">启动已停止的容器</td>
+          <td style="text-align: left"><code>docker start 1234567890ab</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker restart</code></td>
+          <td style="text-align: left">重启容器</td>
+          <td style="text-align: left"><code>docker restart 1234567890ab</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker rm</code></td>
+          <td style="text-align: left">删除容器</td>
+          <td style="text-align: left"><code>docker rm 1234567890ab</code>或<code>docker rm -f</code>（强制删除运行中的容器）</td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker exec</code></td>
+          <td style="text-align: left">在运行容器内执行命令</td>
+          <td style="text-align: left"><code>docker exec -it 1234567890ab /bin/bash</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center">容器网络操作</td>
+          <td style="text-align: left"><code>docker network create</code></td>
+          <td style="text-align: left">创建新的 Docker 网络</td>
+          <td style="text-align: left"><code>docker network create my - network</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker network ls</code></td>
+          <td style="text-align: left">列出所有 Docker 网络</td>
+          <td style="text-align: left"><code>docker network ls</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker network connect</code></td>
+          <td style="text-align: left">将容器连接到网络</td>
+          <td style="text-align: left"><code>docker network connect my - network 1234567890ab</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker network disconnect</code></td>
+          <td style="text-align: left">将容器从网络断开连接</td>
+          <td style="text-align: left"><code>docker network disconnect my - network 1234567890ab</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center">其他操作</td>
+          <td style="text-align: left"><code>docker login</code></td>
+          <td style="text-align: left">登录到 Docker Hub 或其他镜像仓库</td>
+          <td style="text-align: left"><code>docker login</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker logout</code></td>
+          <td style="text-align: left">从 Docker Hub 或其他镜像仓库注销</td>
+          <td style="text-align: left"><code>docker logout</code></td>
+      </tr>
+      <tr>
+          <td style="text-align: center"></td>
+          <td style="text-align: left"><code>docker info</code></td>
+          <td style="text-align: left">显示 Docker 系统信息</td>
+          <td style="text-align: left"><code>docker info</code></td>
+      </tr>
+  </tbody>
 </table>
 
 

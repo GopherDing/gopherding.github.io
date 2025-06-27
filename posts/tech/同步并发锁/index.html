@@ -469,18 +469,18 @@ var _hmt = _hmt || [];
 <h3 id="互斥锁">互斥锁：<a hidden class="anchor" aria-hidden="true" href="#互斥锁">#</a></h3>
 <p>Go 语言中使用<code>sync</code>包中提供的<code>Mutex</code>类型来实现互斥锁。</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:center">func (m *Mutex) Lock()</th>
-<th style="text-align:center">获取互斥锁</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">func (m *Mutex) Unlock()</td>
-<td style="text-align:center">释放互斥锁</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">func (m *Mutex) Lock()</th>
+          <th style="text-align: center">获取互斥锁</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">func (m *Mutex) Unlock()</td>
+          <td style="text-align: center">释放互斥锁</td>
+      </tr>
+  </tbody>
 </table>
 <p>使用互斥锁能够保证同一时间有且只有一个 goroutine 进入临界区，其他的 goroutine 则在等待锁；当互斥锁释放后，等待的 goroutine 才可以获取锁进入临界区，多个 goroutine 同时等待一个锁时，唤醒的策略是随机的。</p>
 <h4 id="锁的两种模式">锁的两种模式<a hidden class="anchor" aria-hidden="true" href="#锁的两种模式">#</a></h4>
@@ -517,60 +517,60 @@ var _hmt = _hmt || [];
 <h3 id="读写互斥锁">读写互斥锁：<a hidden class="anchor" aria-hidden="true" href="#读写互斥锁">#</a></h3>
 <p>互斥锁是完全互斥的，但是实际上有很多场景是读多写少的，当我们并发的去读取一个资源而不涉及资源修改的时候是没有必要加互斥锁的，这种场景下使用读写锁是更好的一种选择。读写锁在 Go 语言中使用<code>sync</code>包中的<code>RWMutex</code>类型。</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:center">方法名</th>
-<th style="text-align:center">功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">func (rw *RWMutex) Lock()</td>
-<td style="text-align:center">获取写锁</td>
-</tr>
-<tr>
-<td style="text-align:center">func (rw *RWMutex) Unlock()</td>
-<td style="text-align:center">释放写锁</td>
-</tr>
-<tr>
-<td style="text-align:center">func (rw *RWMutex) RLock()</td>
-<td style="text-align:center">获取读锁</td>
-</tr>
-<tr>
-<td style="text-align:center">func (rw *RWMutex) RUnlock()</td>
-<td style="text-align:center">释放读锁</td>
-</tr>
-<tr>
-<td style="text-align:center">func (rw *RWMutex) RLocker() Locker</td>
-<td style="text-align:center">返回一个实现Locker接口的读写锁</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">方法名</th>
+          <th style="text-align: center">功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">func (rw *RWMutex) Lock()</td>
+          <td style="text-align: center">获取写锁</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (rw *RWMutex) Unlock()</td>
+          <td style="text-align: center">释放写锁</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (rw *RWMutex) RLock()</td>
+          <td style="text-align: center">获取读锁</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (rw *RWMutex) RUnlock()</td>
+          <td style="text-align: center">释放读锁</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (rw *RWMutex) RLocker() Locker</td>
+          <td style="text-align: center">返回一个实现Locker接口的读写锁</td>
+      </tr>
+  </tbody>
 </table>
 <p>当一个 goroutine 获取到读锁之后，其他的 goroutine 如果是获取读锁会继续获得锁，如果是获取写锁就会等待；而当一个 goroutine 获取写锁之后，其他的 goroutine 无论是获取读锁还是写锁都会等待。</p>
 <p>即：读锁可读不可写，写锁读写均不可。</p>
 <hr>
 <h3 id="syncwaitgroup">sync.WaitGroup<a hidden class="anchor" aria-hidden="true" href="#syncwaitgroup">#</a></h3>
 <table>
-<thead>
-<tr>
-<th style="text-align:center">方法名</th>
-<th style="text-align:center">功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">func (wg * WaitGroup) Add(delta int)</td>
-<td style="text-align:center">计数器+delta</td>
-</tr>
-<tr>
-<td style="text-align:center">(wg *WaitGroup) Done()</td>
-<td style="text-align:center">计数器-1</td>
-</tr>
-<tr>
-<td style="text-align:center">(wg *WaitGroup) Wait()</td>
-<td style="text-align:center">阻塞直到计数器变为0</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">方法名</th>
+          <th style="text-align: center">功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">func (wg * WaitGroup) Add(delta int)</td>
+          <td style="text-align: center">计数器+delta</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">(wg *WaitGroup) Done()</td>
+          <td style="text-align: center">计数器-1</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">(wg *WaitGroup) Wait()</td>
+          <td style="text-align: center">阻塞直到计数器变为0</td>
+      </tr>
+  </tbody>
 </table>
 <p>sync.WaitGroup 内部维护着一个计数器，计数器的值可以增加和减少。例如当我们启动了 N 个并发任务时，就将计数器值增加N。每个任务完成时通过调用 Done 方法将计数器减1。通过调用 Wait 来等待并发任务执行完，当计数器值为 0 时，表示所有并发任务已经完成。</p>
 <hr>
@@ -598,78 +598,78 @@ var _hmt = _hmt || [];
 </span></span></code></pre></div><p>使用方法：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>()  {
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">m</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Map</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. 写入
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>, <span style="color:#ae81ff">18</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. 写入</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>, <span style="color:#ae81ff">18</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#e6db74">&#34;asd&#34;</span>, <span style="color:#ae81ff">20</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. 读取
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. 读取</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">age</span>.(<span style="color:#66d9ef">int</span>))
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. 遍历
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Range</span>(<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">bool</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. 遍历</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Range</span>(<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">bool</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">name</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">key</span>.(<span style="color:#66d9ef">string</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">age</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">value</span>.(<span style="color:#66d9ef">int</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">age</span>)
 </span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
 </span></span><span style="display:flex;"><span>    })
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 4. 删除
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 4. 删除</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">ok</span>)
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 5. 读取或写入，这个 key 已经存在，因此写入不成功，并且读出原值。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">LoadOrStore</span>(<span style="color:#e6db74">&#34;asd&#34;</span>, <span style="color:#ae81ff">100</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 5. 读取或写入，这个 key 已经存在，因此写入不成功，并且读出原值。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">LoadOrStore</span>(<span style="color:#e6db74">&#34;asd&#34;</span>, <span style="color:#ae81ff">100</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;asd&#34;</span>)
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">age</span>)
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><table>
-<thead>
-<tr>
-<th style="text-align:center">方法名</th>
-<th style="text-align:center">功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center">func (m *Map) Store(key, value interface{})</td>
-<td style="text-align:center">存储key-value数据</td>
-</tr>
-<tr>
-<td style="text-align:center">func (m *Map) Load(key interface{}) (value interface{}, ok bool)</td>
-<td style="text-align:center">查询key对应的value</td>
-</tr>
-<tr>
-<td style="text-align:center">func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool)</td>
-<td style="text-align:center">查询或存储key对应的value</td>
-</tr>
-<tr>
-<td style="text-align:center">func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool)</td>
-<td style="text-align:center">查询并删除key</td>
-</tr>
-<tr>
-<td style="text-align:center">func (m *Map) Delete(key interface{})</td>
-<td style="text-align:center">删除key</td>
-</tr>
-<tr>
-<td style="text-align:center">func (m *Map) Range(f func(key, value interface{}) bool)</td>
-<td style="text-align:center">对map中的每个key-value依次调用f</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: center">方法名</th>
+          <th style="text-align: center">功能</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: center">func (m *Map) Store(key, value interface{})</td>
+          <td style="text-align: center">存储key-value数据</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (m *Map) Load(key interface{}) (value interface{}, ok bool)</td>
+          <td style="text-align: center">查询key对应的value</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool)</td>
+          <td style="text-align: center">查询或存储key对应的value</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool)</td>
+          <td style="text-align: center">查询并删除key</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (m *Map) Delete(key interface{})</td>
+          <td style="text-align: center">删除key</td>
+      </tr>
+      <tr>
+          <td style="text-align: center">func (m *Map) Range(f func(key, value interface{}) bool)</td>
+          <td style="text-align: center">对map中的每个key-value依次调用f</td>
+      </tr>
+  </tbody>
 </table>
 <p>浅浅看一下源码罢：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Map</span> <span style="color:#66d9ef">struct</span> {
 </span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mu</span> <span style="color:#a6e22e">Mutex</span>
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// readOnly,`read` 是 atomic.Value 类型，可以并发地读。但如果需要更新 `read`，则需要加锁保护。对于 read 中存储的 entry 字段，可能会被并发地 CAS 更新。但是如果要更新一个之前已被删除的 entry，则需要先将其状态从 expunged 改为 nil，再拷贝到 dirty 中，然后再更新。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">read</span> <span style="color:#a6e22e">atomic</span>.<span style="color:#a6e22e">Value</span>
+</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// readOnly,`read` 是 atomic.Value 类型，可以并发地读。但如果需要更新 `read`，则需要加锁保护。对于 read 中存储的 entry 字段，可能会被并发地 CAS 更新。但是如果要更新一个之前已被删除的 entry，则需要先将其状态从 expunged 改为 nil，再拷贝到 dirty 中，然后再更新。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">read</span> <span style="color:#a6e22e">atomic</span>.<span style="color:#a6e22e">Value</span>
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//`dirty` 是一个非线程安全的原始 map。包含新写入的 key，并且包含 `read` 中的所有未被删除的 key。这样，可以快速地将 `dirty` 提升为 `read` 对外提供服务。如果 `dirty` 为 nil，那么下一次写入时，会新建一个新的 `dirty`，这个初始的 `dirty` 是 `read` 的一个拷贝，但除掉了其中已被删除的 key。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">dirty</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">interface</span>{}]<span style="color:#f92672">*</span><span style="color:#a6e22e">entry</span> 
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//`dirty` 是一个非线程安全的原始 map。包含新写入的 key，并且包含 `read` 中的所有未被删除的 key。这样，可以快速地将 `dirty` 提升为 `read` 对外提供服务。如果 `dirty` 为 nil，那么下一次写入时，会新建一个新的 `dirty`，这个初始的 `dirty` 是 `read` 的一个拷贝，但除掉了其中已被删除的 key。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dirty</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">interface</span>{}]<span style="color:#f92672">*</span><span style="color:#a6e22e">entry</span> 
 </span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//每当从 read 中读取失败，都会将 `misses` 的计数值加 1，当加到一定阈值以后，需要将 dirty 提升为 read，以期减少 miss 的情形。
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">misses</span> <span style="color:#66d9ef">int</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//每当从 read 中读取失败，都会将 `misses` 的计数值加 1，当加到一定阈值以后，需要将 dirty 提升为 read，以期减少 miss 的情形。</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">misses</span> <span style="color:#66d9ef">int</span>
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>sync.map</code> 适用于读多写少的场景。对于写多的场景，会导致 read map 缓存失效，需要加锁，导致冲突变多；而且由于未命中 read map 次数过多，导致 dirty map 提升为 read map，这是一个 O(N) 的操作，会进一步降低性能。</p>
 <h4 id="总之">总之：<a hidden class="anchor" aria-hidden="true" href="#总之">#</a></h4>

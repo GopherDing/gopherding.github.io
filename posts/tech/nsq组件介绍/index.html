@@ -368,8 +368,7 @@ var _hmt = _hmt || [];
 <p>同时参考了：<a href="https://zhuanlan.zhihu.com/p/37081073">https://zhuanlan.zhihu.com/p/37081073</a></p>
 <p><code>nsqd:</code> 是一个进程监听了http,tcp两种协议, 用来创建topic,channel, 分发消息给消费者,向nsqlooup 注册自己的元数据信息(topic、channel、consumer)，自己的服务信息，最核心模块。</p>
 <blockquote>
-<p>nsqd 是一个守护进程，负责接收，排队，投递消息给客户端。也就是说这个服务是干活的。它可以独立运行，不过通常它是由 nsqlookupd 实例所在集群配置的。</p>
-</blockquote>
+<p>nsqd 是一个守护进程，负责接收，排队，投递消息给客户端。也就是说这个服务是干活的。它可以独立运行，不过通常它是由 nsqlookupd 实例所在集群配置的。</p></blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 对订阅了同一个topic，同一个channel的消费者使用负载均衡策略（不是轮询）
@@ -384,8 +383,7 @@ var _hmt = _hmt || [];
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
 </span></span></code></pre></div><p><code>nsqlookup:</code> 存储了nsqd的元数据和服务信息(endpoind),向消费者提供服务发现功能, 向nsqadmin提供数据查询功能.</p>
 <blockquote>
-<p>nsqlookupd 是守护进程负责管理拓扑信息。客户端通过查询 nsqlookupd 来发现指定话题（topic）的生产者，并且 nsqd 节点广播话题（topic）和通道（channel）信息。也就是说nsqlookupd是管理者。</p>
-</blockquote>
+<p>nsqlookupd 是守护进程负责管理拓扑信息。客户端通过查询 nsqlookupd 来发现指定话题（topic）的生产者，并且 nsqd 节点广播话题（topic）和通道（channel）信息。也就是说nsqlookupd是管理者。</p></blockquote>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">		

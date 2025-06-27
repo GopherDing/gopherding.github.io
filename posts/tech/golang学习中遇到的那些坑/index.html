@@ -374,9 +374,9 @@ var _hmt = _hmt || [];
 <li>
 <p>Golang的自增自减&rsquo;++&rsquo; &lsquo;&ndash;&lsquo;是语句而非表达式</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">a</span> <span style="color:#f92672">:=</span> <span style="color:#ae81ff">1</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">a</span> <span style="color:#f92672">++</span>  <span style="color:#75715e">// 注意：不能写成 ++ a 或 -- a 必须放在右边使用
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// b := a++ // 此处为错误的用法，不能写在一行，要单独作为语句使用
-</span></span></span></code></pre></div></li>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">a</span> <span style="color:#f92672">++</span>  <span style="color:#75715e">// 注意：不能写成 ++ a 或 -- a 必须放在右边使用</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// b := a++ // 此处为错误的用法，不能写在一行，要单独作为语句使用</span>
+</span></span></code></pre></div></li>
 <li>
 <p>对外函数的函数名应该首字母大写，否则外部包无法调用该函数（类、属性亦然）。</p>
 </li>
@@ -441,8 +441,8 @@ var _hmt = _hmt || [];
 <p>匿名函数的快速执行：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span>(){
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">fmt</span>.println(<span style="color:#e6db74">&#34;Hello&#34;</span>)
-</span></span><span style="display:flex;"><span>}()  <span style="color:#75715e">//这里加上()是定义并执行函数
-</span></span></span></code></pre></div></li>
+</span></span><span style="display:flex;"><span>}()  <span style="color:#75715e">//这里加上()是定义并执行函数</span>
+</span></span></code></pre></div></li>
 <li>
 <p>闭包：简单来说，闭包 = 函数 + 引用环境</p>
 </li>
@@ -487,8 +487,8 @@ var _hmt = _hmt || [];
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">myMap2</span>[<span style="color:#ae81ff">1</span>] = <span style="color:#e6db74">&#34;java&#34;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">myMap2</span>[<span style="color:#ae81ff">2</span>] = <span style="color:#e6db74">&#34;c++&#34;</span>
 </span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">myMap2</span>[<span style="color:#ae81ff">3</span>] = <span style="color:#e6db74">&#34;python&#34;</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">//或者
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">myMap</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>{
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//或者</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">myMap</span> <span style="color:#f92672">:=</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">string</span>]<span style="color:#66d9ef">string</span>{
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;one&#34;</span>:   <span style="color:#e6db74">&#34;php&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;two&#34;</span>:   <span style="color:#e6db74">&#34;c++&#34;</span>,
 </span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;three&#34;</span>: <span style="color:#e6db74">&#34;python&#34;</span>,

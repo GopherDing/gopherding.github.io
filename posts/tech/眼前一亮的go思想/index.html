@@ -459,15 +459,15 @@ var _hmt = _hmt || [];
 <h3 id="cas">CAS<a hidden class="anchor" aria-hidden="true" href="#cas">#</a></h3>
 <p>实际代码文件在  Go / src / runtime / internal / atomic / asm_amd.s  文件中</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">m</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Mutex</span>) <span style="color:#a6e22e">Lock</span>() {
-</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// Fast path: grab unlocked mutex.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">atomic</span>.<span style="color:#a6e22e">CompareAndSwapInt32</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">state</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">mutexLocked</span>) {
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// Fast path: grab unlocked mutex.</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">atomic</span>.<span style="color:#a6e22e">CompareAndSwapInt32</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">state</span>, <span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">mutexLocked</span>) {
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">race</span>.<span style="color:#a6e22e">Enabled</span> {
 </span></span><span style="display:flex;"><span>         <span style="color:#a6e22e">race</span>.<span style="color:#a6e22e">Acquire</span>(<span style="color:#a6e22e">unsafe</span>.<span style="color:#a6e22e">Pointer</span>(<span style="color:#a6e22e">m</span>))
 </span></span><span style="display:flex;"><span>      }
 </span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">return</span>
 </span></span><span style="display:flex;"><span>   }
-</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// Slow path (outlined so that the fast path can be inlined)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>   <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">lockSlow</span>()
+</span></span><span style="display:flex;"><span>   <span style="color:#75715e">// Slow path (outlined so that the fast path can be inlined)</span>
+</span></span><span style="display:flex;"><span>   <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">lockSlow</span>()
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>如果可以获得锁资源，则修改Mutex.state中的locked位，并成功获取，如果获取不到，则执行lowSlow()方法。</p>
 <p>比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。 该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。</p>
@@ -475,15 +475,13 @@ var _hmt = _hmt || [];
 </li>
 </ol>
 <blockquote>
-<p>1.CAS在共享资源竞争比较激烈的时候，每个goroutine会容易处于自旋状态，影响效率，在竞争激烈的时候推荐使用锁。</p>
-</blockquote>
+<p>1.CAS在共享资源竞争比较激烈的时候，每个goroutine会容易处于自旋状态，影响效率，在竞争激烈的时候推荐使用锁。</p></blockquote>
 <blockquote>
 <p>2.无法解决ABA问题，ABA问题是无锁结构实现中常见的一种问题，可基本表述为：
 进程P1读取了一个数值A
 P1被挂起(时间片耗尽、中断等)，进程P2开始执行
 P2修改数值A为数值B，然后又修改回A
-P1被唤醒，比较后发现数值A没有变化，程序继续执行。</p>
-</blockquote>
+P1被唤醒，比较后发现数值A没有变化，程序继续执行。</p></blockquote>
 <ol start="2">
 <li>
 <h3 id="go如何保证并发安全">Go如何保证并发安全<a hidden class="anchor" aria-hidden="true" href="#go如何保证并发安全">#</a></h3>
