@@ -6,7 +6,40 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 20 Feb 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>再译She Walks in Beauty为七言</title>
+      <link>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</link>
+      <pubDate>Sat, 16 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</guid>
+      <description>&lt;p&gt;深夜起兴，有感而发，悲从中来，无可断绝&lt;/p&gt;
+&lt;p&gt;夜沉无云星缀天，伊行光影自悠然。&lt;/p&gt;
+&lt;p&gt;明暗佳色融眉睫，柔辉不似白日喧。&lt;/p&gt;
+&lt;p&gt;稍增暗影光偏减，便损风姿韵不现。&lt;/p&gt;
+&lt;p&gt;乌发轻摇藏秀色，颊边清辉静漫敛。&lt;/p&gt;
+&lt;p&gt;额角温润容光软，浅笑含情意未言。&lt;/p&gt;
+&lt;p&gt;岁月皆从善念过，心安世路爱纯全。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>She Walks in Beauty-译</title>
+      <link>https://gopherding.github.io/posts/read/she-walks-in-beauty-%E8%AF%91/</link>
+      <pubDate>Mon, 21 Jul 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/she-walks-in-beauty-%E8%AF%91/</guid>
+      <description>How pure, how dear their dwelling place.</description>
+    </item>
+    
+    <item>
+      <title>She Walks in Beauty</title>
+      <link>https://gopherding.github.io/posts/read/she-walks-in-beauty/</link>
+      <pubDate>Sun, 01 Jun 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/she-walks-in-beauty/</guid>
+      <description>How pure, how dear their dwelling place.</description>
+    </item>
+    
     <item>
       <title>CDN失效的解决办法</title>
       <link>https://gopherding.github.io/posts/blog/cdn%E5%A4%B1%E6%95%88%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</link>
@@ -50,15 +83,6 @@
       
       <guid>https://gopherding.github.io/posts/read/%E5%8C%86%E5%8C%86/</guid>
       <description>你聪明的，告诉我，我们的日子为什么一去不复返呢？</description>
-    </item>
-    
-    <item>
-      <title>Sonnet 18</title>
-      <link>https://gopherding.github.io/posts/read/sonnet-18/</link>
-      <pubDate>Mon, 07 Oct 2024 00:18:06 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/sonnet-18/</guid>
-      <description>可否作一比，将君比夏天？可爱有过之，温存更无前。</description>
     </item>
     
     <item>
@@ -512,30 +536,12 @@
     </item>
     
     <item>
-      <title>Github Action测试</title>
-      <link>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</guid>
-      <description>Github Action测试</description>
-    </item>
-    
-    <item>
       <title>Golang学习中遇到的那些坑</title>
       <link>https://gopherding.github.io/%E6%A8%A1%E6%9D%BF/</link>
       <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/%E6%A8%A1%E6%9D%BF/</guid>
       <description>描述了一下本人学习Golang过程中遇到的问题</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-3/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-3/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
     </item>
     
     <item>
@@ -707,6 +713,15 @@
       
       <guid>https://gopherding.github.io/posts/tech/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8%E5%92%8C%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95/</guid>
       <description>索引下推和覆盖索引</description>
+    </item>
+    
+    <item>
+      <title>Sonnet 18</title>
+      <link>https://gopherding.github.io/posts/read/sonnet-18/</link>
+      <pubDate>Thu, 07 Oct 2021 00:18:06 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/sonnet-18/</guid>
+      <description>可否作一比，将君比夏天？可爱有过之，温存更无前。</description>
     </item>
     
     <item>
