@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>NSQ组件介绍 | GopherDing&#39;s Blog</title>
+<title>La Marseillaise | GopherDing&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="NSQ的组件简介和特性介绍">
-<meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
+<meta name="description" content="Vive la France!">
+<meta name="author" content="Claude Joseph Rouget de Lisle">
+<link rel="canonical" href="https://gopherding.github.io/posts/read/la-marseillaise/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
@@ -19,7 +19,7 @@
 <link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/read/la-marseillaise/">
 <noscript>
     <style>
         #theme-toggle,
@@ -74,16 +74,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="NSQ组件介绍" />
-<meta property="og:description" content="NSQ的组件简介和特性介绍" />
+<meta property="og:title" content="La Marseillaise" />
+<meta property="og:description" content="Vive la France!" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-11-06T15:55:23+08:00" />
-<meta property="article:modified_time" content="2024-11-06T15:55:23+08:00" />
+<meta property="og:url" content="https://gopherding.github.io/posts/read/la-marseillaise/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-08-17T15:55:23+08:00" />
+<meta property="article:modified_time" content="2025-08-17T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="NSQ组件介绍"/>
-<meta name="twitter:description" content="NSQ的组件简介和特性介绍"/>
+<meta name="twitter:title" content="La Marseillaise"/>
+<meta name="twitter:description" content="Vive la France!"/>
 
 
 <script type="application/ld+json">
@@ -102,14 +102,14 @@ var _hmt = _hmt || [];
         {
           "@type": "ListItem",
           "position":  2 ,
-          "name": "👨🏻‍💻 技术",
-          "item": "https://gopherding.github.io/posts/tech/"
+          "name": "📕 阅读",
+          "item": "https://gopherding.github.io/posts/read/"
         }, 
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "NSQ组件介绍",
-      "item": "https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/"
+      "name": "La Marseillaise",
+      "item": "https://gopherding.github.io/posts/read/la-marseillaise/"
     }
   ]
 }
@@ -118,24 +118,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "NSQ组件介绍",
-  "name": "NSQ组件介绍",
-  "description": "NSQ的组件简介和特性介绍",
+  "headline": "La Marseillaise",
+  "name": "La Marseillaise",
+  "description": "Vive la France!",
   "keywords": [
     ""
   ],
-  "articleBody": "本文摘自：https://www.cnblogs.com/you-men/p/13884645.html\n同时参考了：https://zhuanlan.zhihu.com/p/37081073\nnsqd: 是一个进程监听了http,tcp两种协议, 用来创建topic,channel, 分发消息给消费者,向nsqlooup 注册自己的元数据信息(topic、channel、consumer)，自己的服务信息，最核心模块。\nnsqd 是一个守护进程，负责接收，排队，投递消息给客户端。也就是说这个服务是干活的。它可以独立运行，不过通常它是由 nsqlookupd 实例所在集群配置的。\n/* 特性: 1. 对订阅了同一个topic，同一个channel的消费者使用负载均衡策略（不是轮询） 2. 只要channel存在，即使没有该channel的消费者，也会将生产者的message缓存到队列中（注意消息的过期处理） 3. 保证队列中的message至少会被消费一次，即使nsqd退出，也会将队列中的消息暂存磁盘上(结束进程等意外情况除外) 4. 限定内存占用，能够配置nsqd中每个channel队列在内存中缓存的message数量，一旦超出，message将被缓存到磁盘中 5. topic，channel一旦建立，将会一直存在，要及时在管理台或者用代码清除无效的topic和channel，避免资源的浪费 */ nsqlookup: 存储了nsqd的元数据和服务信息(endpoind),向消费者提供服务发现功能, 向nsqadmin提供数据查询功能.\nnsqlookupd 是守护进程负责管理拓扑信息。客户端通过查询 nsqlookupd 来发现指定话题（topic）的生产者，并且 nsqd 节点广播话题（topic）和通道（channel）信息。也就是说nsqlookupd是管理者。\n/* 特性: 1. 唯一性，在一个Nsq服务中只有一个nsqlookupd服务。当然也可以在集群中部署多个nsqlookupd，但它们之间是没有关联的. 2. 去中心化，即使nsqlookupd崩溃，也会不影响正在运行的nsqd服务 3. 充当nsqd和naqadmin信息交互的中间件 4. 提供一个http查询服务，给客户端定时更新nsqd的地址目录. */ nsqadmin: 简单的管理界面,展示了topic, channel以及channel上的消费者,也可以创建topic,channel\n/* 特性: 1. 提供一个对topic和channel统一管理的操作界面以及各种实时监控数据的展示，界面设计的很简洁，操作也很简单 2. 展示所有message的数量 3. 能够在后台创建topic和channel 4. nsqadmin的所有功能都必须依赖于nsqlookupd，nsqadmin只是向nsqlookupd传递用户操作并展示来自nsqlookupd的数据 */ Topic和Channel：\n每个nsqd实例旨在一次处理多个数据流。这些数据流称为“topics”，一个topic具有1个或多个“channels”。每个channel都会收到topic所有消息的副本，实际上下游的服务是通过对应的channel来消费topic消息。\ntopic和channel不是预先配置的。topic在首次使用时创建，方法是将其发布到指定topic，或者订阅指定topic上的channel。channel是通过订阅指定的channel在第一次使用时创建的。\ntopic和channel都相互独立地缓冲数据，防止缓慢的消费者导致其他chennel的积压（同样适用于topic级别）。\nchannel可以并且通常会连接多个客户端。假设所有连接的客户端都处于准备接收消息的状态，则每条消息将被传递到随机客户端。\n生产者向某个topic中发送消息，如果topic有一个或者多个channel，那么该消息会被复制多分发送到每一个channel中。类似 rabbitmq中的fanout类型，channel类似队列。 官方说 nsq 是分布式的消息队列服务，但是在我看来只有channel到消费者这部分提现出来分布式的感觉，nsqd 这个模块其实就是单点的，nsqd 将 topic、channel、以及消息都存储在了本地磁盘，官方还建议一个生产者使用一个 nsqd，这样不仅浪费资源还没有数据备份的保障。一旦 nsqd 所在的主机磁损坏，数据都将丢失。 总而言之,消息是从topic--\u003e channel (每个channel接受该topic的所有消息的副本)多播的,但是从channel --\u003e consumers均匀分布 (每个消费者接受该channel的一部分消息) ",
-  "wordCount" : "1823",
+  "articleBody": " 原文 直译 可唱版 第一节Allons enfants de la Patrie, Le jour de gloire est arrivé! Contre nous de la tyrannie, L’étendard sanglant est levé (bis) Entendez-vous dans les campagnes Mugir ces féroces soldats? Ils viennent jusque dans vos bras Egorger vos fils, vos compagnes! Refrain Aux armes, citoyens! Formez vos bataillons! Marchons, marchons! Qu’un sang impur Abreuve nos sillons! 第一节一起走吧，祖国的子民们！荣耀之日来临了！我们面对的是暴政，将染血的军旗升起！（重复）你们可听到在乡间残暴士兵们的吼叫？他们会来到你们的臂膀中残杀你们的孩子，你们的伴侣！副歌武装起来，公民们，组织起你们的队伍！前进，前进！只有（敌人的）不洁之血才能灌溉我们的犁沟！ 第一节前进吧，祖国儿女，快奋起，光荣的一天等着你！专制暴政对着我们升起染满鲜血的旗！（重复）你可听见残暴的士兵？在乡间嚎叫不停，他们冲进你的臂膀，杀死你的妻子儿女。副歌公民，拿起武器，将队伍组织起！前进！前进！用敌人的污血，浇灌我们田野！ 第二节Que veut cette horde d’esclaves De traîtres, de rois conjurés? Pour qui ces ignobles entraves Ces fers dès longtemps préparés? (bis) Français, pour nous, ah! quel outrage! Quels transports il doit exciter? C’est nous qu’on ose méditer De rendre à l’antique esclavage! Refrain 第二节这些家伙想做什么，作为叛国者与疯国王的奴隶?何来那些卑贱的枷锁，还有那些准备已久的凶器！（重复）法国人，冲着我们呐，啊！何等羞辱多令人愤慨！冲着我们呐，有人胆敢算计回到那陈腐的奴隶制！副歌 第二节这一帮卖国贼和保王党，都怀着些什么妄想？试问这该死的铐蹽，是要戴上谁的脚？（重复）法兰西人，给我们戴啊！奇耻大辱叫人愤慨！要倒退回奴隶时代，我们绝不忍耐！副歌 第三节Quoi ces cohortes étrangères! Feraient la loi dans nos foyers! Quoi! ces phalanges mercenaires Terrasseraient nos fils guerriers! (bis) Grand Dieu! par des mains enchaînées Nos fronts sous le joug se ploieraient De vils despotes deviendraient Les maîtres des destinées. Refrain 第三节什么！异国军队在我们家园建立法律！什么！佣兵集团击溃我们引以为傲的战士们！（重复）伟大的天主啊！若双手被铐住，我们只能低头伸向恶人的枷锁独裁者们将会成为我们命运的主宰！副歌 第三节什么！这群外国匪帮，竟敢统治我们家乡！什么！我们的子弟兵，竟被雇佣军欺凌！（重复）难道我们要缚住双手，屈服在他们的脚底下！难道我们要低下头任由卑鄙的暴君管辖？副歌 第四节Tremblez, tyrans et vous perfides L’opprobre de tous les partis Tremblez! vos projets parricides Vont enfin recevoir leurs prix! (bis) Tout est soldat pour vous combattre S’ils tombent, nos jeunes héros La France en produit de nouveaux, Contre vous tout prêts à se battre Refrain 第四节战栗吧！暴君与尔等背信者整个令人耻辱的狗党，战栗吧！你们那弑亲的阴谋终将得到应有的报应！（重复）人人都会是讨罚你们的士兵如果他们倒下，年轻的英雄们，大地会孕育新血全都为了对抗你们而战！副歌 第四节发抖吧！暴君和背信奸佞，无耻的狗党狐群！发抖吧！卖国的阴谋诡计，终究要得到报应！（重复）四处都是反对你的战士，前仆后继有少年兵，法兰西不断出新人，随时准备杀敌效命！副歌 第五节Français, en guerriers magnanimes Portez ou retenez vos coups! Épargnez ces tristes victimes À regret s’armant contre nous (bis) Mais ces despotes sanguinaires, Mais ces complices de Bouillé Tous ces tigres qui, sans pitié Déchirent le sein de leur mère! Refrain 第五节法国人呐，身为宽宏的战士，适时收放自己的攻击！放了那些可悲的受迫者，他们后悔对我们动武！（重复）而那些嗜血的独裁者，而那布耶侯爵的共犯，那群豺狼虎豹正毫不留情地，撕裂着他们母亲的胸口！副歌 第五节法兰西人，宽宏的战士，要学会忍耐与战斗！赦免那些悲惨的人们，使敌后悔拿起刀枪！（重复）但这些嗜血的暴君，这些布耶的同党，无情的虎豹豺狼，竟撕裂母亲的胸膛！副歌 第六节Amour sacré de la Patrie, Conduis, soutiens nos bras vengeurs Liberté, Liberté chérie, Combats avec tes défenseurs! (bis) Sous nos drapeaux que la victoire Accoure à tes mâles accents, Que tes ennemis expirants Voient ton triomphe et notre gloire! Refrain 第六节祖国神圣的爱啊，引领，支持我们洗冤的手自由啊，挚爱的自由，与你的守护者们一起战斗吧！（重复）在我们的旗帜下，让胜利奔向你那雄壮的音符，让你残喘中的敌人们看看你的凯旋与我们的荣耀！副歌 第六节来自对祖国神圣的爱，指引着我们去复仇！自由啊，亲爱的自由，请与你的保卫者同战斗。（重复）在我们胜利旗帜下，奔向你雄伟的乐章。让垂死的敌人看见你的凯旋，我们的荣光！副歌 第七节Nous entrerons dans la carrière Quand nos aînés n’y seront plus, Nous y trouverons leur poussière Et la trace de leurs vertus! (bis) Bien moins jaloux de leur survivre Que de partager leur cercueil, Nous aurons le sublime orgueil De les venger ou de les suivre!Refrain 第七节当前辈们不在世上时，我们也将延续志业我们会找到他们的灰烬和他们美德的足迹（重复）不红着眼希望他们生还而是希望与他们共享灵柩，我们将感到无比的光荣为他们洗冤或追随他们而去！副歌 第七节当我们投入战事，前辈们已然殉职；追随他们的美德气概，去寻回英雄的遗骸。（重复）我们不再羡慕生命，却愿战死在斗争中；为他们复仇而牺牲，便是我们的无上光荣！副歌 ",
+  "wordCount" : "1888",
   "inLanguage": "zh",
-  "datePublished": "2022-11-06T15:55:23+08:00",
-  "dateModified": "2024-11-06T15:55:23+08:00",
+  "datePublished": "2025-08-17T15:55:23+08:00",
+  "dateModified": "2025-08-17T15:55:23+08:00",
   "author":[{
     "@type": "Person",
-    "name": "GopherDing"
+    "name": "Claude Joseph Rouget de Lisle"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/"
+    "@id": "https://gopherding.github.io/posts/read/la-marseillaise/"
   },
   "publisher": {
     "@type": "Organization",
@@ -251,12 +251,12 @@ var _hmt = _hmt || [];
 <article class="post-single">
     <div id="single-content">
         <header class="post-header">
-            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/read/">📕 阅读</a></div>
             <h1 class="post-title">
-                NSQ组件介绍
+                La Marseillaise
             </h1>
             <div class="post-description">
-                NSQ的组件简介和特性介绍
+                Vive la France!
             </div>
             <div class="post-meta">
 
@@ -277,7 +277,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2022-11-06
+        <span>2025-08-17
             &nbsp;&nbsp;
         </span>
     </span>
@@ -290,7 +290,7 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1823字
+        <span>1888字
             &nbsp;&nbsp;
         </span>
     </span>
@@ -302,7 +302,7 @@ var _hmt = _hmt || [];
     </span>
     <span id="post_meta_style_5">
         <span class="fa fa-user-o"></span>
-        <span>GopherDing
+        <span>Claude Joseph Rouget de Lisle
             &nbsp;&nbsp;
         </span>
     </span>
@@ -310,7 +310,7 @@ var _hmt = _hmt || [];
         <span class="fa fa-tags" style="opacity: 0.8"></span>
         <span>
             <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/messagequeue/" style="color: var(--secondary)!important;">MessageQueue</a>
+                <a href="https://gopherding.github.io/tags/lyrics/" style="color: var(--secondary)!important;">Lyrics</a>
             </span>
         </span>
     </span>
@@ -364,67 +364,71 @@ var _hmt = _hmt || [];
 
 </div>
         </header> 
-        <div class="post-content"><p>本文摘自：<a href="https://www.cnblogs.com/you-men/p/13884645.html">https://www.cnblogs.com/you-men/p/13884645.html</a></p>
-<p>同时参考了：<a href="https://zhuanlan.zhihu.com/p/37081073">https://zhuanlan.zhihu.com/p/37081073</a></p>
-<p><code>nsqd:</code> 是一个进程监听了http,tcp两种协议, 用来创建topic,channel, 分发消息给消费者,向nsqlooup 注册自己的元数据信息(topic、channel、consumer)，自己的服务信息，最核心模块。</p>
-<blockquote>
-<p>nsqd 是一个守护进程，负责接收，排队，投递消息给客户端。也就是说这个服务是干活的。它可以独立运行，不过通常它是由 nsqlookupd 实例所在集群配置的。</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 对订阅了同一个topic，同一个channel的消费者使用负载均衡策略（不是轮询）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		2. 只要channel存在，即使没有该channel的消费者，也会将生产者的message缓存到队列中（注意消息的过期处理）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		3. 保证队列中的message至少会被消费一次，即使nsqd退出，也会将队列中的消息暂存磁盘上(结束进程等意外情况除外)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		4. 限定内存占用，能够配置nsqd中每个channel队列在内存中缓存的message数量，一旦超出，message将被缓存到磁盘中
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		5. topic，channel一旦建立，将会一直存在，要及时在管理台或者用代码清除无效的topic和channel，避免资源的浪费
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span></code></pre></div><p><code>nsqlookup:</code> 存储了nsqd的元数据和服务信息(endpoind),向消费者提供服务发现功能, 向nsqadmin提供数据查询功能.</p>
-<blockquote>
-<p>nsqlookupd 是守护进程负责管理拓扑信息。客户端通过查询 nsqlookupd 来发现指定话题（topic）的生产者，并且 nsqd 节点广播话题（topic）和通道（channel）信息。也就是说nsqlookupd是管理者。</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 唯一性，在一个Nsq服务中只有一个nsqlookupd服务。当然也可以在集群中部署多个nsqlookupd，但它们之间是没有关联的.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		2. 去中心化，即使nsqlookupd崩溃，也会不影响正在运行的nsqd服务
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		3. 充当nsqd和naqadmin信息交互的中间件
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		4. 提供一个http查询服务，给客户端定时更新nsqd的地址目录.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span></code></pre></div><p><code>nsqadmin:</code> 简单的管理界面,展示了topic, channel以及channel上的消费者,也可以创建topic,channel</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 提供一个对topic和channel统一管理的操作界面以及各种实时监控数据的展示，界面设计的很简洁，操作也很简单
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		2. 展示所有message的数量
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		3. 能够在后台创建topic和channel
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		4. nsqadmin的所有功能都必须依赖于nsqlookupd，nsqadmin只是向nsqlookupd传递用户操作并展示来自nsqlookupd的数据
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span></code></pre></div><p>Topic和Channel：</p>
-<p>每个nsqd实例旨在一次处理多个数据流。这些数据流称为<code>“topics”</code>，一个<code>topic</code>具有1个或多个<code>“channels”</code>。每个<code>channel</code>都会收到<code>topic</code>所有消息的副本，实际上下游的服务是通过对应的<code>channel</code>来消费<code>topic</code>消息。</p>
-<p><code>topic</code>和<code>channel</code>不是预先配置的。<code>topic</code>在首次使用时创建，方法是将其发布到指定<code>topic</code>，或者订阅指定<code>topic</code>上的<code>channel</code>。<code>channel</code>是通过订阅指定的<code>channel</code>在第一次使用时创建的。</p>
-<p><code>topic</code>和<code>channel</code>都相互独立地缓冲数据，防止缓慢的消费者导致其他<code>chennel</code>的积压（同样适用于<code>topic</code>级别）。</p>
-<p><code>channel</code>可以并且通常会连接多个客户端。假设所有连接的客户端都处于准备接收消息的状态，则每条消息将被传递到随机客户端。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">生产者向某个topic中发送消息</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果topic有一个或者多个channel</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">那么该消息会被复制多分发送到每一个channel中</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">类似</span> <span style="color:#a6e22e">rabbitmq中的fanout类型</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">channel类似队列</span><span style="color:#960050;background-color:#1e0010">。</span> <span style="color:#a6e22e">官方说</span> <span style="color:#a6e22e">nsq</span> <span style="color:#a6e22e">是分布式的消息队列服务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但是在我看来只有channel到消费者这部分提现出来分布式的感觉</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">nsqd</span> <span style="color:#a6e22e">这个模块其实就是单点的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">nsqd</span> <span style="color:#a6e22e">将</span> <span style="color:#a6e22e">topic</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">channel</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">以及消息都存储在了本地磁盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">官方还建议一个生产者使用一个</span> <span style="color:#a6e22e">nsqd</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样不仅浪费资源还没有数据备份的保障</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">一旦</span> <span style="color:#a6e22e">nsqd</span> <span style="color:#a6e22e">所在的主机磁损坏</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">数据都将丢失</span><span style="color:#960050;background-color:#1e0010">。</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">总而言之</span>,<span style="color:#a6e22e">消息是从topic</span><span style="color:#f92672">--</span>&gt; <span style="color:#a6e22e">channel</span> (<span style="color:#a6e22e">每个channel接受该topic的所有消息的副本</span>)<span style="color:#a6e22e">多播的</span>,<span style="color:#a6e22e">但是从channel</span> <span style="color:#f92672">--</span>&gt; <span style="color:#a6e22e">consumers均匀分布</span> (<span style="color:#a6e22e">每个消费者接受该channel的一部分消息</span>)
-</span></span></code></pre></div>
+        <div class="post-content"><table>
+  <thead>
+      <tr>
+          <th>原文</th>
+          <th>直译</th>
+          <th>可唱版</th>
+          <th></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>第一节</strong>Allons enfants de la Patrie, Le jour de gloire est arrivé! Contre nous de la tyrannie, L&rsquo;étendard sanglant est levé <em>(bis)</em> Entendez-vous dans les campagnes Mugir ces féroces soldats? Ils viennent jusque dans vos bras Egorger vos fils, vos compagnes! <strong>Refrain</strong> Aux armes, citoyens! Formez vos bataillons! Marchons, marchons! Qu&rsquo;un sang impur Abreuve nos sillons!</td>
+          <td><strong>第一节</strong>一起走吧，祖国的子民们！荣耀之日来临了！我们面对的是暴政，将染血的军旗升起！（重复）你们可听到在乡间残暴士兵们的吼叫？他们会来到你们的臂膀中残杀你们的孩子，你们的伴侣！<strong>副歌</strong>武装起来，公民们，组织起你们的队伍！前进，前进！只有（敌人的）不洁之血才能灌溉我们的犁沟！</td>
+          <td><strong>第一节</strong>前进吧，祖国儿女，快奋起，光荣的一天等着你！专制暴政对着我们升起染满鲜血的旗！（重复）你可听见残暴的士兵？在乡间嚎叫不停，他们冲进你的臂膀，杀死你的妻子儿女。<strong>副歌</strong>公民，拿起武器，将队伍组织起！前进！前进！用敌人的污血，浇灌我们田野！</td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>第二节</strong>Que veut cette horde d&rsquo;esclaves De traîtres, de rois conjurés? Pour qui ces ignobles entraves Ces fers dès longtemps préparés? <em>(bis)</em> Français, pour nous, ah! quel outrage! Quels transports il doit exciter? C&rsquo;est nous qu&rsquo;on ose méditer De rendre à l&rsquo;antique esclavage! <em>Refrain</em></td>
+          <td><strong>第二节</strong>这些家伙想做什么，作为叛国者与疯国王的奴隶?何来那些卑贱的枷锁，还有那些准备已久的凶器！（重复）法国人，冲着我们呐，啊！何等羞辱多令人愤慨！冲着我们呐，有人胆敢算计回到那陈腐的奴隶制！<em>副歌</em></td>
+          <td><strong>第二节</strong>这一帮卖国贼和保王党，都怀着些什么妄想？试问这该死的铐蹽，是要戴上谁的脚？（重复）法兰西人，给我们戴啊！奇耻大辱叫人愤慨！要倒退回奴隶时代，我们绝不忍耐！<em>副歌</em></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>第三节</strong>Quoi ces cohortes étrangères! Feraient la loi dans nos foyers! Quoi! ces phalanges mercenaires Terrasseraient nos fils guerriers! <em>(bis)</em> Grand Dieu! par des mains enchaînées Nos fronts sous le joug se ploieraient De vils despotes deviendraient Les maîtres des destinées. <em>Refrain</em></td>
+          <td><strong>第三节</strong>什么！异国军队在我们家园建立法律！什么！佣兵集团击溃我们引以为傲的战士们！（重复）伟大的天主啊！若双手被铐住，我们只能低头伸向恶人的枷锁独裁者们将会成为我们命运的主宰！<em>副歌</em></td>
+          <td><strong>第三节</strong>什么！这群外国匪帮，竟敢统治我们家乡！什么！我们的子弟兵，竟被雇佣军欺凌！（重复）难道我们要缚住双手，屈服在他们的脚底下！难道我们要低下头任由卑鄙的暴君管辖？<em>副歌</em></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>第四节</strong>Tremblez, tyrans et vous perfides L&rsquo;opprobre de tous les partis Tremblez! vos projets parricides Vont enfin recevoir leurs prix! <em>(bis)</em> Tout est soldat pour vous combattre S&rsquo;ils tombent, nos jeunes héros La France en produit de nouveaux, Contre vous tout prêts à se battre <em>Refrain</em></td>
+          <td><strong>第四节</strong>战栗吧！暴君与尔等背信者整个令人耻辱的狗党，战栗吧！你们那弑亲的阴谋终将得到应有的报应！（重复）人人都会是讨罚你们的士兵如果他们倒下，年轻的英雄们，大地会孕育新血全都为了对抗你们而战！<em>副歌</em></td>
+          <td><strong>第四节</strong>发抖吧！暴君和背信奸佞，无耻的狗党狐群！发抖吧！卖国的阴谋诡计，终究要得到报应！（重复）四处都是反对你的战士，前仆后继有少年兵，法兰西不断出新人，随时准备杀敌效命！<em>副歌</em></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>第五节</strong>Français, en guerriers magnanimes Portez ou retenez vos coups! Épargnez ces tristes victimes À regret s&rsquo;armant contre nous <em>(bis)</em> Mais ces despotes sanguinaires, Mais ces complices de Bouillé Tous ces tigres qui, sans pitié Déchirent le sein de leur mère! <em>Refrain</em></td>
+          <td><strong>第五节</strong>法国人呐，身为宽宏的战士，适时收放自己的攻击！放了那些可悲的受迫者，他们后悔对我们动武！（重复）而那些嗜血的独裁者，而那布耶侯爵的共犯，那群豺狼虎豹正毫不留情地，撕裂着他们母亲的胸口！<em>副歌</em></td>
+          <td><strong>第五节</strong>法兰西人，宽宏的战士，要学会忍耐与战斗！赦免那些悲惨的人们，使敌后悔拿起刀枪！（重复）但这些嗜血的暴君，这些布耶的同党，无情的虎豹豺狼，竟撕裂母亲的胸膛！<em>副歌</em></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>第六节</strong>Amour sacré de la Patrie, Conduis, soutiens nos bras vengeurs Liberté, Liberté chérie, Combats avec tes défenseurs! <em>(bis)</em> Sous nos drapeaux que la victoire Accoure à tes mâles accents, Que tes ennemis expirants Voient ton triomphe et notre gloire! <em>Refrain</em></td>
+          <td><strong>第六节</strong>祖国神圣的爱啊，引领，支持我们洗冤的手自由啊，挚爱的自由，与你的守护者们一起战斗吧！（重复）在我们的旗帜下，让胜利奔向你那雄壮的音符，让你残喘中的敌人们看看你的凯旋与我们的荣耀！<em>副歌</em></td>
+          <td><strong>第六节</strong>来自对祖国神圣的爱，指引着我们去复仇！自由啊，亲爱的自由，请与你的保卫者同战斗。（重复）在我们胜利旗帜下，奔向你雄伟的乐章。让垂死的敌人看见你的凯旋，我们的荣光！<em>副歌</em></td>
+          <td></td>
+      </tr>
+      <tr>
+          <td><strong>第七节</strong>Nous entrerons dans la carrière Quand nos aînés n&rsquo;y seront plus, Nous y trouverons leur poussière Et la trace de leurs vertus! <em>(bis)</em> Bien moins jaloux de leur survivre Que de partager leur cercueil, Nous aurons le sublime orgueil De les venger ou de les suivre!<em>Refrain</em></td>
+          <td><strong>第七节</strong>当前辈们不在世上时，我们也将延续志业我们会找到他们的灰烬和他们美德的足迹（重复）不红着眼希望他们生还而是希望与他们共享灵柩，我们将感到无比的光荣为他们洗冤或追随他们而去！<em>副歌</em></td>
+          <td><strong>第七节</strong>当我们投入战事，前辈们已然殉职；追随他们的美德气概，去寻回英雄的遗骸。（重复）我们不再羡慕生命，却愿战死在斗争中；为他们复仇而牺牲，便是我们的无上光荣！<em>副歌</em></td>
+          <td></td>
+      </tr>
+  </tbody>
+</table>
+
 
         </div>
 
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-8---%E5%89%AF%E6%9C%AC/">
-    <span class="title">« 上一页</span>
-    <br>
-    <span>XXXXXXXXXXXXXX</span>
-  </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/nsq%E5%92%8Ckafka%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/">
+  <a class="next" href="https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%91%E4%B8%83%E8%A8%80she-walks-in-beauty---%E5%89%AF%E6%9C%AC/">
     <span class="title">下一页 »</span>
     <br>
-    <span>NSQ和kafka的技术选型</span>
+    <span>XXXXXX</span>
   </a>
 </nav>
 
