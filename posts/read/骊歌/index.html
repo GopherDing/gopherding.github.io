@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>NSQ组件介绍 | GopherDing&#39;s Blog</title>
+<title>骊歌 | GopherDing&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="NSQ的组件简介和特性介绍">
-<meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
+<meta name="description" content="祝愿同志们矢勤矢勇，切莫踯躅，毕业快乐！">
+<meta name="author" content="华文宪">
+<link rel="canonical" href="https://gopherding.github.io/posts/read/%E9%AA%8A%E6%AD%8C/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
@@ -19,7 +19,7 @@
 <link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/read/%E9%AA%8A%E6%AD%8C/">
 <noscript>
     <style>
         #theme-toggle,
@@ -74,16 +74,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="NSQ组件介绍" />
-<meta property="og:description" content="NSQ的组件简介和特性介绍" />
+<meta property="og:title" content="骊歌" />
+<meta property="og:description" content="祝愿同志们矢勤矢勇，切莫踯躅，毕业快乐！" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2022-11-06T15:55:23+08:00" />
-<meta property="article:modified_time" content="2024-11-06T15:55:23+08:00" />
+<meta property="og:url" content="https://gopherding.github.io/posts/read/%E9%AA%8A%E6%AD%8C/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2025-06-26T15:55:23+08:00" />
+<meta property="article:modified_time" content="2025-06-26T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="NSQ组件介绍"/>
-<meta name="twitter:description" content="NSQ的组件简介和特性介绍"/>
+<meta name="twitter:title" content="骊歌"/>
+<meta name="twitter:description" content="祝愿同志们矢勤矢勇，切莫踯躅，毕业快乐！"/>
 
 
 <script type="application/ld+json">
@@ -102,14 +102,14 @@ var _hmt = _hmt || [];
         {
           "@type": "ListItem",
           "position":  2 ,
-          "name": "👨🏻‍💻 技术",
-          "item": "https://gopherding.github.io/posts/tech/"
+          "name": "📕 阅读",
+          "item": "https://gopherding.github.io/posts/read/"
         }, 
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "NSQ组件介绍",
-      "item": "https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/"
+      "name": "骊歌",
+      "item": "https://gopherding.github.io/posts/read/%E9%AA%8A%E6%AD%8C/"
     }
   ]
 }
@@ -118,24 +118,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "NSQ组件介绍",
-  "name": "NSQ组件介绍",
-  "description": "NSQ的组件简介和特性介绍",
+  "headline": "骊歌",
+  "name": "骊歌",
+  "description": "祝愿同志们矢勤矢勇，切莫踯躅，毕业快乐！",
   "keywords": [
     ""
   ],
-  "articleBody": "本文摘自：https://www.cnblogs.com/you-men/p/13884645.html\n同时参考了：https://zhuanlan.zhihu.com/p/37081073\nnsqd: 是一个进程监听了http,tcp两种协议, 用来创建topic,channel, 分发消息给消费者,向nsqlooup 注册自己的元数据信息(topic、channel、consumer)，自己的服务信息，最核心模块。\nnsqd 是一个守护进程，负责接收，排队，投递消息给客户端。也就是说这个服务是干活的。它可以独立运行，不过通常它是由 nsqlookupd 实例所在集群配置的。\n/* 特性: 1. 对订阅了同一个topic，同一个channel的消费者使用负载均衡策略（不是轮询） 2. 只要channel存在，即使没有该channel的消费者，也会将生产者的message缓存到队列中（注意消息的过期处理） 3. 保证队列中的message至少会被消费一次，即使nsqd退出，也会将队列中的消息暂存磁盘上(结束进程等意外情况除外) 4. 限定内存占用，能够配置nsqd中每个channel队列在内存中缓存的message数量，一旦超出，message将被缓存到磁盘中 5. topic，channel一旦建立，将会一直存在，要及时在管理台或者用代码清除无效的topic和channel，避免资源的浪费 */ nsqlookup: 存储了nsqd的元数据和服务信息(endpoind),向消费者提供服务发现功能, 向nsqadmin提供数据查询功能.\nnsqlookupd 是守护进程负责管理拓扑信息。客户端通过查询 nsqlookupd 来发现指定话题（topic）的生产者，并且 nsqd 节点广播话题（topic）和通道（channel）信息。也就是说nsqlookupd是管理者。\n/* 特性: 1. 唯一性，在一个Nsq服务中只有一个nsqlookupd服务。当然也可以在集群中部署多个nsqlookupd，但它们之间是没有关联的. 2. 去中心化，即使nsqlookupd崩溃，也会不影响正在运行的nsqd服务 3. 充当nsqd和naqadmin信息交互的中间件 4. 提供一个http查询服务，给客户端定时更新nsqd的地址目录. */ nsqadmin: 简单的管理界面,展示了topic, channel以及channel上的消费者,也可以创建topic,channel\n/* 特性: 1. 提供一个对topic和channel统一管理的操作界面以及各种实时监控数据的展示，界面设计的很简洁，操作也很简单 2. 展示所有message的数量 3. 能够在后台创建topic和channel 4. nsqadmin的所有功能都必须依赖于nsqlookupd，nsqadmin只是向nsqlookupd传递用户操作并展示来自nsqlookupd的数据 */ Topic和Channel：\n每个nsqd实例旨在一次处理多个数据流。这些数据流称为“topics”，一个topic具有1个或多个“channels”。每个channel都会收到topic所有消息的副本，实际上下游的服务是通过对应的channel来消费topic消息。\ntopic和channel不是预先配置的。topic在首次使用时创建，方法是将其发布到指定topic，或者订阅指定topic上的channel。channel是通过订阅指定的channel在第一次使用时创建的。\ntopic和channel都相互独立地缓冲数据，防止缓慢的消费者导致其他chennel的积压（同样适用于topic级别）。\nchannel可以并且通常会连接多个客户端。假设所有连接的客户端都处于准备接收消息的状态，则每条消息将被传递到随机客户端。\n生产者向某个topic中发送消息，如果topic有一个或者多个channel，那么该消息会被复制多分发送到每一个channel中。类似 rabbitmq中的fanout类型，channel类似队列。 官方说 nsq 是分布式的消息队列服务，但是在我看来只有channel到消费者这部分提现出来分布式的感觉，nsqd 这个模块其实就是单点的，nsqd 将 topic、channel、以及消息都存储在了本地磁盘，官方还建议一个生产者使用一个 nsqd，这样不仅浪费资源还没有数据备份的保障。一旦 nsqd 所在的主机磁损坏，数据都将丢失。 总而言之,消息是从topic--\u003e channel (每个channel接受该topic的所有消息的副本)多播的,但是从channel --\u003e consumers均匀分布 (每个消费者接受该channel的一部分消息) ",
-  "wordCount" : "1823",
+  "articleBody": "骊歌初动，离情辘辘，惊惜韶光匆促，\n毋忘所训，谨遵所嘱，从今知行弥笃，\n更愿诸君，矢勤矢勇，指戈长白山麓。\n去矣男儿，切莫踯躅，矢志复兴民族。\n怀昔叙首，朝夕同堂，亲爱兮未能忘，\n今朝隔别，天各一方，山高兮水又长，\n依稀往事，费煞思量，一思兮一心伤。\n前途茫茫，何时相见，相见兮在何方。\n",
+  "wordCount" : "136",
   "inLanguage": "zh",
-  "datePublished": "2022-11-06T15:55:23+08:00",
-  "dateModified": "2024-11-06T15:55:23+08:00",
+  "datePublished": "2025-06-26T15:55:23+08:00",
+  "dateModified": "2025-06-26T15:55:23+08:00",
   "author":[{
     "@type": "Person",
-    "name": "GopherDing"
+    "name": "华文宪"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/tech/nsq%E7%BB%84%E4%BB%B6%E4%BB%8B%E7%BB%8D/"
+    "@id": "https://gopherding.github.io/posts/read/%E9%AA%8A%E6%AD%8C/"
   },
   "publisher": {
     "@type": "Organization",
@@ -251,12 +251,12 @@ var _hmt = _hmt || [];
 <article class="post-single">
     <div id="single-content">
         <header class="post-header">
-            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
+            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/read/">📕 阅读</a></div>
             <h1 class="post-title">
-                NSQ组件介绍
+                骊歌
             </h1>
             <div class="post-description">
-                NSQ的组件简介和特性介绍
+                祝愿同志们矢勤矢勇，切莫踯躅，毕业快乐！
             </div>
             <div class="post-meta">
 
@@ -277,7 +277,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2022-11-06
+        <span>2025-06-26
             &nbsp;&nbsp;
         </span>
     </span>
@@ -290,19 +290,19 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1823字
+        <span>136字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>4分钟
+        <span>1分钟
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_5">
         <span class="fa fa-user-o"></span>
-        <span>GopherDing
+        <span>华文宪
             &nbsp;&nbsp;
         </span>
     </span>
@@ -310,7 +310,7 @@ var _hmt = _hmt || [];
         <span class="fa fa-tags" style="opacity: 0.8"></span>
         <span>
             <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/messagequeue/" style="color: var(--secondary)!important;">MessageQueue</a>
+                <a href="https://gopherding.github.io/tags/lyrics/" style="color: var(--secondary)!important;">Lyrics</a>
             </span>
         </span>
     </span>
@@ -364,67 +364,30 @@ var _hmt = _hmt || [];
 
 </div>
         </header> 
-        <div class="post-content"><p>本文摘自：<a href="https://www.cnblogs.com/you-men/p/13884645.html">https://www.cnblogs.com/you-men/p/13884645.html</a></p>
-<p>同时参考了：<a href="https://zhuanlan.zhihu.com/p/37081073">https://zhuanlan.zhihu.com/p/37081073</a></p>
-<p><code>nsqd:</code> 是一个进程监听了http,tcp两种协议, 用来创建topic,channel, 分发消息给消费者,向nsqlooup 注册自己的元数据信息(topic、channel、consumer)，自己的服务信息，最核心模块。</p>
-<blockquote>
-<p>nsqd 是一个守护进程，负责接收，排队，投递消息给客户端。也就是说这个服务是干活的。它可以独立运行，不过通常它是由 nsqlookupd 实例所在集群配置的。</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 对订阅了同一个topic，同一个channel的消费者使用负载均衡策略（不是轮询）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		2. 只要channel存在，即使没有该channel的消费者，也会将生产者的message缓存到队列中（注意消息的过期处理）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		3. 保证队列中的message至少会被消费一次，即使nsqd退出，也会将队列中的消息暂存磁盘上(结束进程等意外情况除外)
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		4. 限定内存占用，能够配置nsqd中每个channel队列在内存中缓存的message数量，一旦超出，message将被缓存到磁盘中
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		5. topic，channel一旦建立，将会一直存在，要及时在管理台或者用代码清除无效的topic和channel，避免资源的浪费
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span></code></pre></div><p><code>nsqlookup:</code> 存储了nsqd的元数据和服务信息(endpoind),向消费者提供服务发现功能, 向nsqadmin提供数据查询功能.</p>
-<blockquote>
-<p>nsqlookupd 是守护进程负责管理拓扑信息。客户端通过查询 nsqlookupd 来发现指定话题（topic）的生产者，并且 nsqd 节点广播话题（topic）和通道（channel）信息。也就是说nsqlookupd是管理者。</p></blockquote>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 唯一性，在一个Nsq服务中只有一个nsqlookupd服务。当然也可以在集群中部署多个nsqlookupd，但它们之间是没有关联的.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		2. 去中心化，即使nsqlookupd崩溃，也会不影响正在运行的nsqd服务
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		3. 充当nsqd和naqadmin信息交互的中间件
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		4. 提供一个http查询服务，给客户端定时更新nsqd的地址目录.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span></code></pre></div><p><code>nsqadmin:</code> 简单的管理界面,展示了topic, channel以及channel上的消费者,也可以创建topic,channel</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">/*
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		特性:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		1. 提供一个对topic和channel统一管理的操作界面以及各种实时监控数据的展示，界面设计的很简洁，操作也很简单
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		2. 展示所有message的数量
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		3. 能够在后台创建topic和channel
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		4. nsqadmin的所有功能都必须依赖于nsqlookupd，nsqadmin只是向nsqlookupd传递用户操作并展示来自nsqlookupd的数据
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">		
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">*/</span>
-</span></span></code></pre></div><p>Topic和Channel：</p>
-<p>每个nsqd实例旨在一次处理多个数据流。这些数据流称为<code>“topics”</code>，一个<code>topic</code>具有1个或多个<code>“channels”</code>。每个<code>channel</code>都会收到<code>topic</code>所有消息的副本，实际上下游的服务是通过对应的<code>channel</code>来消费<code>topic</code>消息。</p>
-<p><code>topic</code>和<code>channel</code>不是预先配置的。<code>topic</code>在首次使用时创建，方法是将其发布到指定<code>topic</code>，或者订阅指定<code>topic</code>上的<code>channel</code>。<code>channel</code>是通过订阅指定的<code>channel</code>在第一次使用时创建的。</p>
-<p><code>topic</code>和<code>channel</code>都相互独立地缓冲数据，防止缓慢的消费者导致其他<code>chennel</code>的积压（同样适用于<code>topic</code>级别）。</p>
-<p><code>channel</code>可以并且通常会连接多个客户端。假设所有连接的客户端都处于准备接收消息的状态，则每条消息将被传递到随机客户端。</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#a6e22e">生产者向某个topic中发送消息</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">如果topic有一个或者多个channel</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">那么该消息会被复制多分发送到每一个channel中</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">类似</span> <span style="color:#a6e22e">rabbitmq中的fanout类型</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">channel类似队列</span><span style="color:#960050;background-color:#1e0010">。</span> <span style="color:#a6e22e">官方说</span> <span style="color:#a6e22e">nsq</span> <span style="color:#a6e22e">是分布式的消息队列服务</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">但是在我看来只有channel到消费者这部分提现出来分布式的感觉</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">nsqd</span> <span style="color:#a6e22e">这个模块其实就是单点的</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">nsqd</span> <span style="color:#a6e22e">将</span> <span style="color:#a6e22e">topic</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">channel</span><span style="color:#960050;background-color:#1e0010">、</span><span style="color:#a6e22e">以及消息都存储在了本地磁盘</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">官方还建议一个生产者使用一个</span> <span style="color:#a6e22e">nsqd</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">这样不仅浪费资源还没有数据备份的保障</span><span style="color:#960050;background-color:#1e0010">。</span><span style="color:#a6e22e">一旦</span> <span style="color:#a6e22e">nsqd</span> <span style="color:#a6e22e">所在的主机磁损坏</span><span style="color:#960050;background-color:#1e0010">，</span><span style="color:#a6e22e">数据都将丢失</span><span style="color:#960050;background-color:#1e0010">。</span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">总而言之</span>,<span style="color:#a6e22e">消息是从topic</span><span style="color:#f92672">--</span>&gt; <span style="color:#a6e22e">channel</span> (<span style="color:#a6e22e">每个channel接受该topic的所有消息的副本</span>)<span style="color:#a6e22e">多播的</span>,<span style="color:#a6e22e">但是从channel</span> <span style="color:#f92672">--</span>&gt; <span style="color:#a6e22e">consumers均匀分布</span> (<span style="color:#a6e22e">每个消费者接受该channel的一部分消息</span>)
-</span></span></code></pre></div>
+        <div class="post-content"><p>骊歌初动，离情辘辘，惊惜韶光匆促，</p>
+<p>毋忘所训，谨遵所嘱，从今知行弥笃，</p>
+<p>更愿诸君，矢勤矢勇，指戈长白山麓。</p>
+<p>去矣男儿，切莫踯躅，矢志复兴民族。</p>
+<p>怀昔叙首，朝夕同堂，亲爱兮未能忘，</p>
+<p>今朝隔别，天各一方，山高兮水又长，</p>
+<p>依稀往事，费煞思量，一思兮一心伤。</p>
+<p>前途茫茫，何时相见，相见兮在何方。</p>
+
 
         </div>
 
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/">
+  <a class="prev" href="https://gopherding.github.io/posts/read/%E6%98%A5%E6%99%96%E4%B8%AD%E5%AD%A6%E6%AF%95%E4%B8%9A%E6%AD%8C/">
     <span class="title">« 上一页</span>
     <br>
-    <span>XXXXXXXXXXXXXX</span>
+    <span>春晖中学毕业歌</span>
   </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/nsq%E5%92%8Ckafka%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/">
+  <a class="next" href="https://gopherding.github.io/posts/read/%E9%80%81%E5%88%AB/">
     <span class="title">下一页 »</span>
     <br>
-    <span>NSQ和kafka的技术选型</span>
+    <span>送别</span>
   </a>
 </nav>
 
