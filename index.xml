@@ -6,14 +6,29 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 18 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 16 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>再译She Walks in Beauty为七言</title>
-      <link>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</link>
+      <title>XXXXXX</title>
+      <link>https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%91%E4%B8%83%E8%A8%80she-walks-in-beauty---%E5%89%AF%E6%9C%AC/</link>
       <pubDate>Sat, 16 Aug 2025 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/life/%E6%A8%A1%E6%9D%BF/</guid>
-      <description>&lt;p&gt;深夜起兴，有感而发，悲从中来，无可断绝&lt;/p&gt;
+      <guid>https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%91%E4%B8%83%E8%A8%80she-walks-in-beauty---%E5%89%AF%E6%9C%AC/</guid>
+      <description>&lt;p&gt;深夜无眠，窗外小雨碎碎零零，悲从中来，&lt;/p&gt;
+&lt;p&gt;夜沉无云星缀天，伊行光影自悠然。&lt;/p&gt;
+&lt;p&gt;明暗佳色融眉睫，柔辉不似白日喧。&lt;/p&gt;
+&lt;p&gt;稍增暗影光偏减，便损风姿韵不现。&lt;/p&gt;
+&lt;p&gt;乌发轻摇藏秀色，颊边清辉静漫敛。&lt;/p&gt;
+&lt;p&gt;额角温润容光软，浅笑含情意未言。&lt;/p&gt;
+&lt;p&gt;岁月皆从善念过，心安世路爱纯全。&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>再译七言She Walks in Beauty</title>
+      <link>https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%91%E4%B8%83%E8%A8%80she-walks-in-beauty/</link>
+      <pubDate>Sat, 16 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%91%E4%B8%83%E8%A8%80she-walks-in-beauty/</guid>
+      <description>&lt;p&gt;窗外小雨碎碎零零，深夜无眠，起身伏案，转悠三圈，遂得此篇。&lt;/p&gt;
 &lt;p&gt;夜沉无云星缀天，伊行光影自悠然。&lt;/p&gt;
 &lt;p&gt;明暗佳色融眉睫，柔辉不似白日喧。&lt;/p&gt;
 &lt;p&gt;稍增暗影光偏减，便损风姿韵不现。&lt;/p&gt;
@@ -24,19 +39,10 @@
     
     <item>
       <title>She Walks in Beauty-译</title>
-      <link>https://gopherding.github.io/posts/read/she-walks-in-beauty-%E8%AF%91/</link>
-      <pubDate>Mon, 21 Jul 2025 15:55:23 +0800</pubDate>
+      <link>https://gopherding.github.io/posts/life/she-walks-in-beauty-%E8%AF%91/</link>
+      <pubDate>Thu, 14 Aug 2025 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/read/she-walks-in-beauty-%E8%AF%91/</guid>
-      <description>How pure, how dear their dwelling place.</description>
-    </item>
-    
-    <item>
-      <title>She Walks in Beauty</title>
-      <link>https://gopherding.github.io/posts/read/she-walks-in-beauty/</link>
-      <pubDate>Sun, 01 Jun 2025 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/she-walks-in-beauty/</guid>
+      <guid>https://gopherding.github.io/posts/life/she-walks-in-beauty-%E8%AF%91/</guid>
       <description>How pure, how dear their dwelling place.</description>
     </item>
     
@@ -428,12 +434,30 @@
     </item>
     
     <item>
+      <title>L&#39;Internationale</title>
+      <link>https://gopherding.github.io/posts/read/linternationale/</link>
+      <pubDate>Tue, 07 Nov 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/linternationale/</guid>
+      <description>国际悲歌歌一曲，狂飙为我从天落。</description>
+    </item>
+    
+    <item>
       <title>RDS 、DynamoDB的区别</title>
       <link>https://gopherding.github.io/posts/tech/rds-dynamodb%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
       <pubDate>Fri, 20 Oct 2023 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/tech/rds-dynamodb%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
       <description>RDS 、DynamoDB的区别与选型</description>
+    </item>
+    
+    <item>
+      <title>She Walks in Beauty</title>
+      <link>https://gopherding.github.io/posts/read/she-walks-in-beauty/</link>
+      <pubDate>Sat, 07 Oct 2023 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/she-walks-in-beauty/</guid>
+      <description>How pure, how dear their dwelling place.</description>
     </item>
     
     <item>
@@ -542,15 +566,6 @@
       
       <guid>https://gopherding.github.io/%E6%A8%A1%E6%9D%BF/</guid>
       <description>描述了一下本人学习Golang过程中遇到的问题</description>
-    </item>
-    
-    <item>
-      <title>XXXXXXXXXXXXXX</title>
-      <link>https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC-4/</guid>
-      <description>XXXXXXXXXXXXXXXXXXXXXXX</description>
     </item>
     
     <item>
