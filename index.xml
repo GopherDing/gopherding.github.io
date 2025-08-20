@@ -6,9 +6,36 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 17 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 18 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>La La Land影评.md</title>
+      <title>La Marseillaise</title>
+      <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
+      <pubDate>Sun, 17 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
+      <description>Vive la France!</description>
+    </item>
+    
+    <item>
+      <title>Do You Hear the People Sing_Les Misérables</title>
+      <link>https://gopherding.github.io/posts/read/do-you-hear-the-people-sing_les-mis%C3%A9rables/</link>
+      <pubDate>Mon, 18 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/do-you-hear-the-people-sing_les-mis%C3%A9rables/</guid>
+      <description>It is the music of a people, who will not be slaves again.</description>
+    </item>
+    
+    <item>
+      <title>One Day More_Les Misérables</title>
+      <link>https://gopherding.github.io/posts/read/one-day-more_les-mis%C3%A9rables/</link>
+      <pubDate>Mon, 18 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/one-day-more_les-mis%C3%A9rables/</guid>
+      <description>One more dawn. One more day. One day more.</description>
+    </item>
+    
+    <item>
+      <title>La La Land影评</title>
       <link>https://gopherding.github.io/posts/life/la-la-land%E5%BD%B1%E8%AF%84/</link>
       <pubDate>Sun, 17 Aug 2025 15:55:23 +0800</pubDate>
       
@@ -17,12 +44,12 @@
     </item>
     
     <item>
-      <title>La Marseillaise</title>
-      <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
+      <title>再话红楼</title>
+      <link>https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%9D%E7%BA%A2%E6%A5%BC/</link>
       <pubDate>Sun, 17 Aug 2025 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
-      <description>Vive la France!</description>
+      <guid>https://gopherding.github.io/posts/life/%E5%86%8D%E8%AF%9D%E7%BA%A2%E6%A5%BC/</guid>
+      <description>若说没奇缘, 今生偏又遇着他; 若说有奇缘, 如何心事终虚化?</description>
     </item>
     
     <item>
@@ -602,15 +629,6 @@
     </item>
     
     <item>
-      <title>City of Stars_La La Land</title>
-      <link>https://gopherding.github.io/posts/read/city-of-stars_la-la-land/</link>
-      <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/city-of-stars_la-la-land/</guid>
-      <description>A voice that says I&amp;#39;ll be here. And you&amp;#39;ll be alright</description>
-    </item>
-    
-    <item>
       <title>Golang学习中遇到的那些坑</title>
       <link>https://gopherding.github.io/%E6%A8%A1%E6%9D%BF/</link>
       <pubDate>Wed, 30 Nov 2022 15:55:23 +0800</pubDate>
@@ -635,6 +653,15 @@
       
       <guid>https://gopherding.github.io/posts/tech/nsq%E5%92%8Ckafka%E7%9A%84%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
       <description>NSQ和kafka的特点和选型</description>
+    </item>
+    
+    <item>
+      <title>City of Stars_La La Land</title>
+      <link>https://gopherding.github.io/posts/read/city-of-stars_la-la-land/</link>
+      <pubDate>Fri, 07 Oct 2022 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/city-of-stars_la-la-land/</guid>
+      <description>A voice that says I&amp;#39;ll be here. And you&amp;#39;ll be alright</description>
     </item>
     
     <item>
