@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>随笔 on GopherDing&#39;s Blog</title>
+    <link>https://gopherding.github.io/tags/%E9%9A%8F%E7%AC%94/</link>
+    <description>Recent content in 随笔 on GopherDing&#39;s Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh</language>
+    <lastBuildDate>Wed, 20 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/tags/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Just Do It</title>
+      <link>https://gopherding.github.io/posts/life/just-do-it/</link>
+      <pubDate>Wed, 20 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/just-do-it/</guid>
+      <description>And the only way to do great work is to love what you do.</description>
+    </item>
+    
+    <item>
+      <title>格律的终极生命力</title>
+      <link>https://gopherding.github.io/posts/life/%E6%A0%BC%E5%BE%8B%E7%9A%84%E7%BB%88%E6%9E%81%E7%94%9F%E5%91%BD%E5%8A%9B/</link>
+      <pubDate>Sun, 17 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E6%A0%BC%E5%BE%8B%E7%9A%84%E7%BB%88%E6%9E%81%E7%94%9F%E5%91%BD%E5%8A%9B/</guid>
+      <description>Here&amp;#39;s to the ones that dream.</description>
+    </item>
+    
+  </channel>
+</rss>
