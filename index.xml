@@ -6,7 +6,7 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Wed, 20 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 22 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>La Marseillaise</title>
       <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
@@ -14,6 +14,15 @@
       
       <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
       <description>Vive la France!</description>
+    </item>
+    
+    <item>
+      <title>归去来兮辞</title>
+      <link>https://gopherding.github.io/posts/read/%E5%BD%92%E5%8E%BB%E6%9D%A5%E5%85%AE%E8%BE%9E/</link>
+      <pubDate>Fri, 22 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/%E5%BD%92%E5%8E%BB%E6%9D%A5%E5%85%AE%E8%BE%9E/</guid>
+      <description>悟已往之不谏，知来者之可追。实迷途其未远，觉今是而昨非。</description>
     </item>
     
     <item>
@@ -49,7 +58,7 @@
       <pubDate>Mon, 18 Aug 2025 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/read/empty-chairs-at-empty-tables_les-mis%C3%A9rables/</guid>
-      <description>和Sonnet的格律听起来很像</description>
+      <description>和Sonnet的格律听起来很像，同时建议听10周年版本的</description>
     </item>
     
     <item>
@@ -134,6 +143,15 @@
     </item>
     
     <item>
+      <title>求职过后的一些反思</title>
+      <link>https://gopherding.github.io/posts/life/%E6%B1%82%E8%81%8C%E8%BF%87%E5%90%8E%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8F%8D%E6%80%9D/</link>
+      <pubDate>Fri, 11 Jul 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E6%B1%82%E8%81%8C%E8%BF%87%E5%90%8E%E7%9A%84%E4%B8%80%E4%BA%9B%E5%8F%8D%E6%80%9D/</guid>
+      <description>All we have to decide is what to do with the time that is given us.</description>
+    </item>
+    
+    <item>
       <title>春晖中学毕业歌</title>
       <link>https://gopherding.github.io/posts/read/%E6%98%A5%E6%99%96%E4%B8%AD%E5%AD%A6%E6%AF%95%E4%B8%9A%E6%AD%8C/</link>
       <pubDate>Thu, 26 Jun 2025 15:55:23 +0800</pubDate>
@@ -158,6 +176,15 @@
       
       <guid>https://gopherding.github.io/posts/read/%E9%80%81%E5%88%AB/</guid>
       <description>May the force be with you.</description>
+    </item>
+    
+    <item>
+      <title>关于面试的一些复盘总结</title>
+      <link>https://gopherding.github.io/posts/life/%E5%85%B3%E4%BA%8E%E9%9D%A2%E8%AF%95%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A4%8D%E7%9B%98%E6%80%BB%E7%BB%93/</link>
+      <pubDate>Sun, 11 May 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E5%85%B3%E4%BA%8E%E9%9D%A2%E8%AF%95%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A4%8D%E7%9B%98%E6%80%BB%E7%BB%93/</guid>
+      <description>All we have to decide is what to do with the time that is given us.</description>
     </item>
     
     <item>
