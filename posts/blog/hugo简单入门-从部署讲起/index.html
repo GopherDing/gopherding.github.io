@@ -78,8 +78,8 @@ var _hmt = _hmt || [];
 <meta property="og:description" content="Hugo简要入门" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="https://gopherding.github.io/posts/blog/hugo%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8-%E4%BB%8E%E9%83%A8%E7%BD%B2%E8%AE%B2%E8%B5%B7/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2021-11-22T15:55:23+08:00" />
-<meta property="article:modified_time" content="2021-11-22T15:55:23+08:00" />
+<meta property="article:published_time" content="2023-06-21T15:55:23+08:00" />
+<meta property="article:modified_time" content="2023-06-21T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
 <meta name="twitter:title" content="Hugo简单入门-从部署讲起"/>
@@ -127,8 +127,8 @@ var _hmt = _hmt || [];
   "articleBody": "一、本地操作流程 1. 查看文件变更状态 git status 作用：查看哪些文件被修改、新增或删除，确认更新内容 2. 添加变更到暂存区 git add . 说明：.表示添加所有变更文件，也可指定单个文件如git add content/posts/new-article.md 3. 提交变更到本地仓库 git commit -m \"更新博文：《Hugo博客部署指南》\" 建议：提交信息明确说明更新内容，便于后续追溯 4. 拉取远程仓库最新代码 git pull origin main 注意：main为默认主分支，若使用其他分支请替换，避免推送时出现冲突 5. 生成静态文件 hugo -D 参数说明：\n-D：包含草稿状态的文章（draft: true） –minify：压缩 HTML、CSS 和 JS 文件（可选） -b https://yourdomain.com：设置基准 URL（多环境部署时使用） 二、远程部署操作 1. 推送到 GitHub 主分支 git push origin main 效果：触发 GitHub Actions 工作流（若已配置）自动部署到 GitHub Pages 2. 验证部署状态 查看 GitHub Actions 运行情况： 进入 GitHub 仓库 → Actions标签\n查看Deploy to GitHub Pages工作流是否成功\n点击具体任务查看日志，排查错误（如有）\n确认博客更新： # 本地预览（部署前可选） hugo server -D 访问http://localhost:1313确认新博文已显示\n部署后访问线上地址，可能需要清除浏览器缓存\n三、特殊场景补充命令 1. 更新博客主题 # 拉取主题子模块最新代码 git submodule update --remote --merge # 提交主题变更 git add themes/your-theme/ git commit -m \"更新主题到v1.2.0\" git push origin main 2. 修复部署错误 # 修改本地代码后重新提交 git add . git commit -m \"修复部署问题：修正配置文件\" git push origin main 3. 手动部署到自定义服务器 # 生成静态文件到指定目录 hugo -D -d /path/to/deploy/folder # 通过SCP上传到服务器 scp -r /path/to/deploy/folder/* user@server:/var/www/your-blog/ # 远程重启服务（如Nginx） ssh user@server \"systemctl restart nginx\" 四、自动化部署脚本 创建deploy.sh脚本简化流程：\n#!/bin/bash # 博客部署脚本 echo \"开始部署Hugo博客...\" # 1. 检查状态并添加变更 git status git add . # 2. 提交变更 DATE=$(date +\"%Y-%m-%d %H:%M:%S\") git commit -m \"自动部署：$DATE\" || exit 0 # 3. 拉取并推送 git pull origin main git push origin main # 4. 提示完成 echo \"部署已触发，等待GitHub Actions完成...\" 赋予执行权限并运行：\nchmod +x deploy.sh ./deploy.sh 五、部署流程示意图 本地修改博文 → git add . → git commit → git pull → hugo -D → git push → GitHub Actions触发 ↓ Hugo生成静态文件 → 推送到gh-pages分支 → 博客自动更新（约1-3分钟） 六、注意事项 分支设置：确保 GitHub Actions 配置文件（.github/workflows/gh-pages.yml）正确监听main分支\n主题依赖：若使用主题，需在 Actions 中配置submodules: true拉取主题代码\n草稿处理：线上环境如需显示草稿，需在 Hugo 命令或 Actions 中添加-D参数\n缓存问题：部署后若未显示更新，尝试强制刷新浏览器（Ctrl+Shift+R）或清除 CDN 缓存\n",
   "wordCount" : "1121",
   "inLanguage": "zh",
-  "datePublished": "2021-11-22T15:55:23+08:00",
-  "dateModified": "2021-11-22T15:55:23+08:00",
+  "datePublished": "2023-06-21T15:55:23+08:00",
+  "dateModified": "2023-06-21T15:55:23+08:00",
   "author":[{
     "@type": "Person",
     "name": "GopherDing"
@@ -277,7 +277,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2021-11-22
+        <span>2023-06-21
             &nbsp;&nbsp;
         </span>
     </span>
@@ -627,15 +627,15 @@ var _hmt = _hmt || [];
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/tech/go%E7%9A%84%E7%BC%96%E8%AF%91%E6%89%A7%E8%A1%8C%E6%B5%81%E7%A8%8B/">
+  <a class="prev" href="https://gopherding.github.io/posts/read/she-walks-in-beauty/">
     <span class="title">« 上一页</span>
     <br>
-    <span>Go的编译执行流程</span>
+    <span>She Walks in Beauty</span>
   </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/%E7%B4%A2%E5%BC%95%E4%B8%8B%E6%8E%A8%E5%92%8C%E8%A6%86%E7%9B%96%E7%B4%A2%E5%BC%95/">
+  <a class="next" href="https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/">
     <span class="title">下一页 »</span>
     <br>
-    <span>索引下推和覆盖索引</span>
+    <span>We choose to go to the moon</span>
   </a>
 </nav>
 
