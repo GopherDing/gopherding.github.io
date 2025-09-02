@@ -6,7 +6,7 @@
     <description>Recent content in 📕 阅读 on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Tue, 26 Aug 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/read/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 01 Sep 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/read/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>La Marseillaise</title>
       <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
@@ -14,6 +14,15 @@
       
       <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
       <description>Vive la France!</description>
+    </item>
+    
+    <item>
+      <title>文化偏至论</title>
+      <link>https://gopherding.github.io/posts/read/%E6%96%87%E5%8C%96%E5%81%8F%E8%87%B3%E8%AE%BA/</link>
+      <pubDate>Mon, 01 Sep 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/%E6%96%87%E5%8C%96%E5%81%8F%E8%87%B3%E8%AE%BA/</guid>
+      <description>掊物質而張靈明，任個人而排眾數。</description>
     </item>
     
     <item>
@@ -310,15 +319,6 @@
       <pubDate>Wed, 18 Jan 2023 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/read/%E8%AE%BA%E7%9D%81%E4%BA%86%E7%9C%BC%E7%9C%8B/</guid>
-      <description>社会现象，是客观存在的，不管你看与不看，它都在那里。而且，社会现象，是不断变化的，你不看，就会落后，就会被淘汰。</description>
-    </item>
-    
-    <item>
-      <title>文化偏至论</title>
-      <link>https://gopherding.github.io/posts/read/%E6%96%87%E5%8C%96%E5%81%8F%E8%87%B3%E8%AE%BA/</link>
-      <pubDate>Wed, 18 Jan 2023 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/%E6%96%87%E5%8C%96%E5%81%8F%E8%87%B3%E8%AE%BA/</guid>
       <description>社会现象，是客观存在的，不管你看与不看，它都在那里。而且，社会现象，是不断变化的，你不看，就会落后，就会被淘汰。</description>
     </item>
     
