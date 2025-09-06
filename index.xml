@@ -314,6 +314,15 @@
     </item>
     
     <item>
+      <title>🙋🏻‍♂️关于</title>
+      <link>https://gopherding.github.io/about/</link>
+      <pubDate>Thu, 06 Mar 2025 14:57:28 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/about/</guid>
+      <description>Even the smallest person can change the course of the future.</description>
+    </item>
+    
+    <item>
       <title>CDN失效的解决办法</title>
       <link>https://gopherding.github.io/posts/blog/cdn%E5%A4%B1%E6%95%88%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/</link>
       <pubDate>Thu, 20 Feb 2025 15:55:23 +0800</pubDate>
@@ -329,15 +338,6 @@
       
       <guid>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
       <description>以人话和鬼话两种方式解释了一下go的读写锁</description>
-    </item>
-    
-    <item>
-      <title>🙋🏻‍♂️关于</title>
-      <link>https://gopherding.github.io/about/</link>
-      <pubDate>Wed, 06 Nov 2024 14:57:28 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/about/</guid>
-      <description>道路曲折，前途光明！</description>
     </item>
     
     <item>
