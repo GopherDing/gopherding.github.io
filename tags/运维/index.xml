@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>异地多活架构设计</title>
+      <link>https://gopherding.github.io/posts/tech/%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</link>
+      <pubDate>Wed, 16 Oct 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E5%BC%82%E5%9C%B0%E5%A4%9A%E6%B4%BB%E6%9E%B6%E6%9E%84%E8%AE%BE%E8%AE%A1/</guid>
+      <description>很好的文章，大道至简</description>
+    </item>
+    
+    <item>
       <title>ELK和EFK</title>
       <link>https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/</link>
       <pubDate>Fri, 06 Sep 2024 15:55:23 +0800</pubDate>
