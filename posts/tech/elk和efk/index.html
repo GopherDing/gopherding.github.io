@@ -5,11 +5,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta name="robots" content="index, follow">
-<title>Cluster Autoscaler和Horizontal Pod Autoscaler的区别 | GopherDing&#39;s Blog</title>
+<title>ELK和EFK | GopherDing&#39;s Blog</title>
 <meta name="keywords" content="">
-<meta name="description" content="Cluster Autoscaler和Horizontal Pod Autoscaler的区别">
+<meta name="description" content="总结了ELK和EFK各自适合的适用情况">
 <meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/">
+<link rel="canonical" href="https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/">
 <link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
 <script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
 <link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
@@ -19,7 +19,7 @@
 <link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
 <meta name="theme-color" content="#2e2e33">
 <meta name="msapplication-TileColor" content="#2e2e33">
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/">
+<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/">
 <noscript>
     <style>
         #theme-toggle,
@@ -74,16 +74,16 @@ var _hmt = _hmt || [];
   s.parentNode.insertBefore(hm, s);
 })();
 </script>
-<meta property="og:title" content="Cluster Autoscaler和Horizontal Pod Autoscaler的区别" />
-<meta property="og:description" content="Cluster Autoscaler和Horizontal Pod Autoscaler的区别" />
+<meta property="og:title" content="ELK和EFK" />
+<meta property="og:description" content="总结了ELK和EFK各自适合的适用情况" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-01-16T15:55:23+08:00" />
-<meta property="article:modified_time" content="2024-01-16T15:55:23+08:00" />
+<meta property="og:url" content="https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2024-09-06T15:55:23+08:00" />
+<meta property="article:modified_time" content="2024-09-06T15:55:23+08:00" />
 
 <meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Cluster Autoscaler和Horizontal Pod Autoscaler的区别"/>
-<meta name="twitter:description" content="Cluster Autoscaler和Horizontal Pod Autoscaler的区别"/>
+<meta name="twitter:title" content="ELK和EFK"/>
+<meta name="twitter:description" content="总结了ELK和EFK各自适合的适用情况"/>
 
 
 <script type="application/ld+json">
@@ -108,8 +108,8 @@ var _hmt = _hmt || [];
     {
       "@type": "ListItem",
       "position":  3 ,
-      "name": "Cluster Autoscaler和Horizontal Pod Autoscaler的区别",
-      "item": "https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/"
+      "name": "ELK和EFK",
+      "item": "https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/"
     }
   ]
 }
@@ -118,24 +118,24 @@ var _hmt = _hmt || [];
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "Cluster Autoscaler和Horizontal Pod Autoscaler的区别",
-  "name": "Cluster Autoscaler和Horizontal Pod Autoscaler的区别",
-  "description": "Cluster Autoscaler和Horizontal Pod Autoscaler的区别",
+  "headline": "ELK和EFK",
+  "name": "ELK和EFK",
+  "description": "总结了ELK和EFK各自适合的适用情况",
   "keywords": [
     ""
   ],
-  "articleBody": "Cluster Autoscaler 和 Horizontal Pod Autoscaler（HPA）在 Kubernetes 中有着不同的作用，主要区别如下：\n一、作用对象 Cluster Autoscaler： 作用于 Kubernetes 集群中的节点（node）。它会根据整个集群的资源需求情况，自动调整节点的数量。例如，当集群中的 Pod 由于资源不足而无法被调度时，Cluster Autoscaler 会自动添加新的节点到集群中，以提供更多的资源供 Pod 运行。 你在管理一个大规模的分布式应用时，如果发现应用的负载持续增加，导致现有节点无法满足 Pod 的资源需求，Cluster Autoscaler 就会发挥作用，自动增加节点来承载更多的工作负载。 Horizontal Pod Autoscaler： 作用于特定的 Deployment、ReplicaSet 或 StatefulSet 中的 Pod 副本数量。它根据 Pod 的资源使用情况（如 CPU 使用率、内存使用率等）自动调整 Pod 的副本数量。例如，如果一个 Deployment 中的 Pod 的平均 CPU 使用率超过了预设的阈值，HPA 会自动增加 Pod 的副本数量，以分担负载。 当你的应用面临不同的负载变化时，HPA 可以动态地调整 Pod 的数量，确保应用始终有足够的资源来处理请求，同时避免资源浪费。 二、调整方式 Cluster Autoscaler： 通过添加或删除节点来调整集群的资源容量。这通常涉及到云服务提供商的 API 调用，以启动新的虚拟机实例作为节点加入集群，或者删除不再需要的节点以节省成本。例如，在 AWS 上使用 Kubernetes，Cluster Autoscaler 可以调用 AWS EC2 API 来启动或终止 EC2 实例作为 Kubernetes 节点。 调整过程相对较慢，因为涉及到节点的创建和初始化等操作。但是，它可以从根本上解决集群资源不足的问题，适用于大规模的资源需求变化。 Horizontal Pod Autoscaler： 直接调整 Pod 的副本数量。当需要增加资源时，它会创建更多的 Pod 副本；当资源需求减少时，它会减少 Pod 的副本数量。这个过程相对较快，因为 Pod 的创建和销毁通常比节点的创建和删除要快得多。 调整的粒度相对较细，可以根据具体的应用负载变化进行快速响应。但是，它只能在现有节点的资源范围内进行调整，如果整个集群的资源都不足，就需要 Cluster Autoscaler 来添加新的节点。 三、应用场景 Cluster Autoscaler： 适用于大规模的资源需求变化，尤其是当现有节点无法满足应用的资源需求时。例如，在处理突发的高流量事件、大规模数据处理任务等情况下，Cluster Autoscaler 可以快速增加节点数量，以确保应用的可用性和性能。 对于长期运行的大规模分布式系统，Cluster Autoscaler 可以根据负载的变化自动调整节点数量，以实现资源的优化配置和成本控制。 Horizontal Pod Autoscaler： 适用于应用负载变化较为频繁，但资源需求变化相对较小的情况。例如，Web 应用、API 服务等，这些应用的负载可能会随着用户请求的数量而变化，但通常不需要大规模的资源扩展。 可以帮助优化资源使用，确保应用在不同负载下都能高效运行，同时避免资源浪费。 综上所述，Cluster Autoscaler 和 Horizontal Pod Autoscaler 在 Kubernetes 中分别从不同的层面调整资源，以满足应用的需求。它们可以结合使用，共同实现 Kubernetes 集群的自动扩缩容，提高资源利用率和和应用的可靠性。\n",
-  "wordCount" : "1194",
+  "articleBody": "以下是关于 ELK 和 EFK 的对比解析：\nELK 核心组件 Elasticsearch 分布式搜索引擎，负责存储、检索和分析海量数据。支持实时查询和高可用性，适用于日志、指标等场景。 Logstash 数据收集和处理引擎，支持多种输入源（如文件、数据库、消息队列）。提供强大的过滤和转换能力（如正则解析、字段提取），但资源消耗较高。 Kibana 数据可视化平台，用于生成图表、仪表盘，支持交互式查询和分析。 典型架构 日志采集：Logstash 从文件、数据库等读取原始日志。 数据处理：Logstash 通过解析规则（如 grok 插件）清洗数据。 存储与检索：清洗后的数据存入 Elasticsearch。 可视化：Kibana 展示日志趋势、错误分布等。 优点 功能全面：Logstash 支持复杂的数据处理逻辑。 生态成熟：丰富的插件体系（如 beats 输入插件）。 缺点 资源消耗大：Logstash 在数据量大时易成为性能瓶颈。 复杂度高：配置和维护成本较高。 EFK 核心组件 Elasticsearch（同上） Fluentd/Fluent Bit 轻量级日志收集器，专为容器化环境设计。Fluentd 功能全面，Fluent Bit 更轻量（适合边缘设备）。 Kibana（同上） 典型架构（以 Kubernetes 为例） 日志采集： Fluentd 以 DaemonSet 部署在每个节点，通过 tail 插件采集容器日志。 自动关联 Kubernetes 元数据（如 Pod 名称、命名空间）。 数据处理： Fluentd 使用过滤器（如 record_transformer）添加标签或删除冗余字段。 存储与检索：数据发送到 Elasticsearch。 可视化：Kibana 展示日志，支持按集群、节点、Pod 等多维度过滤。 优点 轻量化：Fluentd/Fluent Bit 资源占用低，适合容器环境。 云原生友好：天然支持 Kubernetes 元数据，集成 Prometheus 监控。 灵活性：支持插件扩展（如 kafka 输出插件）。 缺点 功能限制：相比 Logstash，复杂数据处理能力较弱（如多层嵌套日志解析）。 ELK vs EFK 关键区别 对比项 ELK EFK 日志收集器 Logstash Fluentd/Fluent Bit 资源消耗 高（JVM 内存占用大） 低（适合容器化环境） 适用场景 传统服务器日志处理 云原生、Kubernetes 环境 数据处理能力 强大（支持复杂解析） 中等（依赖插件扩展） 部署复杂度 较高 较低 应用场景 ELK 传统服务器日志分析，需复杂清洗（如多行日志合并）。 大数据场景，需 Logstash 的丰富插件支持（如 JDBC 读取数据库）。 EFK Kubernetes / 容器化环境，需低资源占用的日志采集。 云原生场景，需与 Prometheus、Grafana 等工具集成。 总结 选择 ELK：适合需要复杂数据处理且资源充足的传统环境。 选择 EFK：适合云原生、Kubernetes 等轻量化场景，尤其是资源敏感型应用。 混合使用：例如用 Fluentd 采集日志，Logstash 做二次处理（通过 fluentd 输入插件）。 ",
+  "wordCount" : "1052",
   "inLanguage": "zh",
-  "datePublished": "2024-01-16T15:55:23+08:00",
-  "dateModified": "2024-01-16T15:55:23+08:00",
+  "datePublished": "2024-09-06T15:55:23+08:00",
+  "dateModified": "2024-09-06T15:55:23+08:00",
   "author":[{
     "@type": "Person",
     "name": "GopherDing"
   }],
   "mainEntityOfPage": {
     "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/"
+    "@id": "https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/"
   },
   "publisher": {
     "@type": "Organization",
@@ -253,10 +253,10 @@ var _hmt = _hmt || [];
         <header class="post-header">
             <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
             <h1 class="post-title">
-                Cluster Autoscaler和Horizontal Pod Autoscaler的区别
+                ELK和EFK
             </h1>
             <div class="post-description">
-                Cluster Autoscaler和Horizontal Pod Autoscaler的区别
+                总结了ELK和EFK各自适合的适用情况
             </div>
             <div class="post-meta">
 
@@ -277,7 +277,7 @@ var _hmt = _hmt || [];
 <span class="parent-post-meta">
     <span id="post_meta_style_1">
         <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-16
+        <span>2024-09-06
             &nbsp;&nbsp;
         </span>
     </span>
@@ -290,7 +290,7 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1194字
+        <span>1052字
             &nbsp;&nbsp;
         </span>
     </span>
@@ -310,8 +310,7 @@ var _hmt = _hmt || [];
         <span class="fa fa-tags" style="opacity: 0.8"></span>
         <span>
             <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-                &nbsp;<a href="https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/" style="color: var(--secondary)!important;">运维</a>
+                <a href="https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/" style="color: var(--secondary)!important;">运维</a>
             </span>
         </span>
     </span>
@@ -373,31 +372,36 @@ var _hmt = _hmt || [];
 
         <div class="inner"><ul>
                 <li>
-                    <a href="#%e4%b8%80%e4%bd%9c%e7%94%a8%e5%af%b9%e8%b1%a1" aria-label="一、作用对象"><strong>一、作用对象</strong></a><ul>
+                    <a href="#elk" aria-label="ELK"><strong>ELK</strong></a><ul>
                         
                 <li>
-                    <a href="#cluster-autoscaler" aria-label="Cluster Autoscaler：">Cluster Autoscaler：</a></li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e7%bb%84%e4%bb%b6" aria-label="核心组件">核心组件</a></li>
                 <li>
-                    <a href="#horizontal-pod-autoscaler" aria-label="Horizontal Pod Autoscaler：">Horizontal Pod Autoscaler：</a></li></ul>
+                    <a href="#%e5%85%b8%e5%9e%8b%e6%9e%b6%e6%9e%84" aria-label="典型架构">典型架构</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e7%82%b9" aria-label="优点">优点</a></li>
+                <li>
+                    <a href="#%e7%bc%ba%e7%82%b9" aria-label="缺点">缺点</a></li></ul>
                 </li>
                 <li>
-                    <a href="#%e4%ba%8c%e8%b0%83%e6%95%b4%e6%96%b9%e5%bc%8f" aria-label="二、调整方式"><strong>二、调整方式</strong></a><ul>
+                    <a href="#efk" aria-label="EFK"><strong>EFK</strong></a><ul>
                         
                 <li>
-                    <a href="#cluster-autoscaler-1" aria-label="Cluster Autoscaler：">Cluster Autoscaler：</a></li>
+                    <a href="#%e6%a0%b8%e5%bf%83%e7%bb%84%e4%bb%b6-1" aria-label="核心组件">核心组件</a></li>
                 <li>
-                    <a href="#horizontal-pod-autoscaler-1" aria-label="Horizontal Pod Autoscaler：">Horizontal Pod Autoscaler：</a></li></ul>
+                    <a href="#%e5%85%b8%e5%9e%8b%e6%9e%b6%e6%9e%84%e4%bb%a5-kubernetes-%e4%b8%ba%e4%be%8b" aria-label="典型架构（以 Kubernetes 为例）">典型架构（以 Kubernetes 为例）</a></li>
+                <li>
+                    <a href="#%e4%bc%98%e7%82%b9-1" aria-label="优点">优点</a></li>
+                <li>
+                    <a href="#%e7%bc%ba%e7%82%b9-1" aria-label="缺点">缺点</a></li></ul>
                 </li>
                 <li>
-                    <a href="#%e4%b8%89%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af" aria-label="三、应用场景"><strong>三、应用场景</strong></a><ul>
-                        
+                    <a href="#elk-vs-efk-%e5%85%b3%e9%94%ae%e5%8c%ba%e5%88%ab" aria-label="ELK vs EFK 关键区别"><strong>ELK vs EFK 关键区别</strong></a></li>
                 <li>
-                    <a href="#cluster-autoscaler-2" aria-label="Cluster Autoscaler：">Cluster Autoscaler：</a></li>
+                    <a href="#%e5%ba%94%e7%94%a8%e5%9c%ba%e6%99%af" aria-label="应用场景"><strong>应用场景</strong></a></li>
                 <li>
-                    <a href="#horizontal-pod-autoscaler-2" aria-label="Horizontal Pod Autoscaler：">Horizontal Pod Autoscaler：</a>
+                    <a href="#%e6%80%bb%e7%bb%93" aria-label="总结"><strong>总结</strong></a>
                 </li>
-            </ul>
-            </li>
             </ul>
         </div>
         </details>
@@ -463,59 +467,131 @@ var _hmt = _hmt || [];
         return rect.top + win.pageYOffset;
     }
 </script>
-        <div class="post-content"><p>Cluster Autoscaler 和 Horizontal Pod Autoscaler（HPA）在 Kubernetes 中有着不同的作用，主要区别如下：</p>
-<h3 id="一作用对象"><strong>一、作用对象</strong><a hidden class="anchor" aria-hidden="true" href="#一作用对象">#</a></h3>
-<ol>
-<li>
-<h4 id="cluster-autoscaler">Cluster Autoscaler：<a hidden class="anchor" aria-hidden="true" href="#cluster-autoscaler">#</a></h4>
+        <div class="post-content"><p>以下是关于 <strong>ELK</strong> 和 <strong>EFK</strong> 的对比解析：</p>
+<hr>
+<h3 id="elk"><strong>ELK</strong><a hidden class="anchor" aria-hidden="true" href="#elk">#</a></h3>
+<h4 id="核心组件">核心组件<a hidden class="anchor" aria-hidden="true" href="#核心组件">#</a></h4>
 <ul>
-<li>作用于 Kubernetes 集群中的节点（node）。它会根据整个集群的资源需求情况，自动调整节点的数量。例如，当集群中的 Pod 由于资源不足而无法被调度时，Cluster Autoscaler 会自动添加新的节点到集群中，以提供更多的资源供 Pod 运行。</li>
-<li>你在管理一个大规模的分布式应用时，如果发现应用的负载持续增加，导致现有节点无法满足 Pod 的资源需求，Cluster Autoscaler 就会发挥作用，自动增加节点来承载更多的工作负载。</li>
+<li><strong>Elasticsearch</strong>
+分布式搜索引擎，负责存储、检索和分析海量数据。支持实时查询和高可用性，适用于日志、指标等场景。</li>
+<li><strong>Logstash</strong>
+数据收集和处理引擎，支持多种输入源（如文件、数据库、消息队列）。提供强大的过滤和转换能力（如正则解析、字段提取），但资源消耗较高。</li>
+<li><strong>Kibana</strong>
+数据可视化平台，用于生成图表、仪表盘，支持交互式查询和分析。</li>
+</ul>
+<h4 id="典型架构">典型架构<a hidden class="anchor" aria-hidden="true" href="#典型架构">#</a></h4>
+<ol>
+<li><strong>日志采集</strong>：Logstash 从文件、数据库等读取原始日志。</li>
+<li><strong>数据处理</strong>：Logstash 通过解析规则（如 <code>grok</code> 插件）清洗数据。</li>
+<li><strong>存储与检索</strong>：清洗后的数据存入 Elasticsearch。</li>
+<li><strong>可视化</strong>：Kibana 展示日志趋势、错误分布等。</li>
+</ol>
+<h4 id="优点">优点<a hidden class="anchor" aria-hidden="true" href="#优点">#</a></h4>
+<ul>
+<li><strong>功能全面</strong>：Logstash 支持复杂的数据处理逻辑。</li>
+<li><strong>生态成熟</strong>：丰富的插件体系（如 <code>beats</code> 输入插件）。</li>
+</ul>
+<h4 id="缺点">缺点<a hidden class="anchor" aria-hidden="true" href="#缺点">#</a></h4>
+<ul>
+<li><strong>资源消耗大</strong>：Logstash 在数据量大时易成为性能瓶颈。</li>
+<li><strong>复杂度高</strong>：配置和维护成本较高。</li>
+</ul>
+<hr>
+<h3 id="efk"><strong>EFK</strong><a hidden class="anchor" aria-hidden="true" href="#efk">#</a></h3>
+<h4 id="核心组件-1">核心组件<a hidden class="anchor" aria-hidden="true" href="#核心组件-1">#</a></h4>
+<ul>
+<li><strong>Elasticsearch</strong>（同上）</li>
+<li><strong>Fluentd/Fluent Bit</strong>
+轻量级日志收集器，专为容器化环境设计。Fluentd 功能全面，Fluent Bit 更轻量（适合边缘设备）。</li>
+<li><strong>Kibana</strong>（同上）</li>
+</ul>
+<h4 id="典型架构以-kubernetes-为例">典型架构（以 Kubernetes 为例）<a hidden class="anchor" aria-hidden="true" href="#典型架构以-kubernetes-为例">#</a></h4>
+<ol>
+<li><strong>日志采集：</strong>
+<ul>
+<li>Fluentd 以 DaemonSet 部署在每个节点，通过 <code>tail</code> 插件采集容器日志。</li>
+<li>自动关联 Kubernetes 元数据（如 Pod 名称、命名空间）。</li>
 </ul>
 </li>
-<li>
-<h4 id="horizontal-pod-autoscaler">Horizontal Pod Autoscaler：<a hidden class="anchor" aria-hidden="true" href="#horizontal-pod-autoscaler">#</a></h4>
+<li><strong>数据处理：</strong>
 <ul>
-<li>作用于特定的 Deployment、ReplicaSet 或 StatefulSet 中的 Pod 副本数量。它根据 Pod 的资源使用情况（如 CPU 使用率、内存使用率等）自动调整 Pod 的副本数量。例如，如果一个 Deployment 中的 Pod 的平均 CPU 使用率超过了预设的阈值，HPA 会自动增加 Pod 的副本数量，以分担负载。</li>
-<li>当你的应用面临不同的负载变化时，HPA 可以动态地调整 Pod 的数量，确保应用始终有足够的资源来处理请求，同时避免资源浪费。</li>
+<li>Fluentd 使用过滤器（如 <code>record_transformer</code>）添加标签或删除冗余字段。</li>
+</ul>
+</li>
+<li><strong>存储与检索</strong>：数据发送到 Elasticsearch。</li>
+<li><strong>可视化</strong>：Kibana 展示日志，支持按集群、节点、Pod 等多维度过滤。</li>
+</ol>
+<h4 id="优点-1">优点<a hidden class="anchor" aria-hidden="true" href="#优点-1">#</a></h4>
+<ul>
+<li><strong>轻量化</strong>：Fluentd/Fluent Bit 资源占用低，适合容器环境。</li>
+<li><strong>云原生友好</strong>：天然支持 Kubernetes 元数据，集成 Prometheus 监控。</li>
+<li><strong>灵活性</strong>：支持插件扩展（如 <code>kafka</code> 输出插件）。</li>
+</ul>
+<h4 id="缺点-1">缺点<a hidden class="anchor" aria-hidden="true" href="#缺点-1">#</a></h4>
+<ul>
+<li><strong>功能限制</strong>：相比 Logstash，复杂数据处理能力较弱（如多层嵌套日志解析）。</li>
+</ul>
+<hr>
+<h3 id="elk-vs-efk-关键区别"><strong>ELK vs EFK 关键区别</strong><a hidden class="anchor" aria-hidden="true" href="#elk-vs-efk-关键区别">#</a></h3>
+<table>
+  <thead>
+      <tr>
+          <th><strong>对比项</strong></th>
+          <th><strong>ELK</strong></th>
+          <th><strong>EFK</strong></th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td><strong>日志收集器</strong></td>
+          <td>Logstash</td>
+          <td>Fluentd/Fluent Bit</td>
+      </tr>
+      <tr>
+          <td><strong>资源消耗</strong></td>
+          <td>高（JVM 内存占用大）</td>
+          <td>低（适合容器化环境）</td>
+      </tr>
+      <tr>
+          <td><strong>适用场景</strong></td>
+          <td>传统服务器日志处理</td>
+          <td>云原生、Kubernetes 环境</td>
+      </tr>
+      <tr>
+          <td><strong>数据处理能力</strong></td>
+          <td>强大（支持复杂解析）</td>
+          <td>中等（依赖插件扩展）</td>
+      </tr>
+      <tr>
+          <td><strong>部署复杂度</strong></td>
+          <td>较高</td>
+          <td>较低</td>
+      </tr>
+  </tbody>
+</table>
+<hr>
+<h3 id="应用场景"><strong>应用场景</strong><a hidden class="anchor" aria-hidden="true" href="#应用场景">#</a></h3>
+<ol>
+<li>ELK
+<ul>
+<li>传统服务器日志分析，需复杂清洗（如多行日志合并）。</li>
+<li>大数据场景，需 Logstash 的丰富插件支持（如 <code>JDBC</code> 读取数据库）。</li>
+</ul>
+</li>
+<li>EFK
+<ul>
+<li>Kubernetes / 容器化环境，需低资源占用的日志采集。</li>
+<li>云原生场景，需与 Prometheus、Grafana 等工具集成。</li>
 </ul>
 </li>
 </ol>
-<h3 id="二调整方式"><strong>二、调整方式</strong><a hidden class="anchor" aria-hidden="true" href="#二调整方式">#</a></h3>
-<ol>
-<li>
-<h4 id="cluster-autoscaler-1">Cluster Autoscaler：<a hidden class="anchor" aria-hidden="true" href="#cluster-autoscaler-1">#</a></h4>
+<hr>
+<h3 id="总结"><strong>总结</strong><a hidden class="anchor" aria-hidden="true" href="#总结">#</a></h3>
 <ul>
-<li>通过添加或删除节点来调整集群的资源容量。这通常涉及到云服务提供商的 API 调用，以启动新的虚拟机实例作为节点加入集群，或者删除不再需要的节点以节省成本。例如，在 AWS 上使用 Kubernetes，Cluster Autoscaler 可以调用 AWS EC2 API 来启动或终止 EC2 实例作为 Kubernetes 节点。</li>
-<li>调整过程相对较慢，因为涉及到节点的创建和初始化等操作。但是，它可以从根本上解决集群资源不足的问题，适用于大规模的资源需求变化。</li>
+<li><strong>选择 ELK</strong>：适合需要复杂数据处理且资源充足的传统环境。</li>
+<li><strong>选择 EFK</strong>：适合云原生、Kubernetes 等轻量化场景，尤其是资源敏感型应用。</li>
+<li><strong>混合使用</strong>：例如用 Fluentd 采集日志，Logstash 做二次处理（通过 <code>fluentd</code> 输入插件）。</li>
 </ul>
-</li>
-<li>
-<h4 id="horizontal-pod-autoscaler-1">Horizontal Pod Autoscaler：<a hidden class="anchor" aria-hidden="true" href="#horizontal-pod-autoscaler-1">#</a></h4>
-<ul>
-<li>直接调整 Pod 的副本数量。当需要增加资源时，它会创建更多的 Pod 副本；当资源需求减少时，它会减少 Pod 的副本数量。这个过程相对较快，因为 Pod 的创建和销毁通常比节点的创建和删除要快得多。</li>
-<li>调整的粒度相对较细，可以根据具体的应用负载变化进行快速响应。但是，它只能在现有节点的资源范围内进行调整，如果整个集群的资源都不足，就需要 Cluster Autoscaler 来添加新的节点。</li>
-</ul>
-</li>
-</ol>
-<h3 id="三应用场景"><strong>三、应用场景</strong><a hidden class="anchor" aria-hidden="true" href="#三应用场景">#</a></h3>
-<ol>
-<li>
-<h4 id="cluster-autoscaler-2">Cluster Autoscaler：<a hidden class="anchor" aria-hidden="true" href="#cluster-autoscaler-2">#</a></h4>
-<ul>
-<li>适用于大规模的资源需求变化，尤其是当现有节点无法满足应用的资源需求时。例如，在处理突发的高流量事件、大规模数据处理任务等情况下，Cluster Autoscaler 可以快速增加节点数量，以确保应用的可用性和性能。</li>
-<li>对于长期运行的大规模分布式系统，Cluster Autoscaler 可以根据负载的变化自动调整节点数量，以实现资源的优化配置和成本控制。</li>
-</ul>
-</li>
-<li>
-<h4 id="horizontal-pod-autoscaler-2">Horizontal Pod Autoscaler：<a hidden class="anchor" aria-hidden="true" href="#horizontal-pod-autoscaler-2">#</a></h4>
-<ul>
-<li>适用于应用负载变化较为频繁，但资源需求变化相对较小的情况。例如，Web 应用、API 服务等，这些应用的负载可能会随着用户请求的数量而变化，但通常不需要大规模的资源扩展。</li>
-<li>可以帮助优化资源使用，确保应用在不同负载下都能高效运行，同时避免资源浪费。</li>
-</ul>
-</li>
-</ol>
-<p>综上所述，Cluster Autoscaler 和 Horizontal Pod Autoscaler 在 Kubernetes 中分别从不同的层面调整资源，以满足应用的需求。它们可以结合使用，共同实现 Kubernetes 集群的自动扩缩容，提高资源利用率和和应用的可靠性。</p>
 
 
         </div>
@@ -523,15 +599,15 @@ var _hmt = _hmt || [];
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/tech/helm3%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/">
+  <a class="prev" href="https://gopherding.github.io/posts/read/%E4%B8%AD%E5%9B%BD%E4%BA%BA%E5%A4%B1%E6%8E%89%E8%87%AA%E4%BF%A1%E5%8A%9B%E4%BA%86%E5%90%97/">
     <span class="title">« 上一页</span>
     <br>
-    <span>Helm3的使用方法</span>
+    <span>中国人失掉自信力了吗</span>
   </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E9%85%8D%E7%BD%AE%E4%B8%AD%E5%BF%83%E9%80%89%E5%9E%8B/">
+  <a class="next" href="https://gopherding.github.io/posts/tech/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4quota%E5%B9%B3%E5%9D%87%E7%9A%84%E5%AE%9E%E7%8E%B0/">
     <span class="title">下一页 »</span>
     <br>
-    <span>K8s的配置中心选型</span>
+    <span>网络运维—Quota平均的实现</span>
   </a>
 </nav>
 

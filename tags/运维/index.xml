@@ -17,12 +17,48 @@
     </item>
     
     <item>
+      <title>ELK和EFK</title>
+      <link>https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/</link>
+      <pubDate>Fri, 06 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/</guid>
+      <description>总结了ELK和EFK各自适合的适用情况</description>
+    </item>
+    
+    <item>
+      <title>网络运维—Quota平均的实现</title>
+      <link>https://gopherding.github.io/posts/tech/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4quota%E5%B9%B3%E5%9D%87%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Fri, 06 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4quota%E5%B9%B3%E5%9D%87%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+      <description>如何实现Quota平均</description>
+    </item>
+    
+    <item>
       <title>Rancher&#43;Helm3 &#43; ConfigMap集群配置项热更新</title>
       <link>https://gopherding.github.io/posts/tech/rancher&#43;helm3&#43;-configmap%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%83%AD%E6%9B%B4%E6%96%B0/</link>
       <pubDate>Fri, 26 Jan 2024 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/tech/rancher&#43;helm3&#43;-configmap%E9%9B%86%E7%BE%A4%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%83%AD%E6%9B%B4%E6%96%B0/</guid>
       <description>实现Rancher&#43;Helm3 &#43; ConfigMap集群配置项热更新的方式详解</description>
+    </item>
+    
+    <item>
+      <title>Cluster Autoscaler和Horizontal Pod Autoscaler的区别</title>
+      <link>https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/</link>
+      <pubDate>Tue, 16 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/cluster-autoscaler%E5%92%8Chorizontal-pod-autoscaler%E7%9A%84%E5%8C%BA%E5%88%AB/</guid>
+      <description>Cluster Autoscaler和Horizontal Pod Autoscaler的区别</description>
+    </item>
+    
+    <item>
+      <title>HPA和Prometheus联动自动扩容</title>
+      <link>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</link>
+      <pubDate>Mon, 08 Jan 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/</guid>
+      <description>HPA和Prometheus联动自动扩容</description>
     </item>
     
   </channel>

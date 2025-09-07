@@ -44,6 +44,24 @@
     </item>
     
     <item>
+      <title>ELK和EFK</title>
+      <link>https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/</link>
+      <pubDate>Fri, 06 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/elk%E5%92%8Cefk/</guid>
+      <description>总结了ELK和EFK各自适合的适用情况</description>
+    </item>
+    
+    <item>
+      <title>网络运维—Quota平均的实现</title>
+      <link>https://gopherding.github.io/posts/tech/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4quota%E5%B9%B3%E5%9D%87%E7%9A%84%E5%AE%9E%E7%8E%B0/</link>
+      <pubDate>Fri, 06 Sep 2024 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/tech/%E7%BD%91%E7%BB%9C%E8%BF%90%E7%BB%B4quota%E5%B9%B3%E5%9D%87%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
+      <description>如何实现Quota平均</description>
+    </item>
+    
+    <item>
       <title>Golang的PGO优化</title>
       <link>https://gopherding.github.io/posts/tech/pgo%E7%9B%B8%E5%85%B3/</link>
       <pubDate>Tue, 13 Aug 2024 15:55:23 +0800</pubDate>
