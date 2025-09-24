@@ -6,7 +6,7 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Mon, 22 Sep 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 24 Sep 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>La Marseillaise</title>
       <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
@@ -14,6 +14,15 @@
       
       <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
       <description>Vive la France!</description>
+    </item>
+    
+    <item>
+      <title>Text of President John Kennedy&#39;s Rice Stadium Moom Speech</title>
+      <link>https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/</link>
+      <pubDate>Wed, 24 Sep 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/</guid>
+      <description>Well, space is there, and we’re going to climb it, and the moon and the planets are there, and new hopes for knowledge and peace are there. </description>
     </item>
     
     <item>
@@ -836,11 +845,11 @@
     </item>
     
     <item>
-      <title>We choose to go to the moon</title>
-      <link>https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/</link>
+      <title>We choose to go to the moon(Extract)</title>
+      <link>https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moonextract/</link>
       <pubDate>Fri, 05 May 2023 15:55:23 +0800</pubDate>
       
-      <guid>https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/</guid>
+      <guid>https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moonextract/</guid>
       <description>Not because they are easy, but because they are hard</description>
     </item>
     
