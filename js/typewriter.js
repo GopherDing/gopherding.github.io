@@ -10,9 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 3. 动画参数（可自己调速度）
   const typingSpeed = 100;       // 打字速度（毫秒/字）
-  const deletingSpeed = 50;      // 删除速度
-  const pauseAfterTyping = 2000; // 打完停顿2秒
-  const pauseAfterDeleting = 500;// 删除完停顿0.5秒
+  const deletingSpeed = 25;      // 删除速度
+  const pauseAfterTyping = 2000; // 打完停顿
+  const pauseAfterDeleting = 500;// 删除完停顿
 
   // 4. 状态变量
   let currentQuoteIndex = Math.floor(Math.random() * quotes.length); // 随机开始第一句
