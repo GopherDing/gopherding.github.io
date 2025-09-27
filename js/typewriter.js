@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 3. 动画参数（可自己调速度）
   const typingSpeed = 100;       // 打字速度（毫秒/字）
-  const deletingSpeed = 25;      // 删除速度
+  const deletingSpeed = 15;      // 删除速度
   const pauseAfterTyping = 2000; // 打完停顿
   const pauseAfterDeleting = 500;// 删除完停顿
 
