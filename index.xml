@@ -8,21 +8,21 @@
     <language>zh</language>
     <lastBuildDate>Sun, 05 Oct 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>La Marseillaise</title>
-      <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
-      <pubDate>Sun, 17 Aug 2025 15:55:23 +0800</pubDate>
-      
-      <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
-      <description>Vive la France!</description>
-    </item>
-    
-    <item>
       <title>CHANGELOG-v1.1.0-移动端优化</title>
       <link>https://gopherding.github.io/posts/blog/changelog-v1.2.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/</link>
       <pubDate>Sun, 05 Oct 2025 15:55:23 +0800</pubDate>
       
       <guid>https://gopherding.github.io/posts/blog/changelog-v1.2.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/</guid>
       <description>用户体验优化与界面美化</description>
+    </item>
+    
+    <item>
+      <title>如何对博客进行版本更新并推送</title>
+      <link>https://gopherding.github.io/posts/blog/%E5%A6%82%E4%BD%95%E5%AF%B9%E5%8D%9A%E5%AE%A2%E8%BF%9B%E8%A1%8C%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%B9%B6%E6%8E%A8%E9%80%81/</link>
+      <pubDate>Sun, 05 Oct 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/blog/%E5%A6%82%E4%BD%95%E5%AF%B9%E5%8D%9A%E5%AE%A2%E8%BF%9B%E8%A1%8C%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%B9%B6%E6%8E%A8%E9%80%81/</guid>
+      <description>大版本更新中的一些注意事项</description>
     </item>
     
     <item>
@@ -266,6 +266,15 @@
       
       <guid>https://gopherding.github.io/posts/read/one-day-more_les-mis%C3%A9rables/</guid>
       <description>One more dawn. One more day. One day more.</description>
+    </item>
+    
+    <item>
+      <title>La Marseillaise</title>
+      <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
+      <pubDate>Sun, 17 Aug 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
+      <description>Vive la France!</description>
     </item>
     
     <item>

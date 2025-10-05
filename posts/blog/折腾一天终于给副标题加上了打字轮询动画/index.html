@@ -718,10 +718,10 @@ var _hmt = _hmt || [];
         <footer class="post-footer">
             
 <nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/blog/changelog-v1.2.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/">
+  <a class="prev" href="https://gopherding.github.io/posts/blog/%E5%A6%82%E4%BD%95%E5%AF%B9%E5%8D%9A%E5%AE%A2%E8%BF%9B%E8%A1%8C%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%B9%B6%E6%8E%A8%E9%80%81/">
     <span class="title">« 上一页</span>
     <br>
-    <span>CHANGELOG-v1.1.0-移动端优化</span>
+    <span>如何对博客进行版本更新并推送</span>
   </a>
   <a class="next" href="https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/">
     <span class="title">下一页 »</span>
@@ -925,36 +925,16 @@ var _hmt = _hmt || [];
             selection.removeRange(range);
         });
 
-        let language = codeblock.className.replaceAll("language-", "")
-        let macTool = document.createElement("div")
-        let macTool1 = document.createElement("div")
-        let macTool2 = document.createElement("div")
-        let macTool3 = document.createElement("div")
-        let languageType = document.createElement("div")
-        languageType.innerText = language
-        macTool.setAttribute('class', 'mac-tool')
-        macTool1.setAttribute('class', 'mac bb1')
-        macTool2.setAttribute('class', 'mac bb2')
-        macTool3.setAttribute('class', 'mac bb3')
-        languageType.setAttribute('class', 'language-type')
-        macTool.appendChild(macTool1)
-        macTool.appendChild(macTool2)
-        macTool.appendChild(macTool3)
-        macTool.appendChild(languageType)
-
         if (container.classList.contains("highlight")) {
             container.appendChild(copybutton);
-            container.appendChild(macTool)
         } else if (container.parentNode.firstChild == container) {
             
         } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
             
             codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-            container.appendChild(macTool)
         } else {
             
             codeblock.parentNode.appendChild(copybutton);
-            container.appendChild(macTool)
         }
     });
 </script>
