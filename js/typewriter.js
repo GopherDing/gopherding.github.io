@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (quotes.length === 0) return; // 没句子也退出
 
   // 3. 动画参数（可自己调速度）
-  const typingSpeed = 100;       // 打字速度（毫秒/字）
-  const deletingSpeed = 10;      // 删除速度
+  const typingSpeed = 80;       // 打字速度（毫秒/字）
+  const deletingSpeed = 12;      // 删除速度
   const pauseAfterTyping = 2500; // 打完停顿
   const pauseAfterDeleting = 500;// 删除完停顿
 
