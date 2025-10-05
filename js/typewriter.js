@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
       charIndex++;
     }
 
-    // 更新副标题内容
+    // 更新副标题内容（无光标效果）
     subtitle.textContent = currentText;
 
     // 切换状态/句子

@@ -6,7 +6,7 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Thu, 25 Sep 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 05 Oct 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>La Marseillaise</title>
       <link>https://gopherding.github.io/posts/read/la-marseillaise/</link>
@@ -14,6 +14,15 @@
       
       <guid>https://gopherding.github.io/posts/read/la-marseillaise/</guid>
       <description>Vive la France!</description>
+    </item>
+    
+    <item>
+      <title>CHANGELOG-v2.1.0-移动端优化</title>
+      <link>https://gopherding.github.io/posts/blog/changelog-v2.1.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/</link>
+      <pubDate>Sun, 05 Oct 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/blog/changelog-v2.1.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/</guid>
+      <description>用户体验优化与界面美化</description>
     </item>
     
     <item>
@@ -428,6 +437,15 @@
       
       <guid>https://gopherding.github.io/posts/tech/go%E8%AF%BB%E5%86%99%E9%94%81%E7%9A%84%E5%AE%9E%E7%8E%B0/</guid>
       <description>以人话和鬼话两种方式解释了一下go的读写锁</description>
+    </item>
+    
+    <item>
+      <title>移动端显示测试</title>
+      <link>https://gopherding.github.io/posts/blog/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E6%B5%8B%E8%AF%95/</link>
+      <pubDate>Sun, 05 Jan 2025 10:00:00 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/blog/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E6%B5%8B%E8%AF%95/</guid>
+      <description>用于测试移动端显示效果的文章</description>
     </item>
     
     <item>

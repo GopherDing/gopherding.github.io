@@ -64,6 +64,82 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
+<script>// 移动端导航优化脚本
+(function() {
+    'use strict';
+    
+    function optimizeNavigation() {
+        const menu = document.getElementById('menu');
+        if (!menu) return;
+        
+        const menuItems = menu.querySelectorAll('li a span');
+        const isMobileScreen = window.innerWidth <= 768; // 在平板及以下都显示图标
+        
+        menuItems.forEach(item => {
+            const originalText = item.textContent || item.innerText;
+            
+            if (!item.dataset.originalText) {
+                item.dataset.originalText = originalText;
+            }
+            
+            if (isMobileScreen) {
+                // 在移动端只显示emoji图标部分
+                const emoji = originalText.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]/u);
+                if (emoji) {
+                    item.textContent = emoji[0];
+                    // 添加title属性显示完整文本，去掉图标部分
+                    const textOnly = originalText.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]/gu, '').trim();
+                    item.closest('a').title = textOnly || originalText.trim();
+                }
+            } else {
+                // 在桌面端显示完整文本
+                item.textContent = item.dataset.originalText || originalText;
+                item.closest('a').removeAttribute('title');
+            }
+        });
+    }
+    
+    // 窗口大小改变时重新优化
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(optimizeNavigation, 150);
+    });
+    
+    // 添加触摸反馈
+    function addTouchFeedback() {
+        const menuItems = document.querySelectorAll('#menu li a');
+        
+        menuItems.forEach(item => {
+            // 触摸开始时添加按下效果
+            item.addEventListener('touchstart', function(e) {
+                this.style.transform = 'scale(0.95)';
+                this.style.transition = 'transform 0.1s ease';
+            });
+            
+            // 触摸结束时恢复
+            item.addEventListener('touchend', function(e) {
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.transition = '';
+                }, 100);
+            });
+        });
+    }
+    
+    // 页面加载完成后添加触摸反馈
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            optimizeNavigation();
+            addTouchFeedback();
+        });
+    } else {
+        optimizeNavigation();
+        addTouchFeedback();
+    }
+    
+})();</script>
+
 
 <script>
 var _hmt = _hmt || [];
@@ -204,6 +280,81 @@ var _hmt = _hmt || [];
     预知后事如何，且听下回分解&hellip;
   </div>
 </header>
+
+<article class="post-entry">
+  <div class="post-info">
+    <header class="entry-header">
+      <h2>CHANGELOG-v2.1.0-移动端优化
+      </h2>
+    </header>
+    <section class="entry-content">
+      <p>
+        用户体验优化与界面美化
+        
+        ...
+      </p>
+    </section>
+    <footer class="entry-footer">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2025-10-05
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>1225字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>3分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/%E5%BB%BA%E7%AB%99/" style="color: var(--secondary)!important;">建站</a>
+            </span>
+        </span>
+    </span>
+</span>
+</footer>
+  </div> 
+  <a class="entry-link" aria-label="post link to CHANGELOG-v2.1.0-移动端优化" href="https://gopherding.github.io/posts/blog/changelog-v2.1.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/"></a>
+</article>
 
 <article class="post-entry">
   <div class="post-info">
@@ -353,6 +504,82 @@ var _hmt = _hmt || [];
 </footer>
   </div> 
   <a class="entry-link" aria-label="post link to CDN失效的解决办法" href="https://gopherding.github.io/posts/blog/cdn%E5%A4%B1%E6%95%88%E7%9A%84%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95/"></a>
+</article>
+
+<article class="post-entry">
+  <div class="post-info">
+    <header class="entry-header">
+      <h2>移动端显示测试
+      </h2>
+    </header>
+    <section class="entry-content">
+      <p>
+        用于测试移动端显示效果的文章
+        
+        ...
+      </p>
+    </section>
+    <footer class="entry-footer">
+
+<style>
+    i[id*="post_meta_style"] {
+        display: flex;
+        align-items: center;
+        margin: 0 0 10px 0;
+    }
+
+    .parent-post-meta {
+        display: flex;
+        flex-wrap: wrap;
+        opacity: 0.8;
+    }
+</style>
+
+<span class="parent-post-meta">
+    <span id="post_meta_style_1">
+        <span class="fa fa-calendar-check-o"></span>
+        <span>2025-01-05
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    
+    
+    
+    
+    
+    
+    
+    <span id="post_meta_style_3">
+        <span class="fa fa-file-word-o"></span>
+        <span>380字
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_4">
+        <span class="fa fa-clock-o"></span>
+        <span>1分钟
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_5">
+        <span class="fa fa-user-o"></span>
+        <span>GopherDing
+            &nbsp;&nbsp;
+        </span>
+    </span>
+    <span id="post_meta_style_6">
+        <span class="fa fa-tags" style="opacity: 0.8"></span>
+        <span>
+            <span class="post-tags-meta">
+                <a href="https://gopherding.github.io/tags/%E6%B5%8B%E8%AF%95/" style="color: var(--secondary)!important;">测试</a>
+                &nbsp;<a href="https://gopherding.github.io/tags/%E7%A7%BB%E5%8A%A8%E7%AB%AF/" style="color: var(--secondary)!important;">移动端</a>
+            </span>
+        </span>
+    </span>
+</span>
+</footer>
+  </div> 
+  <a class="entry-link" aria-label="post link to 移动端显示测试" href="https://gopherding.github.io/posts/blog/%E7%A7%BB%E5%8A%A8%E7%AB%AF%E9%80%82%E9%85%8D%E6%B5%8B%E8%AF%95/"></a>
 </article>
 
 <article class="post-entry">

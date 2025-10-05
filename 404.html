@@ -63,6 +63,82 @@
 <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 
+<script>// 移动端导航优化脚本
+(function() {
+    'use strict';
+    
+    function optimizeNavigation() {
+        const menu = document.getElementById('menu');
+        if (!menu) return;
+        
+        const menuItems = menu.querySelectorAll('li a span');
+        const isMobileScreen = window.innerWidth <= 768; // 在平板及以下都显示图标
+        
+        menuItems.forEach(item => {
+            const originalText = item.textContent || item.innerText;
+            
+            if (!item.dataset.originalText) {
+                item.dataset.originalText = originalText;
+            }
+            
+            if (isMobileScreen) {
+                // 在移动端只显示emoji图标部分
+                const emoji = originalText.match(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]/u);
+                if (emoji) {
+                    item.textContent = emoji[0];
+                    // 添加title属性显示完整文本，去掉图标部分
+                    const textOnly = originalText.replace(/[\u{1F300}-\u{1F9FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{1F900}-\u{1F9FF}]/gu, '').trim();
+                    item.closest('a').title = textOnly || originalText.trim();
+                }
+            } else {
+                // 在桌面端显示完整文本
+                item.textContent = item.dataset.originalText || originalText;
+                item.closest('a').removeAttribute('title');
+            }
+        });
+    }
+    
+    // 窗口大小改变时重新优化
+    let resizeTimer;
+    window.addEventListener('resize', function() {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(optimizeNavigation, 150);
+    });
+    
+    // 添加触摸反馈
+    function addTouchFeedback() {
+        const menuItems = document.querySelectorAll('#menu li a');
+        
+        menuItems.forEach(item => {
+            // 触摸开始时添加按下效果
+            item.addEventListener('touchstart', function(e) {
+                this.style.transform = 'scale(0.95)';
+                this.style.transition = 'transform 0.1s ease';
+            });
+            
+            // 触摸结束时恢复
+            item.addEventListener('touchend', function(e) {
+                setTimeout(() => {
+                    this.style.transform = '';
+                    this.style.transition = '';
+                }, 100);
+            });
+        });
+    }
+    
+    // 页面加载完成后添加触摸反馈
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() {
+            optimizeNavigation();
+            addTouchFeedback();
+        });
+    } else {
+        optimizeNavigation();
+        addTouchFeedback();
+    }
+    
+})();</script>
+
 
 <script>
 var _hmt = _hmt || [];
