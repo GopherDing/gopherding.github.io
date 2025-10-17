@@ -193,8 +193,8 @@ var _hmt = _hmt || [];
   "keywords": [
     ""
   ],
-  "articleBody": " CAS 实际代码文件在 Go / src / runtime / internal / atomic / asm_amd.s 文件中\nfunc (m *Mutex) Lock() { // Fast path: grab unlocked mutex. if atomic.CompareAndSwapInt32(\u0026m.state, 0, mutexLocked) { if race.Enabled { race.Acquire(unsafe.Pointer(m)) } return } // Slow path (outlined so that the fast path can be inlined) m.lockSlow() } 如果可以获得锁资源，则修改Mutex.state中的locked位，并成功获取，如果获取不到，则执行lowSlow()方法。\n比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。 该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。\nCAS缺点：\n1.CAS在共享资源竞争比较激烈的时候，每个goroutine会容易处于自旋状态，影响效率，在竞争激烈的时候推荐使用锁。\n2.无法解决ABA问题，ABA问题是无锁结构实现中常见的一种问题，可基本表述为： 进程P1读取了一个数值A P1被挂起(时间片耗尽、中断等)，进程P2开始执行 P2修改数值A为数值B，然后又修改回A P1被唤醒，比较后发现数值A没有变化，程序继续执行。\nGo如何保证并发安全 Mutex、Channel、Atomic\nMutex\n加锁应该是最常见的并发控制方法，一般分成两种，乐观锁和悲观锁。\n悲观锁是一种悲观思想，它总认为最坏的情况可能会出现。不管意料之外的结果是否会发生，只要存在发生的可能，就在操作这个资源之前先上锁。例如互斥锁、读写锁都是悲观锁。\n乐观锁的思想与悲观锁的思想相反，它总认为资源和数据不会被别人所修改，所以读取不会上锁，但是乐观锁在进行写入操作的时候会判断当前数据是否被修改过。乐观锁适用于多读的场景，可以提高吞吐量。乐观锁的实现方案主要包含CAS和版本号机制。\nChannel\n详见：[goroutine\u0026channel专题.md](C:\\Users\\GEORGE DING\\Desktop!\\BLOG\\Golang\\goroutine\u0026channel专题.md)\nAtomic\n1.总线加锁\n所谓总线锁就是使用处理器提供的一个lock#信号，当一个处理器在总线上输出此信号时，其他处理器的请求会被阻塞住，那么该处理器可以独占共享内存。\n但总线锁定把cpu和内存之间的通信锁住了，这使得锁定期间，其他处理器不能操作其他内存地址的数据，所以开销比较大。\n2.缓存加锁\n第二个机制是通过缓存锁定来保证原子性。在同一时刻，我们只需保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，这使得锁定期间，其他处理器不能操作其他内存地址的数据，所以总线锁定的开销比较大，目前处理器在某些场合下使用缓存锁定代替总线锁定来进行优化。\n去 Go SDK/sync/atomic下找罢，或者点击这里\nCSP CSP 是通信顺序进程（Communicating Sequential Process）的简称，是一种并发编程模型。简单来说，CSP模型由并发的实体所组成，实体之间通过发送消息进行通信，而发送消息使用的就是通道，即channel。GO实现了CSP部分理论，goroutine对应CSP中的并发执行的实体，channel对应CSP中的channel。\n不要通过共享内存来通信，而应该通过通信来共享内存 一份有用的说明文档通常比额外的长名字更有价值 ",
-  "wordCount" : "1320",
+  "articleBody": " CAS 实际代码文件在 Go / src / runtime / internal / atomic / asm_amd.s 文件中\nfunc (m *Mutex) Lock() { // Fast path: grab unlocked mutex. if atomic.CompareAndSwapInt32(\u0026m.state, 0, mutexLocked) { if race.Enabled { race.Acquire(unsafe.Pointer(m)) } return } // Slow path (outlined so that the fast path can be inlined) m.lockSlow() } 如果可以获得锁资源，则修改Mutex.state中的locked位，并成功获取，如果获取不到，则执行lowSlow()方法。\n比较并交换(compare and swap, CAS)，是原子操作的一种，可用于在多线程编程中实现不被打断的数据交换操作，从而避免多线程同时改写某一数据时由于执行顺序不确定性以及中断的不可预知性产生的数据不一致问题。 该操作通过将内存中的值与指定数据进行比较，当数值一样时将内存中的数据替换为新的值。\nCAS缺点：\n1.CAS在共享资源竞争比较激烈的时候，每个goroutine会容易处于自旋状态，影响效率，在竞争激烈的时候推荐使用锁。\n2.无法解决ABA问题，ABA问题是无锁结构实现中常见的一种问题，可基本表述为： 进程P1读取了一个数值A P1被挂起(时间片耗尽、中断等)，进程P2开始执行 P2修改数值A为数值B，然后又修改回A P1被唤醒，比较后发现数值A没有变化，程序继续执行。\nGo如何保证并发安全 Mutex、Channel、Atomic\nMutex\n加锁应该是最常见的并发控制方法，一般分成两种，乐观锁和悲观锁。\n悲观锁是一种悲观思想，它总认为最坏的情况可能会出现。不管意料之外的结果是否会发生，只要存在发生的可能，就在操作这个资源之前先上锁。例如互斥锁、读写锁都是悲观锁。\n乐观锁的思想与悲观锁的思想相反，它总认为资源和数据不会被别人所修改，所以读取不会上锁，但是乐观锁在进行写入操作的时候会判断当前数据是否被修改过。乐观锁适用于多读的场景，可以提高吞吐量。乐观锁的实现方案主要包含CAS和版本号机制。\nChannel\n详见：goroutine\u0026channel专题\nAtomic\n1.总线加锁\n所谓总线锁就是使用处理器提供的一个lock#信号，当一个处理器在总线上输出此信号时，其他处理器的请求会被阻塞住，那么该处理器可以独占共享内存。\n但总线锁定把cpu和内存之间的通信锁住了，这使得锁定期间，其他处理器不能操作其他内存地址的数据，所以开销比较大。\n2.缓存加锁\n第二个机制是通过缓存锁定来保证原子性。在同一时刻，我们只需保证对某个内存地址的操作是原子性即可，但总线锁定把CPU和内存之间的通信锁住了，这使得锁定期间，其他处理器不能操作其他内存地址的数据，所以总线锁定的开销比较大，目前处理器在某些场合下使用缓存锁定代替总线锁定来进行优化。\n去 Go SDK/sync/atomic下找罢，或者点击这里\nCSP CSP 是通信顺序进程（Communicating Sequential Process）的简称，是一种并发编程模型。简单来说，CSP模型由并发的实体所组成，实体之间通过发送消息进行通信，而发送消息使用的就是通道，即channel。GO实现了CSP部分理论，goroutine对应CSP中的并发执行的实体，channel对应CSP中的channel。\n不要通过共享内存来通信，而应该通过通信来共享内存 一份有用的说明文档通常比额外的长名字更有价值 ",
+  "wordCount" : "1246",
   "inLanguage": "zh",
   "image":"https://www.XXXXXX.cn/XXX/1.png","datePublished": "2022-08-18T15:55:23+08:00",
   "dateModified": "2022-08-18T15:55:23+08:00",
@@ -359,7 +359,7 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>1320字
+        <span>1246字
             &nbsp;&nbsp;
         </span>
     </span>
@@ -556,7 +556,7 @@ P1被唤醒，比较后发现数值A没有变化，程序继续执行。</p></bl
 <p>悲观锁是一种悲观思想，它总认为最坏的情况可能会出现。不管意料之外的结果是否会发生，只要存在发生的可能，就在操作这个资源之前先上锁。例如互斥锁、读写锁都是悲观锁。</p>
 <p>乐观锁的思想与悲观锁的思想相反，它总认为资源和数据不会被别人所修改，所以读取不会上锁，但是乐观锁在进行写入操作的时候会判断当前数据是否被修改过。乐观锁适用于多读的场景，可以提高吞吐量。乐观锁的实现方案主要包含CAS和版本号机制。</p>
 <p><strong>Channel</strong></p>
-<p>详见：[goroutine&amp;channel专题.md](C:\Users\GEORGE DING\Desktop!\BLOG\Golang\goroutine&amp;channel专题.md)</p>
+<p>详见：<a href="https://gopherding.github.io/posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/">goroutine&amp;channel专题</a></p>
 <p><strong>Atomic</strong></p>
 <p>1.总线加锁</p>
 <p>所谓总线锁就是使用处理器提供的一个lock#信号，当一个处理器在总线上输出此信号时，其他处理器的请求会被阻塞住，那么该处理器可以独占共享内存。</p>
