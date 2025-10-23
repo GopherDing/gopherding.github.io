@@ -6,7 +6,16 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 05 Oct 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 23 Oct 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>外企面试注意事项——时区划分</title>
+      <link>https://gopherding.github.io/posts/life/%E5%A4%96%E4%BC%81%E9%9D%A2%E8%AF%95%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E6%97%B6%E5%8C%BA%E5%88%92%E5%88%86/</link>
+      <pubDate>Thu, 23 Oct 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/life/%E5%A4%96%E4%BC%81%E9%9D%A2%E8%AF%95%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9%E6%97%B6%E5%8C%BA%E5%88%92%E5%88%86/</guid>
+      <description>荣耀此时并不会向我俯首，但是沉默此刻确是震耳欲聋</description>
+    </item>
+    
     <item>
       <title>CHANGELOG-v1.1.0-移动端优化</title>
       <link>https://gopherding.github.io/posts/blog/changelog-v1.2.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/</link>
