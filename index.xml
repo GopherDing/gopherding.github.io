@@ -6,7 +6,16 @@
     <description>Recent content on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 02 Nov 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Nov 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>外部CDN依赖本地化</title>
+      <link>https://gopherding.github.io/posts/blog/%E5%A4%96%E9%83%A8cdn%E4%BE%9D%E8%B5%96%E6%9C%AC%E5%9C%B0%E5%8C%96/</link>
+      <pubDate>Tue, 04 Nov 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/blog/%E5%A4%96%E9%83%A8cdn%E4%BE%9D%E8%B5%96%E6%9C%AC%E5%9C%B0%E5%8C%96/</guid>
+      <description>通过本地化外部CDN依赖实现页面加载速度优化</description>
+    </item>
+    
     <item>
       <title>实践是检验真理的唯一标准</title>
       <link>https://gopherding.github.io/posts/read/%E5%AE%9E%E8%B7%B5%E6%98%AF%E6%A3%80%E9%AA%8C%E7%9C%9F%E7%90%86%E7%9A%84%E5%94%AF%E4%B8%80%E6%A0%87%E5%87%86/</link>

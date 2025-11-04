@@ -6,7 +6,16 @@
     <description>Recent content in 🧱 建站 on GopherDing&#39;s Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh</language>
-    <lastBuildDate>Sun, 05 Oct 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 04 Nov 2025 15:55:23 +0800</lastBuildDate><atom:link href="https://gopherding.github.io/posts/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>外部CDN依赖本地化</title>
+      <link>https://gopherding.github.io/posts/blog/%E5%A4%96%E9%83%A8cdn%E4%BE%9D%E8%B5%96%E6%9C%AC%E5%9C%B0%E5%8C%96/</link>
+      <pubDate>Tue, 04 Nov 2025 15:55:23 +0800</pubDate>
+      
+      <guid>https://gopherding.github.io/posts/blog/%E5%A4%96%E9%83%A8cdn%E4%BE%9D%E8%B5%96%E6%9C%AC%E5%9C%B0%E5%8C%96/</guid>
+      <description>通过本地化外部CDN依赖实现页面加载速度优化</description>
+    </item>
+    
     <item>
       <title>CHANGELOG-v1.1.0-移动端优化</title>
       <link>https://gopherding.github.io/posts/blog/changelog-v1.2.0-%E7%A7%BB%E5%8A%A8%E7%AB%AF%E4%BC%98%E5%8C%96/</link>
