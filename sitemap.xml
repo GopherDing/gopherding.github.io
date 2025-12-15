@@ -2,22 +2,31 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gopherding.github.io/posts/read/</loc>
-    <lastmod>2025-11-28T15:55:23+08:00</lastmod>
+    <loc>https://gopherding.github.io/posts/tech/</loc>
+    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/</loc>
-    <lastmod>2025-11-28T15:55:23+08:00</lastmod>
+    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/generative-ai/</loc>
+    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/</loc>
+    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/tech/introduction-to-generative-ai/</loc>
+    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/</loc>
+    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/read/</loc>
     <lastmod>2025-11-28T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/lyrics/</loc>
     <lastmod>2025-11-28T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/music/</loc>
-    <lastmod>2025-11-28T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/tags/</loc>
     <lastmod>2025-11-28T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/read/%E7%8B%AE%E5%AD%90%E5%B1%B1%E4%B8%8B/</loc>
@@ -232,9 +241,6 @@
   </url><url>
     <loc>https://gopherding.github.io/links/</loc>
     <lastmod>2025-02-06T15:15:53+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/posts/tech/</loc>
-    <lastmod>2025-01-06T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/golang/</loc>
     <lastmod>2025-01-06T15:55:23+08:00</lastmod>
