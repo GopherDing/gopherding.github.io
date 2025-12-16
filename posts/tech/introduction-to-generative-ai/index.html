@@ -191,7 +191,7 @@ var _hmt = _hmt || [];
     ""
   ],
   "articleBody": "CS5494 Week 1: Introduction to Generative AI \u0026 Perception Models 第一周：生成式人工智能与感知模型导论 1. 核心概念：生成模型与判别模型 Core Concept: Generative vs. Discriminative Models 这是本节课最重要的理论基础，理解它们的区别是入门的关键。\n1. 判别模型 (Discriminative Models)\n功能 (Function): 学习如何区分或预测。就像给作业打分的老师，看到一个输入（试卷），给出一个输出（分数）。 Analogy: Like a teacher grading an exam. Given an input (exam paper), it produces an output (score). 数学表达 (Mathematical Form): 建模条件概率 $P(y|x)$。即给定输入 $x$（如一张照片），预测标签 $y$（如“猫”或“狗”）的概率。 Math: Models the conditional probability $P(y|x)$. Given input $x$, predict the probability of label $y$. 局限 (Limitation): 它们无法创造新数据，只能对现有数据进行分类或回归。 2. 生成模型 (Generative Models)\n功能 (Function): 学习数据的底层分布 (Underlying Distribution)，从而能够创造出与训练数据相似但全新的数据。就像一个画家，看过很多猫之后，在一张白纸上画出一只从未存在过的猫。 Analogy: Like an artist who, after seeing many cats, draws a new cat that never existed before on a blank piece of paper. 数学表达 (Mathematical Form): 建模联合概率分布 $P(x,y)$ 或数据本身的分布 $P(x)$。 Math: Models the joint probability distribution $P(x,y)$ or the data distribution $P(x)$ itself. 核心目标 (Core Goal): 能够从学习到的分布中采样 (Sample)，生成逼真的新样本（图像、文本、音频）。 2. 感知模型与表示学习 Perception Models \u0026 Representation Learning 课件中强调，为了做好生成（Generation），首先要解决感知（Perception）的问题。感知模型的核心就是表示学习。\n什么是表示学习？ (What is Representation Learning?)\n定义: 将原始数据（Raw Data）转化为机器更容易理解和处理的形式（Feature/Embedding）。 Definition: Converting raw data into a form (features/embeddings) that is easier for machines to understand and process. 过程: 从原始像素（Pixels）$\\rightarrow$ 抽象特征（Abstraction）$\\rightarrow$ 概念（Concepts）。 Process: From raw pixels $\\rightarrow$ Abstract features $\\rightarrow$ High-level concepts. 重要性: 好的表示（Representation）能让模型“理解”数据的本质，而不仅仅是死记硬背。AlphaGo 的成功就归功于它能比人类更好地表示棋盘局势。 3. 深度神经网络的演进 (Deep Neural Networks Evolution) From LeNet to Transformers 这部分回顾了深度学习过去十年的关键突破，正是这些技术让现在的 GenAI 成为可能。\nA. 卷积神经网络 (CNNs) 的崛起 LeNet (1989/1998): 引入了卷积 (Convolution) 和 池化 (Pooling) 的概念。利用权值共享（Weight Sharing）大大减少了参数量，适合处理图像。 AlexNet (2012): 深度学习的爆发点。引入了 ReLU 激活函数（解决了梯度消失问题）和 Dropout，并使用了 GPU 加速训练。 VGG (2014): 证明了**“越深越好” (Deeper is better)**。它用连续的 3x3 小卷积核代替了大卷积核，加深了网络结构。 B. 突破瓶颈：初始化与归一化 (Initialization \u0026 Normalization) 随着网络变深，训练变得极其困难（梯度爆炸或消失）。\n初始化 (Initialization): Xavier 和 Kaiming Initialization 提供了科学的参数初始值设定方法，让信号能更稳定地在网络中传播。 批归一化 (Batch Normalization, BN): 强制将每一层的输入拉回到标准的分布。这被认为是训练深层网络的“神技”，大大加速了收敛。 C. 残差网络 (ResNet, 2015) 问题: 当网络非常深时（如 100 层），简单堆叠层数反而会导致性能下降（Degradation problem）。 解决方案: 引入 Shortcut Connection (跳跃连接)，让数据可以直接跨层传递。 Mechanism: The network learns the residual (difference) $F(x)$ instead of the original mapping. Mathematically: $y = F(x) + x$. 意义: 使得训练成百上千层的网络成为可能，是现代大模型（包括 GPT 系列）的基石结构。 D. Transformer (2017) \u0026 ViT (2020) Transformer: 抛弃了循环（RNN）和卷积（CNN），完全依赖 Attention Mechanism (注意力机制)。每一个 token 都能看到所有其他 token，拥有全局上下文 (Global Context)。 Vision Transformer (ViT): 将图像切成小块（Patches），像处理文字一样处理图像。这统一了视觉和语言的模型架构。 4. 生成模型的框架 Framework of Generative Models 课件最后总结了构建一个生成模型的五个关键要素：\n形式化 (Formulation): 将问题定义为概率建模问题（如何描述 $P(x)$？）。 表示 (Representation): 使用深度神经网络（如 ResNet, Transformer）来拟合复杂的数据分布。 目标函数 (Objective Function): 定义“生成得好不好”的标准（Loss Function），衡量预测分布与真实分布的差异。 优化 (Optimization): 调整网络参数以最小化目标函数（通常使用反向传播）。 推断 (Inference): 训练好后，如何采样（Sampler）生成新数据？ 5. 专有名词表 (Glossary) 中文术语 English Term 详细解释 / Detailed Explanation 生成模型 Generative Model 学习数据分布 $P(x)$ 以生成新样本的模型。如 GPT, Stable Diffusion。 判别模型 Discriminative Model 学习条件概率 $P(y|x)$ 以分类或预测标签的模型。如垃圾邮件分类器。 表示学习 Representation Learning 自动从原始数据中提取有效特征的过程，将高维数据映射到低维、抽象的特征空间。 卷积神经网络 CNN (Convolutional Neural Network) 专门处理网格数据（如图像）的神经网络，利用卷积层提取局部特征。 残差学习 Residual Learning ResNet 的核心。通过引入“跳跃连接”，让网络学习残差（差异）而不是完整的映射，解决了深层网络的退化问题。 批归一化 Batch Normalization (BN) 在每一层网络的激活前对数据进行归一化处理，防止分布偏移，加速训练。 注意力机制 Attention Mechanism Transformer 的核心。允许模型在处理一个元素时，动态关注序列中的其他相关元素（无论距离多远）。 反向传播 Backpropagation 训练神经网络的核心算法。根据输出误差，反向计算梯度并更新网络参数。 概率分布 Probability Distribution 描述随机变量取值可能性的数学函数。生成模型本质上就是在拟合这个复杂的函数。 推断 Inference 模型训练完成后，利用模型进行预测或生成新数据的过程。 总结 (Summary) 这份课件的核心逻辑是：Generative AI 的本质是概率分布的建模，而为了通过机器学习好这个分布，我们需要强大的 Deep Learning 模型（如 ResNet, Transformer）作为支撑。 所以第一周花了很多时间复习深度学习的基础架构。\nCS5494 Week 2: Basics of Probability Distributions 第二周：概率分布基础 1. 生成模型 vs. 判别模型 (进阶版) Generative vs. Discriminative Models (Revisited) 上周讲了概念，这周从数学角度深入对比。\n判别模型 (Discriminative Models):\n目标 (Goal): 直接区分 $y$（标签）。建立 $x$ 到 $y$ 的映射。 数学 (Math): 建模条件概率 $P(y|x)$。 决策边界 (Decision Boundary): 它只关心怎么把两类数据分开，不关心数据长什么样。 Analogy: Like learning a rule to distinguish cats from dogs without knowing how to draw them. 生成模型 (Generative Models):\n目标 (Goal): 描述数据 $x$ 是如何生成的。 数学 (Math): 建模联合概率 $P(x, y)$ 或边缘概率 $P(x)$。 贝叶斯公式 (Bayes’ Rule): 生成模型可以通过贝叶斯公式转化为判别模型： $$P(y|x) = \\frac{P(x|y)P(y)}{P(x)}$$ 优势 (Advantage): 课件特别提到，生成模型在缺失数据 (Missing Data) 的情况下依然有效。因为它可以对未观察到的变量进行边缘化 (Marginalize)，而判别模型必须依赖完整的 $x$。 2. 核心挑战：维数灾难 The Core Challenge: Curse of Dimensionality 这是本节课提出的最根本问题：为什么生成模型这么难做？\n问题描述 (Problem): 假设我们要为一个简单的 $28 \\times 28$ 黑白像素图像（如 MNIST 数字）建模联合分布。 每个像素有 2 种状态（0 或 1）。 总共有 $784$ 个像素。 那么这幅图可能的状态总数是 $2^{784}$。 Concept: The number of possible configurations grows exponentially with the number of variables (pixels). 结论 (Conclusion): 我们不可能列出一张表来记录每一个可能图像的概率。所需的参数量远远超过了宇宙中原子的数量。 解决方案 (Solution): 我们必须引入假设 (Assumptions) 和 结构 (Structure) 来减少参数量。 3. 结构化模型：贝叶斯网络 Structured Models: Bayesian Networks 为了解决维数灾难，我们引入了“条件独立性”假设。\nA. 链式法则 (The Chain Rule) 任何复杂的联合分布都可以分解为条件概率的乘积： $$P(x_1, x_2, x_3, x_4) = P(x_1) P(x_2|x_1) P(x_3|x_1, x_2) P(x_4|x_1, x_2, x_3)$$\n解释: 就像讲故事，后面的情节取决于前面的铺垫。 问题: 即使分解了，参数量并没有减少。最后几项依然非常复杂。 B. 条件独立性假设 (Conditional Independence Assumption) 这是贝叶斯网络的核心。我们假设：每个变量只依赖于它的少数几个“父节点”，而不是之前的所有变量。\nKey Idea: Variable $x_i$ is independent of its non-descendants given its parents. C. 贝叶斯网络 (Bayesian Networks) 定义: 一个有向无环图 (DAG)，其中节点代表变量，边代表依赖关系。 公式: $P(x_1, …, x_n) = \\prod_{i=1}^{n} P(x_i | \\text{Parents}(x_i))$ 效果: 极大地减少了参数量。 全连接 (Fully Connected): 每个变量都依赖所有前序变量 $\\rightarrow$ 参数爆炸。 稀疏连接 (Sparse): 每个变量只依赖 1-2 个父节点 $\\rightarrow$ 参数可控。 D. 经典案例：朴素贝叶斯 (Naive Bayes) 这是贝叶斯网络的一个极端特例。 假设: 给定类别 $y$ 后，所有的特征 $x_i$ 都是相互独立的。 Assumption: All features are independent given the class label. 局限: 这个假设太强了（现实中像素之间肯定有关联），所以它生成的图片通常全是噪点，效果不好。但它作为分类器效果还不错。 4. 神经模型：引入深度学习 Neural Models: Merging Probability with Deep Learning 传统的图模型（如贝叶斯网络）需要专家手工设计依赖关系图，这很难。现在的趋势是结合神经网络。\n参数化 (Parameterization): 在贝叶斯网络中，我们需要用表格或简单函数来表示 $P(x_i | \\text{Parents}(x_i))$。 在神经模型中，我们用一个神经网络来拟合这个条件概率函数。 Mechanism: Use a neural network to output the probability distribution parameters. 非线性依赖 (Non-linear Dependence): 线性模型（如逻辑回归）假设变量间是线性关系。而神经网络通过激活函数（如 Sigmoid, ReLU）引入了非线性，能够捕捉更复杂的数据关系。 $$y = \\sigma(Wx + b)$$ 从图到网 (From Graphs to Nets): 我们可以重复堆叠神经层，构建深层网络。这实际上是在学习更复杂的、隐含的依赖结构，而不需要人工显式地画出每一条边。 5. 专有名词表 (Glossary) 中文术语 English Term 详细解释 / Detailed Explanation 联合分布 Joint Distribution $P(x, y)$ 或 $P(x_1, …, x_n)$。描述所有变量同时取特定值的概率。这是生成模型的核心。 条件概率 Conditional Probability $P(A|B)$。在事件 B 发生的条件下，事件 A 发生的概率。 边缘化 Marginalization 通过对某些变量求和（或积分），从联合分布中得到子集变量分布的过程。常用于处理缺失数据。 维数灾难 Curse of Dimensionality 随着数据维度（特征数量）增加，数据空间呈指数级爆炸，导致数据变得极其稀疏，难以建模。 链式法则 Chain Rule (Probability) 概率论基本定理，允许将联合概率分解为一系列条件概率的乘积。 贝叶斯网络 Bayesian Network 一种概率图模型，使用有向无环图 (DAG) 来表示变量间的条件依赖关系。 条件独立 Conditional Independence 如果已知变量 Z，变量 X 和 Y 互不影响，则称 X 和 Y 关于 Z 条件独立。这是简化模型的关键。 朴素贝叶斯 Naive Bayes 一种简单的生成模型，假设特征之间相互独立。常作为基准模型 (Baseline)。 有向无环图 DAG (Directed Acyclic Graph) 贝叶斯网络的结构基础，图中的边是有方向的，且不存在闭环。 逻辑函数 Logistic Function (Sigmoid) $\\sigma(z) = \\frac{1}{1+e^{-z}}$。常用于神经网络中将输出压缩到 (0,1) 之间，表示概率。 总结 (Summary) Week 2 告诉你：因为世界太复杂（维数灾难），我们不能蛮力记录所有可能性。 我们必须偷懒——要么假设变量之间没那么多关系（贝叶斯网络），要么用一个强大的黑盒（神经网络）去拟合这些关系。现代 GenAI 正是选择了后者。\nCS5494 Week 3: Autoregressive Models 第三周：自回归模型 1. 核心定义：什么是自回归模型？ Core Definition: What are Autoregressive Models? 自回归模型是生成式 AI 中最主流的一派（GPT 中的 “G” 就是 Generative，实际上是 Autoregressive 的）。\n基本思想 (Basic Idea): 将生成高维数据（如一张图或一段话）的任务，拆解为序列生成 (Sequential Generation) 任务。即：根据前面所有的内容，预测下一个内容。\nConcept: Decompose the task of generating high-dimensional data into a sequential generation task. Predict the next token based on all previous tokens. 数学基础：链式法则 (Mathematical Foundation: Chain Rule) 我们利用概率链式法则，将联合分布分解为条件概率的乘积，不引入任何独立性假设： $$P(x_1, …, x_n) = \\prod_{i=1}^{n} P(x_i | x_1, …, x_{i-1})$$\nExplanation: $x_i$ depends on all previous variables $x_{",
-  "wordCount" : "13143",
+  "wordCount" : "19120",
   "inLanguage": "zh",
   "datePublished": "2025-12-15T15:55:23+08:00",
   "dateModified": "2025-12-15T15:55:23+08:00",
@@ -361,13 +361,13 @@ var _hmt = _hmt || [];
     
     <span id="post_meta_style_3">
         <span class="fa fa-file-word-o"></span>
-        <span>13143字
+        <span>19120字
             &nbsp;&nbsp;
         </span>
     </span>
     <span id="post_meta_style_4">
         <span class="fa fa-clock-o"></span>
-        <span>27分钟
+        <span>39分钟
             &nbsp;&nbsp;
         </span>
     </span>
@@ -765,7 +765,147 @@ var _hmt = _hmt || [];
                     <a href="#6-%e4%b8%93%e6%9c%89%e5%90%8d%e8%af%8d%e8%a1%a8-glossary-2" aria-label="6. 专有名词表 (Glossary)">6. 专有名词表 (Glossary)</a><ul>
                         
                 <li>
-                    <a href="#%e6%80%bb%e7%bb%93-summary-6" aria-label="总结 (Summary)">总结 (Summary)</a>
+                    <a href="#%e6%80%bb%e7%bb%93-summary-6" aria-label="总结 (Summary)">总结 (Summary)</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#cs5494-week-8-ai-agent" aria-label="CS5494 Week 8: AI Agent">CS5494 Week 8: AI Agent</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e5%85%ab%e5%91%a8%e4%ba%ba%e5%b7%a5%e6%99%ba%e8%83%bd%e6%99%ba%e8%83%bd%e4%bd%93" aria-label="第八周：人工智能智能体">第八周：人工智能智能体</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%a0%b8%e5%bf%83%e5%ae%9a%e4%b9%89%e4%bb%80%e4%b9%88%e6%98%af-ai-agent" aria-label="1. 核心定义：什么是 AI Agent？">1. 核心定义：什么是 AI Agent？</a><ul>
+                        
+                <li>
+                    <a href="#core-definition-what-is-an-ai-agent" aria-label="Core Definition: What is an AI Agent?">Core Definition: What is an AI Agent?</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2-%e6%a0%b8%e5%bf%83%e8%83%bd%e5%8a%9b%e4%b8%80%e8%a7%84%e5%88%92%e4%b8%8e%e6%80%9d%e8%80%83-planning--reasoning" aria-label="2. 核心能力一：规划与思考 (Planning &amp; Reasoning)">2. 核心能力一：规划与思考 (Planning &amp; Reasoning)</a><ul>
+                        
+                <li>
+                    <a href="#core-capability-1-how-ai-thinks" aria-label="Core Capability 1: How AI Thinks?">Core Capability 1: How AI Thinks?</a><ul>
+                        
+                <li>
+                    <a href="#a-%e8%a7%82%e5%af%9f-%e6%80%9d%e8%80%83-%e8%a1%8c%e5%8a%a8%e5%be%aa%e7%8e%af-obs-think-act-loop" aria-label="A. 观察-思考-行动循环 (Obs-Think-Act Loop)">A. 观察-思考-行动循环 (Obs-Think-Act Loop)</a></li>
+                <li>
+                    <a href="#b-react-%e6%a1%86%e6%9e%b6-reasoning--acting-%e9%87%8d%e7%82%b9" aria-label="B. ReAct 框架 (Reasoning &#43; Acting) [重点]">B. ReAct 框架 (Reasoning + Acting) [重点]</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#3-%e6%a0%b8%e5%bf%83%e8%83%bd%e5%8a%9b%e4%ba%8c%e5%b7%a5%e5%85%b7%e4%bd%bf%e7%94%a8-tool-use" aria-label="3. 核心能力二：工具使用 (Tool Use)">3. 核心能力二：工具使用 (Tool Use)</a><ul>
+                        
+                <li>
+                    <a href="#core-capability-2-how-ai-uses-tools" aria-label="Core Capability 2: How AI Uses Tools?">Core Capability 2: How AI Uses Tools?</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4-%e6%a0%b8%e5%bf%83%e8%83%bd%e5%8a%9b%e4%b8%89%e8%ae%b0%e5%bf%86%e4%b8%8e%e7%bb%8f%e9%aa%8c-memory--experience" aria-label="4. 核心能力三：记忆与经验 (Memory &amp; Experience)">4. 核心能力三：记忆与经验 (Memory &amp; Experience)</a><ul>
+                        
+                <li>
+                    <a href="#core-capability-3-adjusting-behavior-via-experience" aria-label="Core Capability 3: Adjusting Behavior via Experience">Core Capability 3: Adjusting Behavior via Experience</a></li></ul>
+                </li>
+                <li>
+                    <a href="#5-%e8%bf%9b%e9%98%b6%e6%a6%82%e5%bf%b5agentic-ai-%e4%b8%8e%e5%a4%9a%e6%99%ba%e8%83%bd%e4%bd%93" aria-label="5. 进阶概念：Agentic AI 与多智能体">5. 进阶概念：Agentic AI 与多智能体</a><ul>
+                        
+                <li>
+                    <a href="#advanced-concept-agentic-ai-systems" aria-label="Advanced Concept: Agentic AI Systems">Advanced Concept: Agentic AI Systems</a></li></ul>
+                </li>
+                <li>
+                    <a href="#6-%e4%b8%93%e6%9c%89%e5%90%8d%e8%af%8d%e8%a1%a8-glossary-3" aria-label="6. 专有名词表 (Glossary)">6. 专有名词表 (Glossary)</a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93-summary-7" aria-label="总结 (Summary)">总结 (Summary)</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#cs5494-week-9-3d-vision--generation" aria-label="CS5494 Week 9: 3D Vision &amp; Generation">CS5494 Week 9: 3D Vision &amp; Generation</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e4%b9%9d%e5%91%a8%e4%b8%89%e7%bb%b4%e8%a7%86%e8%a7%89%e4%b8%8e%e7%94%9f%e6%88%90" aria-label="第九周：三维视觉与生成">第九周：三维视觉与生成</a><ul>
+                        
+                <li>
+                    <a href="#1-%e6%a0%b8%e5%bf%83%e7%97%9b%e7%82%b93d-%e8%a1%a8%e7%a4%ba%e7%9a%84%e5%a4%9a%e6%a0%b7%e6%80%a7" aria-label="1. 核心痛点：3D 表示的多样性">1. 核心痛点：3D 表示的多样性</a><ul>
+                        
+                <li>
+                    <a href="#core-pain-point-diversity-of-3d-representations" aria-label="Core Pain Point: Diversity of 3D Representations">Core Pain Point: Diversity of 3D Representations</a><ul>
+                        
+                <li>
+                    <a href="#a-%e6%98%be%e5%bc%8f%e8%a1%a8%e7%a4%ba-explicit-representations" aria-label="A. 显式表示 (Explicit Representations)">A. 显式表示 (Explicit Representations)</a></li>
+                <li>
+                    <a href="#b-%e9%9a%90%e5%bc%8f%e8%a1%a8%e7%a4%ba-implicit-representations-%e9%87%8d%e7%82%b9" aria-label="B. 隐式表示 (Implicit Representations) [重点]">B. 隐式表示 (Implicit Representations) [重点]</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#2-%e6%a0%b8%e5%bf%83%e6%9e%b6%e6%9e%84pointnet-%e5%a4%84%e7%90%86%e7%82%b9%e4%ba%91" aria-label="2. 核心架构：PointNet (处理点云)">2. 核心架构：PointNet (处理点云)</a><ul>
+                        
+                <li>
+                    <a href="#core-architecture-pointnet-processing-point-clouds" aria-label="Core Architecture: PointNet (Processing Point Clouds)">Core Architecture: PointNet (Processing Point Clouds)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3-%e9%9d%a9%e5%91%bd%e6%80%a7%e6%8a%80%e6%9c%afnerf-%e7%a5%9e%e7%bb%8f%e8%be%90%e5%b0%84%e5%9c%ba" aria-label="3. 革命性技术：NeRF (神经辐射场)">3. 革命性技术：NeRF (神经辐射场)</a><ul>
+                        
+                <li>
+                    <a href="#revolutionary-tech-nerf-neural-radiance-fields" aria-label="Revolutionary Tech: NeRF (Neural Radiance Fields)">Revolutionary Tech: NeRF (Neural Radiance Fields)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4-3d-%e7%94%9f%e6%88%90dreamfusion-%e4%b8%8e-sds" aria-label="4. 3D 生成：DreamFusion 与 SDS">4. 3D 生成：DreamFusion 与 SDS</a><ul>
+                        
+                <li>
+                    <a href="#3d-generation-dreamfusion--sds" aria-label="3D Generation: DreamFusion &amp; SDS">3D Generation: DreamFusion &amp; SDS</a></li></ul>
+                </li>
+                <li>
+                    <a href="#5-%e4%b8%93%e6%9c%89%e5%90%8d%e8%af%8d%e8%a1%a8-glossary-3" aria-label="5. 专有名词表 (Glossary)">5. 专有名词表 (Glossary)</a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93-summary-8" aria-label="总结 (Summary)">总结 (Summary)</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#cs5494-week-10-large-foundation-models-vlm--vla" aria-label="CS5494 Week 10: Large Foundation Models (VLM &amp; VLA)">CS5494 Week 10: Large Foundation Models (VLM &amp; VLA)</a></li>
+                <li>
+                    <a href="#%e7%ac%ac%e5%8d%81%e5%91%a8%e5%a4%9a%e6%a8%a1%e6%80%81%e5%9f%ba%e7%a1%80%e6%a8%a1%e5%9e%8b%e4%b8%8e%e5%85%b7%e8%ba%ab%e6%99%ba%e8%83%bd" aria-label="第十周：多模态基础模型与具身智能">第十周：多模态基础模型与具身智能</a><ul>
+                        
+                <li>
+                    <a href="#1-%e8%8c%83%e5%bc%8f%e8%bd%ac%e5%8f%98%e4%bb%8e%e4%b8%93%e7%94%a8%e6%a8%a1%e5%9e%8b%e5%88%b0%e5%9f%ba%e7%a1%80%e6%a8%a1%e5%9e%8b" aria-label="1. 范式转变：从专用模型到基础模型">1. 范式转变：从专用模型到基础模型</a><ul>
+                        
+                <li>
+                    <a href="#paradigm-shift-from-specialized-to-foundation-models" aria-label="Paradigm Shift: From Specialized to Foundation Models">Paradigm Shift: From Specialized to Foundation Models</a></li></ul>
+                </li>
+                <li>
+                    <a href="#2-%e8%a7%86%e8%a7%89-%e8%af%ad%e8%a8%80%e6%a8%a1%e5%9e%8b-vlm-clip" aria-label="2. 视觉-语言模型 (VLM): CLIP">2. 视觉-语言模型 (VLM): CLIP</a><ul>
+                        
+                <li>
+                    <a href="#vision-language-models-vlm-clip" aria-label="Vision-Language Models (VLM): CLIP">Vision-Language Models (VLM): CLIP</a></li></ul>
+                </li>
+                <li>
+                    <a href="#3-%e8%ae%a9-llm-%e7%9c%8b%e6%87%82%e5%9b%be-llava" aria-label="3. 让 LLM 看懂图: LLaVA">3. 让 LLM 看懂图: LLaVA</a><ul>
+                        
+                <li>
+                    <a href="#making-llm-see-llava-large-language-and-vision-assistant" aria-label="Making LLM See: LLaVA (Large Language-and-Vision Assistant)">Making LLM See: LLaVA (Large Language-and-Vision Assistant)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#4-%e8%a7%86%e8%a7%89%e5%88%86%e5%89%b2%e5%9f%ba%e5%ba%a7-sam" aria-label="4. 视觉分割基座: SAM">4. 视觉分割基座: SAM</a><ul>
+                        
+                <li>
+                    <a href="#vision-foundation-model-sam-segment-anything-model" aria-label="Vision Foundation Model: SAM (Segment Anything Model)">Vision Foundation Model: SAM (Segment Anything Model)</a></li></ul>
+                </li>
+                <li>
+                    <a href="#5-%e5%85%b7%e8%ba%ab%e6%99%ba%e8%83%bd-vla-%e6%a8%a1%e5%9e%8b-robotic-foundation-models" aria-label="5. 具身智能: VLA 模型 (Robotic Foundation Models)">5. 具身智能: VLA 模型 (Robotic Foundation Models)</a><ul>
+                        
+                <li>
+                    <a href="#embodied-ai-vision-language-action-models-vla" aria-label="Embodied AI: Vision-Language-Action Models (VLA)">Embodied AI: Vision-Language-Action Models (VLA)</a><ul>
+                        
+                <li>
+                    <a href="#a-rt-1-robotic-transformer-1" aria-label="A. RT-1 (Robotic Transformer 1)">A. RT-1 (Robotic Transformer 1)</a></li>
+                <li>
+                    <a href="#b-rt-2-%e4%ba%92%e8%81%94%e7%bd%91%e7%9f%a5%e8%af%86%e8%bf%81%e7%a7%bb-internet-knowledge-transfer" aria-label="B. RT-2: 互联网知识迁移 (Internet Knowledge Transfer)">B. RT-2: 互联网知识迁移 (Internet Knowledge Transfer)</a></li>
+                <li>
+                    <a href="#c-rt-x--openvla" aria-label="C. RT-X / OpenVLA">C. RT-X / OpenVLA</a></li></ul>
+                </li></ul>
+                </li>
+                <li>
+                    <a href="#6-%e4%b8%93%e6%9c%89%e5%90%8d%e8%af%8d%e8%a1%a8-glossary-4" aria-label="6. 专有名词表 (Glossary)">6. 专有名词表 (Glossary)</a><ul>
+                        
+                <li>
+                    <a href="#%e6%80%bb%e7%bb%93-summary-9" aria-label="总结 (Summary)">总结 (Summary)</a>
                 </li>
             </ul>
             </li>
@@ -2000,6 +2140,547 @@ $$x_{t-1} = \frac{1}{\sqrt{\alpha_t}} (x_t - \frac{1 - \alpha_t}{\sqrt{1 - \bar{
 <strong>生成 = 去噪。</strong>
 我们不需要像 GAN 那样用判别器去“逼”模型生成，也不需要像 VAE 那样把分布压缩到潜空间。
 我们只需要教会神经网络一件事：<strong>看到一张全是噪点的图，请告诉我，刚才加进去的噪点长什么样？</strong> 只要它能把噪点预测出来，我们把它减掉，图就变清晰了。</p>
+<hr>
+<h1 id="cs5494-week-8-ai-agent">CS5494 Week 8: AI Agent<a hidden class="anchor" aria-hidden="true" href="#cs5494-week-8-ai-agent">#</a></h1>
+<h1 id="第八周人工智能智能体">第八周：人工智能智能体<a hidden class="anchor" aria-hidden="true" href="#第八周人工智能智能体">#</a></h1>
+<h2 id="1-核心定义什么是-ai-agent">1. 核心定义：什么是 AI Agent？<a hidden class="anchor" aria-hidden="true" href="#1-核心定义什么是-ai-agent">#</a></h2>
+<h3 id="core-definition-what-is-an-ai-agent">Core Definition: What is an AI Agent?<a hidden class="anchor" aria-hidden="true" href="#core-definition-what-is-an-ai-agent">#</a></h3>
+<p>传统的 LLM (如 ChatGPT) 就像一个“大脑在缸中”，它什么都知道，但什么都做不了（除了说话）。AI Agent 就是给这个大脑装上了<strong>手脚（工具）<strong>和</strong>长期记忆</strong>。</p>
+<ul>
+<li>
+<p><strong>公式 (The Formula)</strong>:
+$$Agent = LLM + Planning + Memory + Tools$$
+[cite_start][cite: 3]</p>
+</li>
+<li>
+<p><strong>区别 (Difference)</strong>:</p>
+<ul>
+<li><strong>Generative AI (Chatbot)</strong>:
+<ul>
+<li><strong>模式</strong>: 输入 Prompt $\rightarrow$ 输出文字/图片。</li>
+<li><strong>特点</strong>: <strong>Reactive (被动反应)</strong>。你不问，它不说。</li>
+<li><em>Analogy</em>: Like a library. [cite_start]It contains knowledge but sits still until you open a book. [cite: 53]</li>
+</ul>
+</li>
+<li><strong>AI Agent</strong>:
+<ul>
+<li><strong>模式</strong>: 设定目标 Goal $\rightarrow$ 自主规划 $\rightarrow$ 使用工具 $\rightarrow$ 完成任务。</li>
+<li><strong>特点</strong>: <strong>Proactive (主动)</strong>。它可以为了一个目标进行多步操作。</li>
+<li><em>Analogy</em>: Like a personal assistant. [cite_start]You say &ldquo;plan a trip,&rdquo; and it books flights, hotels, and restaurants on its own. [cite: 54]</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-核心能力一规划与思考-planning--reasoning">2. 核心能力一：规划与思考 (Planning &amp; Reasoning)<a hidden class="anchor" aria-hidden="true" href="#2-核心能力一规划与思考-planning--reasoning">#</a></h2>
+<h3 id="core-capability-1-how-ai-thinks">Core Capability 1: How AI Thinks?<a hidden class="anchor" aria-hidden="true" href="#core-capability-1-how-ai-thinks">#</a></h3>
+<p>这是本课的难点。模型通过什么方式来“思考”下一步该做什么？</p>
+<h4 id="a-观察-思考-行动循环-obs-think-act-loop">A. 观察-思考-行动循环 (Obs-Think-Act Loop)<a hidden class="anchor" aria-hidden="true" href="#a-观察-思考-行动循环-obs-think-act-loop">#</a></h4>
+<p>Agent 不会直接跳到结论，而是经历一个循环：</p>
+<ol>
+<li><strong>观察 (Observation)</strong>: 现在的状态是什么？（比如：棋盘现在长什么样？）</li>
+<li><strong>思考 (Thought)</strong>: 基于观察，我该怎么做？</li>
+<li>[cite_start]<strong>行动 (Action)</strong>: 执行操作（比如：下棋，或者搜索谷歌）。[cite: 3]</li>
+</ol>
+<h4 id="b-react-框架-reasoning--acting-重点">B. ReAct 框架 (Reasoning + Acting) [重点]<a hidden class="anchor" aria-hidden="true" href="#b-react-框架-reasoning--acting-重点">#</a></h4>
+<p>课件中隐含的 ReAct 概念是 Agent 的核心工作流。</p>
+<ul>
+<li><strong>原理</strong>: 要求 LLM 在执行动作之前，先显式地把<strong>思考过程 (Chain of Thought)</strong> 写出来。</li>
+<li><strong>例子</strong>:
+<ul>
+<li><em>用户</em>: &ldquo;马斯克现在的身价是多少？&rdquo;</li>
+<li><em>Agent 思考</em>: &ldquo;我需要查最新的数据，因为我的训练数据可能过时了。&rdquo; (Reasoning)</li>
+<li><em>Agent 行动</em>: <code>Search(&quot;Elon Musk net worth today&quot;)</code> (Acting)</li>
+<li><em>Agent 观察</em>: &ldquo;搜索结果显示 2500亿美元。&rdquo; (Observation)</li>
+<li><em>Agent 回答</em>: &ldquo;马斯克目前身价约2500亿美元。&rdquo;</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="3-核心能力二工具使用-tool-use">3. 核心能力二：工具使用 (Tool Use)<a hidden class="anchor" aria-hidden="true" href="#3-核心能力二工具使用-tool-use">#</a></h2>
+<h3 id="core-capability-2-how-ai-uses-tools">Core Capability 2: How AI Uses Tools?<a hidden class="anchor" aria-hidden="true" href="#core-capability-2-how-ai-uses-tools">#</a></h3>
+<p>LLM 本身无法联网，也不擅长精确数学运算。我们需要教它使用外部工具。</p>
+<ul>
+<li>
+<p><strong>函数调用 (Function Calling)</strong>:</p>
+<ul>
+<li><strong>原理</strong>: 我们不直接把工具给 LLM，而是给它一本<strong>说明书 (System Prompt)</strong>。</li>
+<li>[cite_start]<em>Prompt 示例</em>: &ldquo;如果你遇到不懂的问题，你可以输出 <code>&lt;tool&gt;Search(query)&lt;/tool&gt;</code> 来使用搜索引擎。&rdquo; [cite: 27]</li>
+<li><strong>流程</strong>:
+<ol>
+<li>LLM 输出一段特定的文本（如 XML 标签）。</li>
+<li>系统拦截这段文本，去运行真正的 Python 代码或 API。</li>
+<li>系统把运行结果（比如天气是 30度）塞回给 LLM。</li>
+<li>[cite_start]LLM 根据结果生成最终回答。 [cite: 29, 33, 34]</li>
+</ol>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>自我判断 (Judgment)</strong>:</p>
+<ul>
+<li><strong>难点</strong>: 工具不总是对的。Agent 需要具备<strong>批判性思维</strong>。</li>
+<li><em>Case</em>: 如果天气 API 返回 &ldquo;500°C&rdquo;，LLM 不应直接复述，而应该判断 &ldquo;这数据不合理，可能是工具出错了&rdquo;。</li>
+<li>[cite_start]<em>Concept</em>: <strong>Internal Knowledge (自身常识)</strong> vs. <strong>External Knowledge (工具结果)</strong>。Agent 需要权衡这两者。 [cite: 49, 50, 52]</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="4-核心能力三记忆与经验-memory--experience">4. 核心能力三：记忆与经验 (Memory &amp; Experience)<a hidden class="anchor" aria-hidden="true" href="#4-核心能力三记忆与经验-memory--experience">#</a></h2>
+<h3 id="core-capability-3-adjusting-behavior-via-experience">Core Capability 3: Adjusting Behavior via Experience<a hidden class="anchor" aria-hidden="true" href="#core-capability-3-adjusting-behavior-via-experience">#</a></h3>
+<p>如果 Agent 每次任务结束就重置，它永远不会进步。它需要记忆。</p>
+<ul>
+<li><strong>短期记忆 (Short-term Memory)</strong>: 上下文窗口 (Context Window)，记录当前的对话历史。</li>
+<li><strong>长期记忆 (Long-term Memory)</strong>:
+<ul>
+<li>[cite_start]<strong>RAG (检索增强生成)</strong>: 将过往的经验存入向量数据库 (Vector DB)。当遇到类似任务时，检索出相关的经验供 LLM 参考。 [cite: 15, 19]</li>
+<li>[cite_start]<strong>反思 (Reflection)</strong>: Agent 在行动后，会生成一段“反思总结”，存入记忆。比如 &ldquo;上次我直接搜索失败了，下次应该先拆解问题&rdquo;。 [cite: 21]</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="5-进阶概念agentic-ai-与多智能体">5. 进阶概念：Agentic AI 与多智能体<a hidden class="anchor" aria-hidden="true" href="#5-进阶概念agentic-ai-与多智能体">#</a></h2>
+<h3 id="advanced-concept-agentic-ai-systems">Advanced Concept: Agentic AI Systems<a hidden class="anchor" aria-hidden="true" href="#advanced-concept-agentic-ai-systems">#</a></h3>
+<p>这是从“单个员工”到“公司团队”的跨越。</p>
+<ul>
+<li><strong>Agentic AI System</strong>:
+不是单打独斗，而是多个 Agent 协作。</li>
+<li>[cite_start]<strong>工作流示例 (Youtube -&gt; Rednote)</strong>: [cite: 55]
+<ol>
+<li><strong>Agent 1 (听录员)</strong>: 把视频转成文字。</li>
+<li><strong>Agent 2 (标题党)</strong>: 根据文字起一个吸引人的标题。</li>
+<li><strong>Agent 3 (写手)</strong>: 撰写正文。</li>
+<li><strong>Agent 4 (编辑)</strong>: 润色和排版。</li>
+</ol>
+</li>
+<li><strong>优势</strong>: 术业有专攻，每个 Agent 只需要专注于一个小任务，整体效果更好。</li>
+</ul>
+<hr>
+<h2 id="6-专有名词表-glossary-3">6. 专有名词表 (Glossary)<a hidden class="anchor" aria-hidden="true" href="#6-专有名词表-glossary-3">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">中文术语</th>
+          <th style="text-align: left">English Term</th>
+          <th style="text-align: left">详细解释 / Detailed Explanation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>人工智能智能体</strong></td>
+          <td style="text-align: left">AI Agent</td>
+          <td style="text-align: left">一个拥有感知、规划能力的系统，能使用工具自主完成目标。公式：LLM + 规划 + 记忆 + 工具。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>被动反应</strong></td>
+          <td style="text-align: left">Reactive</td>
+          <td style="text-align: left">传统的 GenAI 模式，只有收到指令才会有输出，不会主动发起行动。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>函数调用</strong></td>
+          <td style="text-align: left">Function Calling</td>
+          <td style="text-align: left">允许 LLM 输出特定格式的指令来触发外部代码（如查天气、搜网页）的技术。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>检索增强生成</strong></td>
+          <td style="text-align: left">RAG (Retrieval-Augmented Generation)</td>
+          <td style="text-align: left">结合了搜索（检索）和生成的技术。让 LLM 在回答前先去“翻书”（数据库），从而减少胡说八道。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>思维链</strong></td>
+          <td style="text-align: left">Chain of Thought (CoT)</td>
+          <td style="text-align: left">提示工程技术，引导模型一步步把逻辑写出来，能显著提升复杂推理任务的准确率。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>ReAct 框架</strong></td>
+          <td style="text-align: left">ReAct (Reason+Act)</td>
+          <td style="text-align: left">一种通过交替进行“推理”和“行动”来解决任务的模式。是 Agent 的核心思考方式。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>多智能体系统</strong></td>
+          <td style="text-align: left">Multi-Agent System</td>
+          <td style="text-align: left">由多个扮演不同角色的 Agent 组成的系统，它们像人类团队一样协作完成复杂任务。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>幻觉</strong></td>
+          <td style="text-align: left">Hallucination</td>
+          <td style="text-align: left">LLM 一本正经地胡说八道。通过使用工具（如搜索、计算器）可以有效减少幻觉。</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="总结-summary-7">总结 (Summary)<a hidden class="anchor" aria-hidden="true" href="#总结-summary-7">#</a></h3>
+<p>Week 8 的核心在于**“Action”**。
+如果说前几周是教你造一个“全知全能的哲学家”（GenAI），这周就是教你把这个哲学家变成一个“能干活的打工人”（Agent）。
+关键在于：</p>
+<ol>
+<li><strong>给它工具</strong>（Function Call）。</li>
+<li><strong>教它流程</strong>（ReAct Loop: 观察-&gt;思考-&gt;行动）。</li>
+<li><strong>给它记忆</strong>（RAG/Database），让它能从经验中学习。</li>
+</ol>
+<hr>
+<h1 id="cs5494-week-9-3d-vision--generation">CS5494 Week 9: 3D Vision &amp; Generation<a hidden class="anchor" aria-hidden="true" href="#cs5494-week-9-3d-vision--generation">#</a></h1>
+<h1 id="第九周三维视觉与生成">第九周：三维视觉与生成<a hidden class="anchor" aria-hidden="true" href="#第九周三维视觉与生成">#</a></h1>
+<h2 id="1-核心痛点3d-表示的多样性">1. 核心痛点：3D 表示的多样性<a hidden class="anchor" aria-hidden="true" href="#1-核心痛点3d-表示的多样性">#</a></h2>
+<h3 id="core-pain-point-diversity-of-3d-representations">Core Pain Point: Diversity of 3D Representations<a hidden class="anchor" aria-hidden="true" href="#core-pain-point-diversity-of-3d-representations">#</a></h3>
+<p>在 2D 中，我们只有一种标准格式：像素网格 (Pixel Grid)。但在 3D 中，没有统一的标准，我们需要根据任务选择不同的<strong>数据结构</strong>。</p>
+<h4 id="a-显式表示-explicit-representations">A. 显式表示 (Explicit Representations)<a hidden class="anchor" aria-hidden="true" href="#a-显式表示-explicit-representations">#</a></h4>
+<p>直接定义物体的几何形状。</p>
+<ol>
+<li>
+<p><strong>体素 (Voxels)</strong>:</p>
+<ul>
+<li><strong>定义</strong>: 3D 版的像素 (Volume Pixel)。就像《我的世界》(Minecraft) 里的方块。</li>
+<li><strong>优点</strong>: 规则结构，可以直接用 3D 卷积神经网络 (3D CNN) 处理。</li>
+<li><strong>缺点</strong>: <strong>内存爆炸</strong>。分辨率每增加 1 倍，内存消耗增加 8 倍 ($O(N^3)$)。这就叫“维数灾难”。</li>
+<li></li>
+</ul>
+</li>
+<li>
+<p><strong>点云 (Point Clouds)</strong>:</p>
+<ul>
+<li><strong>定义</strong>: 一堆 $(x, y, z)$ 坐标点的集合。通常由激光雷达 (LiDAR) 采集。</li>
+<li><strong>特点</strong>: <strong>无序性 (Unordered)</strong>。点的顺序不影响形状，这对神经网络是个挑战（后面会讲 PointNet）。</li>
+<li><strong>缺点</strong>: 没有表面信息，放大看全是洞。</li>
+</ul>
+</li>
+<li>
+<p><strong>网格 (Meshes)</strong>:</p>
+<ul>
+<li><strong>定义</strong>: 由顶点 (Vertices)、边 (Edges) 和面 (Faces) 组成的集合。是游戏和电影工业的标准。</li>
+<li><strong>缺点</strong>: 拓扑结构复杂，神经网络很难直接生成（很难处理“这就多了一个洞”这种拓扑变化）。</li>
+<li></li>
+</ul>
+</li>
+</ol>
+<h4 id="b-隐式表示-implicit-representations-重点">B. 隐式表示 (Implicit Representations) [重点]<a hidden class="anchor" aria-hidden="true" href="#b-隐式表示-implicit-representations-重点">#</a></h4>
+<p>不直接存储点，而是存储一个<strong>数学函数</strong>。</p>
+<ul>
+<li><strong>思想</strong>: 定义一个函数 $f(x, y, z)$。</li>
+<li><strong>SDF (Signed Distance Function)</strong>: 函数返回该点距离物体表面的距离。负数在内部，正数在外部，0 就是表面。</li>
+<li><strong>优点</strong>: 分辨率无限，可以表示极其复杂的拓扑结构。</li>
+</ul>
+<hr>
+<h2 id="2-核心架构pointnet-处理点云">2. 核心架构：PointNet (处理点云)<a hidden class="anchor" aria-hidden="true" href="#2-核心架构pointnet-处理点云">#</a></h2>
+<h3 id="core-architecture-pointnet-processing-point-clouds">Core Architecture: PointNet (Processing Point Clouds)<a hidden class="anchor" aria-hidden="true" href="#core-architecture-pointnet-processing-point-clouds">#</a></h3>
+<p>这是深度学习处理 3D 点云的开山之作。</p>
+<ul>
+<li><strong>难点</strong>: 点云是无序的。输入 $(Point A, Point B)$ 和 $(Point B, Point A)$ 应该代表同一个物体。普通的 CNN 或 RNN 对顺序敏感，无法处理。</li>
+<li><strong>PointNet 的解决方案</strong>:
+<ol>
+<li><strong>共享 MLP (Shared MLP)</strong>: 对每一个点单独进行特征提取（映射到高维空间），每个点用的权重是一样的。</li>
+<li><strong>对称函数 (Symmetric Function)</strong>: 使用 <strong>Max Pooling</strong>。不管输入的点顺序怎么变，取“最大值”这个操作得到的结果永远是一样的。</li>
+</ol>
+<ul>
+<li><em>Mechanism</em>: Map each point individually to a higher dimension, then aggregate them using a symmetric operation (max pooling) to get a global feature vector.</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="3-革命性技术nerf-神经辐射场">3. 革命性技术：NeRF (神经辐射场)<a hidden class="anchor" aria-hidden="true" href="#3-革命性技术nerf-神经辐射场">#</a></h2>
+<h3 id="revolutionary-tech-nerf-neural-radiance-fields">Revolutionary Tech: NeRF (Neural Radiance Fields)<a hidden class="anchor" aria-hidden="true" href="#revolutionary-tech-nerf-neural-radiance-fields">#</a></h3>
+<p>这是本周课件最硬核、也是现代 3D 生成的基石。它不仅是一种表示，更是一种渲染技术。</p>
+<ul>
+<li>
+<p><strong>核心定义</strong>:
+NeRF 不是存网格，而是训练一个<strong>全连接神经网络 (MLP)</strong> 来隐式地存储场景。
+$$F_\theta(x, y, z, \theta, \phi) \rightarrow (r, g, b, \sigma)$$</p>
+<ul>
+<li><strong>输入</strong>: 空间坐标 $(x, y, z)$ + 观看角度 $(\theta, \phi)$。</li>
+<li><strong>输出</strong>: 该点的颜色 $(r, g, b)$ + <strong>密度 (Density $\sigma$)</strong>。</li>
+</ul>
+</li>
+<li>
+<p><strong>体渲染 (Volumetric Rendering)</strong>:
+怎么把这个神经网络变成一张图片？</p>
+<ol>
+<li><strong>光线投射 (Ray Marching)</strong>: 从相机位置向屏幕的每个像素发射一条射线。</li>
+<li><strong>采样 (Sampling)</strong>: 在这条射线上取很多采样点。</li>
+<li><strong>查询 (Query)</strong>: 把每个采样点的坐标丢给 MLP，问它：“这里有什么颜色？密度多少？”</li>
+<li><strong>积分 (Integration)</strong>: 根据密度把颜色累加起来。密度大的地方会遮挡后面的点。</li>
+</ol>
+<ul>
+<li><em>Analogy</em>: 就像在雾中看东西。视线穿过雾气（累加颜色），直到被厚实的东西挡住。</li>
+</ul>
+</li>
+<li>
+<p><strong>优势</strong>: 生成的视图具有<strong>照片级真实感 (Photorealistic)</strong>，且视点连续变化。</p>
+</li>
+<li>
+<p><strong>劣势</strong>: 渲染极慢（生成一张图要查询几百万次网络）。</p>
+</li>
+</ul>
+<hr>
+<h2 id="4-3d-生成dreamfusion-与-sds">4. 3D 生成：DreamFusion 与 SDS<a hidden class="anchor" aria-hidden="true" href="#4-3d-生成dreamfusion-与-sds">#</a></h2>
+<h3 id="3d-generation-dreamfusion--sds">3D Generation: DreamFusion &amp; SDS<a hidden class="anchor" aria-hidden="true" href="#3d-generation-dreamfusion--sds">#</a></h3>
+<p>我们有很强的 2D 生成模型（如 Stable Diffusion），但没有很多 3D 数据来训练 3D 模型。怎么办？
+<strong>DreamFusion (2023)</strong> 提出了一种“借鸡生蛋”的方法。</p>
+<ul>
+<li><strong>核心逻辑</strong>: 用 2D 模型当“老师”，指导 3D 模型“画画”。</li>
+<li><strong>流程 (Process)</strong>:
+<ol>
+<li>初始化一个随机的 NeRF（看起来像一团雾）。</li>
+<li><strong>渲染 (Render)</strong>: 从某个角度拍一张这团雾的照片。</li>
+<li><strong>打分 (Critic)</strong>: 把照片丢给 2D Diffusion Model (比如 Stable Diffusion)，再加上文字提示（如 &ldquo;一只红色的青蛙&rdquo;）。</li>
+<li><strong>SDS Loss (Score Distillation Sampling)</strong>: 2D 模型会告诉 3D 模型：“这看起来不像青蛙，你应该把这里的像素变红一点”。（计算梯度）</li>
+<li><strong>更新 (Update)</strong>: 根据建议修改 NeRF 的参数。</li>
+<li>重复几千次，直到 3D 模型从各个角度看都像一只青蛙。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="5-专有名词表-glossary-3">5. 专有名词表 (Glossary)<a hidden class="anchor" aria-hidden="true" href="#5-专有名词表-glossary-3">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">中文术语</th>
+          <th style="text-align: left">English Term</th>
+          <th style="text-align: left">详细解释 / Detailed Explanation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>体素</strong></td>
+          <td style="text-align: left">Voxel (Volumetric Pixel)</td>
+          <td style="text-align: left">3D 空间中的规则网格单位，相当于 2D 图片中的像素。常用于医疗影像或简单的 3D 模型。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>点云</strong></td>
+          <td style="text-align: left">Point Cloud</td>
+          <td style="text-align: left">3D 空间中一组数据点 $(x,y,z)$ 的集合。由激光雷达扫描生成，数据稀疏且无序。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>网格</strong></td>
+          <td style="text-align: left">Mesh</td>
+          <td style="text-align: left">由多边形（通常是三角形）组成的 3D 物体表面表示法。由顶点、边和面构成。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>SDF</strong></td>
+          <td style="text-align: left">Signed Distance Function</td>
+          <td style="text-align: left">符号距离函数。一种隐式表示，记录空间中任意一点到最近物体表面的距离（内部为负，外部为正）。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>NeRF</strong></td>
+          <td style="text-align: left">NeRF (Neural Radiance Fields)</td>
+          <td style="text-align: left">神经辐射场。用神经网络来表示 3D 场景，通过输入坐标和视角输出颜色和密度，能渲染出极高保真的新视角图像。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>体渲染</strong></td>
+          <td style="text-align: left">Volumetric Rendering</td>
+          <td style="text-align: left">一种基于光线穿过介质（如烟雾、云层）的物理特性的图像生成技术。NeRF 使用它将 3D 密度场转化为 2D 图像。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>光线投射</strong></td>
+          <td style="text-align: left">Ray Casting / Marching</td>
+          <td style="text-align: left">图形学技术。从相机向屏幕像素发射光线，检测光线与物体的交互。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>PointNet</strong></td>
+          <td style="text-align: left">PointNet</td>
+          <td style="text-align: left">专门处理点云数据的神经网络架构，解决了点云无序性的问题。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>DreamFusion</strong></td>
+          <td style="text-align: left">DreamFusion</td>
+          <td style="text-align: left">Google 提出的文本生成 3D 模型。它不需要 3D 训练数据，而是利用预训练的 2D 扩散模型来优化 3D 结构。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>SDS</strong></td>
+          <td style="text-align: left">Score Distillation Sampling</td>
+          <td style="text-align: left">分数蒸馏采样。DreamFusion 的核心算法，用于从 2D 扩散模型中提取梯度信息来更新 3D 参数。</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="总结-summary-8">总结 (Summary)<a hidden class="anchor" aria-hidden="true" href="#总结-summary-8">#</a></h3>
+<p>Week 9 的核心在于**“升维”**。</p>
+<ul>
+<li><strong>存数据</strong>: 既然存不下所有像素（体素太贵），我们就存点（点云），或者存皮（网格），或者最现代的方法——存<strong>函数 (NeRF)</strong>。</li>
+<li><strong>生成数据</strong>: 既然没有 3D 数据集，我们就用 2D 的 AI 去“监考” 3D 的 AI，让它凭空捏出一个 3D 模型 (DreamFusion)。</li>
+</ul>
+<hr>
+<h1 id="cs5494-week-10-large-foundation-models-vlm--vla">CS5494 Week 10: Large Foundation Models (VLM &amp; VLA)<a hidden class="anchor" aria-hidden="true" href="#cs5494-week-10-large-foundation-models-vlm--vla">#</a></h1>
+<h1 id="第十周多模态基础模型与具身智能">第十周：多模态基础模型与具身智能<a hidden class="anchor" aria-hidden="true" href="#第十周多模态基础模型与具身智能">#</a></h1>
+<h2 id="1-范式转变从专用模型到基础模型">1. 范式转变：从专用模型到基础模型<a hidden class="anchor" aria-hidden="true" href="#1-范式转变从专用模型到基础模型">#</a></h2>
+<h3 id="paradigm-shift-from-specialized-to-foundation-models">Paradigm Shift: From Specialized to Foundation Models<a hidden class="anchor" aria-hidden="true" href="#paradigm-shift-from-specialized-to-foundation-models">#</a></h3>
+<p>课件开篇首先强调了 AI 开发模式的根本性变化。</p>
+<ul>
+<li><strong>过去 (The Past)</strong>: 为每个任务训练一个专用模型。
+<ul>
+<li>做分类训练一个 ResNet，做分割训练一个 U-Net，做翻译训练一个 LSTM。</li>
+<li><em>Analogy</em>: 就像家里买了打蛋器、榨汁机、绞肉机，每个机器只能干一件事。</li>
+</ul>
+</li>
+<li><strong>现在 (The Present)</strong>: 基础模型 (Foundation Models)。
+<ul>
+<li>在大规模数据上预训练一个<strong>通用的模型</strong>（如 GPT-4, Gemini），然后通过微调 (Fine-tuning) 或提示 (Prompting) 适应各种下游任务。</li>
+<li><em>Analogy</em>: 就像一个全能的大厨，你给他什么指令，他就能做什么菜。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-视觉-语言模型-vlm-clip">2. 视觉-语言模型 (VLM): CLIP<a hidden class="anchor" aria-hidden="true" href="#2-视觉-语言模型-vlm-clip">#</a></h2>
+<h3 id="vision-language-models-vlm-clip">Vision-Language Models (VLM): CLIP<a hidden class="anchor" aria-hidden="true" href="#vision-language-models-vlm-clip">#</a></h3>
+<p>CLIP (Contrastive Language-Image Pre-training) 是连接文字和图片最重要的桥梁。</p>
+<ul>
+<li><strong>核心思想 (Core Idea)</strong>:
+CLIP 不再像传统分类模型那样预测固定的 1000 个类别（ImageNet），而是<strong>学习图片和文字描述之间的匹配关系</strong>。</li>
+<li><strong>训练方法：对比学习 (Contrastive Learning)</strong>: [重点]
+<ol>
+<li>输入：一对对图片和对应的文字说明 (Image-Text Pairs)。</li>
+<li>模型包含一个 Image Encoder 和一个 Text Encoder。</li>
+<li><strong>拉近 (Pull)</strong>: 只有正确的图文对，它们生成的向量在空间中应该靠得很近。</li>
+<li><strong>推远 (Push)</strong>: 错误的图文组合（比如“狗的图”配“猫的字”），向量应该互相排斥。</li>
+</ol>
+<ul>
+<li><em>Concept</em>: Maximizing the cosine similarity for $N$ real pairs, while minimizing it for $N^2 - N$ incorrect pairings.</li>
+</ul>
+</li>
+<li><strong>能力</strong>: <strong>Zero-shot Classification (零样本分类)</strong>。CLIP 不需要重新训练就能识别从未见过的物体，只要你告诉它那个物体的名字（文字）。</li>
+</ul>
+<hr>
+<h2 id="3-让-llm-看懂图-llava">3. 让 LLM 看懂图: LLaVA<a hidden class="anchor" aria-hidden="true" href="#3-让-llm-看懂图-llava">#</a></h2>
+<h3 id="making-llm-see-llava-large-language-and-vision-assistant">Making LLM See: LLaVA (Large Language-and-Vision Assistant)<a hidden class="anchor" aria-hidden="true" href="#making-llm-see-llava-large-language-and-vision-assistant">#</a></h3>
+<p>CLIP 只能做匹配，不能像 ChatGPT 那样聊天。LLaVA 是通过<strong>视觉指令微调 (Visual Instruction Tuning)</strong> 把视觉能力嫁接到 LLM 上。</p>
+<ul>
+<li><strong>架构 (Architecture)</strong>:
+$$LLaVA = VisionEncoder + Projection + LLM$$
+<ul>
+<li><strong>Vision Encoder</strong>: 用 CLIP 把图片变成向量特征。</li>
+<li><strong>Projection Layer (投影层)</strong>: [难点]
+<ul>
+<li>LLM 只能看懂文本向量空间，看不懂图片向量空间。</li>
+<li>投影层就是一个“翻译官”（通常是个简单的 MLP），把图片特征<strong>映射</strong>到 LLM 的文本特征空间中。</li>
+</ul>
+</li>
+<li><strong>LLM</strong>: 也就是 Llama 或 Vicuna。对它来说，投影后的图片特征就像是一堆“外语单词”。</li>
+</ul>
+</li>
+<li><strong>训练</strong>:
+通过问答对（例如：“这张图里有什么？”-“有一只猫”）来训练，让 LLM 学会理解这些“视觉单词”的含义。</li>
+</ul>
+<hr>
+<h2 id="4-视觉分割基座-sam">4. 视觉分割基座: SAM<a hidden class="anchor" aria-hidden="true" href="#4-视觉分割基座-sam">#</a></h2>
+<h3 id="vision-foundation-model-sam-segment-anything-model">Vision Foundation Model: SAM (Segment Anything Model)<a hidden class="anchor" aria-hidden="true" href="#vision-foundation-model-sam-segment-anything-model">#</a></h3>
+<p>SAM 是 Meta 发布的图像分割领域的“GPT”。</p>
+<ul>
+<li><strong>痛点</strong>: 以前做分割（把物体抠出来）需要针对特定物体训练，且标注数据极难。</li>
+<li><strong>Promptable Segmentation (可提示分割)</strong>:
+SAM 不需要你告诉它具体的类别，你只需要给它一个<strong>提示 (Prompt)</strong>：
+<ul>
+<li>点一下 (Point)</li>
+<li>画个框 (Box)</li>
+<li>写行字 (Text)
+它就能把对应的物体抠出来。</li>
+</ul>
+</li>
+<li><strong>意义</strong>: 解决了视觉任务中最繁琐的分割问题，成为各种高级视觉任务的预处理工具。</li>
+</ul>
+<hr>
+<h2 id="5-具身智能-vla-模型-robotic-foundation-models">5. 具身智能: VLA 模型 (Robotic Foundation Models)<a hidden class="anchor" aria-hidden="true" href="#5-具身智能-vla-模型-robotic-foundation-models">#</a></h2>
+<h3 id="embodied-ai-vision-language-action-models-vla">Embodied AI: Vision-Language-Action Models (VLA)<a hidden class="anchor" aria-hidden="true" href="#embodied-ai-vision-language-action-models-vla">#</a></h3>
+<p>这是本节课最高阶的内容。我们不仅要 AI 看图说话 (VLM)，还要它<strong>看图干活</strong>。</p>
+<h4 id="a-rt-1-robotic-transformer-1">A. RT-1 (Robotic Transformer 1)<a hidden class="anchor" aria-hidden="true" href="#a-rt-1-robotic-transformer-1">#</a></h4>
+<ul>
+<li><strong>核心创新</strong>: <strong>动作 Token 化 (Tokenizing Actions)</strong>。
+<ul>
+<li>Transformer 本质上是预测下一个单词 (Token)。</li>
+<li>RT-1 把机器人的动作（手臂移动 x, y, z，夹爪开合）离散化成一个个数字 Token。</li>
+<li>这样，控制机器人就变成了“文本生成”问题：输入是图片，输出是“动作单词”。</li>
+<li><em>Concept</em>: Treating physical motor control as a sequence modeling problem, just like language.</li>
+</ul>
+</li>
+</ul>
+<h4 id="b-rt-2-互联网知识迁移-internet-knowledge-transfer">B. RT-2: 互联网知识迁移 (Internet Knowledge Transfer)<a hidden class="anchor" aria-hidden="true" href="#b-rt-2-互联网知识迁移-internet-knowledge-transfer">#</a></h4>
+<ul>
+<li><strong>问题</strong>: 机器人数据很少（很难让机器人实际抓 100 万次杯子），但互联网图片/文字数据很多。</li>
+<li><strong>Co-training (联合训练)</strong>:
+RT-2 把互联网上的 VQA 数据（看图问答）和机器人操作数据<strong>混在一起训练</strong>。</li>
+<li><strong>涌现能力 (Emergent Capabilities)</strong>: [难点]
+<ul>
+<li>如果你教机器人“抓苹果”，它会抓苹果。</li>
+<li>但如果你让它“<strong>抓那个灭绝的动物</strong>”（桌上有恐龙玩具和苹果），RT-1 会傻掉。</li>
+<li>RT-2 知道“恐龙是灭绝动物”（来自互联网知识），也知道“怎么抓东西”（来自机器人数据），所以它能推断出要去抓恐龙玩具。</li>
+<li><em>Takeaway</em>: Semantic knowledge from the web is transferred to physical control.</li>
+</ul>
+</li>
+</ul>
+<h4 id="c-rt-x--openvla">C. RT-X / OpenVLA<a hidden class="anchor" aria-hidden="true" href="#c-rt-x--openvla">#</a></h4>
+<ul>
+<li><strong>跨形态 (Cross-Embodiment)</strong>: 不同的机器人（有的单臂，有的双臂，有的长有的短）如何共用一个模型？</li>
+<li>通过标准化动作空间，汇集全世界不同机器人的数据训练出一个通用的 VLA 模型。</li>
+</ul>
+<hr>
+<h2 id="6-专有名词表-glossary-4">6. 专有名词表 (Glossary)<a hidden class="anchor" aria-hidden="true" href="#6-专有名词表-glossary-4">#</a></h2>
+<table>
+  <thead>
+      <tr>
+          <th style="text-align: left">中文术语</th>
+          <th style="text-align: left">English Term</th>
+          <th style="text-align: left">详细解释 / Detailed Explanation</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><strong>基础模型</strong></td>
+          <td style="text-align: left">Foundation Model</td>
+          <td style="text-align: left">在海量数据上预训练的大规模模型，具有强大的泛化能力，可适应多种下游任务（如 GPT-4, Llama）。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>多模态</strong></td>
+          <td style="text-align: left">Multimodal</td>
+          <td style="text-align: left">指模型能同时处理多种媒体数据，如文本、图像、音频、视频等。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>对比学习</strong></td>
+          <td style="text-align: left">Contrastive Learning</td>
+          <td style="text-align: left">CLIP 的核心训练方法。通过拉近正样本对（匹配的图文）、推远负样本对来学习特征表示。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>零样本分类</strong></td>
+          <td style="text-align: left">Zero-shot Classification</td>
+          <td style="text-align: left">模型无需针对特定类别进行微调，仅凭类别的语义描述就能识别样本的能力。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>视觉指令微调</strong></td>
+          <td style="text-align: left">Visual Instruction Tuning</td>
+          <td style="text-align: left">LLaVA 的训练方法。将图像特征映射到语言空间，并通过指令-回复对来微调 LLM，使其具备多模态对话能力。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>具身智能</strong></td>
+          <td style="text-align: left">Embodied AI</td>
+          <td style="text-align: left">拥有物理实体（如机器人）的 AI，不仅能进行数字计算，还能与物理世界进行交互（感知+行动）。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>VLA 模型</strong></td>
+          <td style="text-align: left">VLA (Vision-Language-Action)</td>
+          <td style="text-align: left">视觉-语言-动作模型。VLM 的进阶版，输出不仅是文本，还可以是机器人的控制指令。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>动作 Token 化</strong></td>
+          <td style="text-align: left">Action Tokenization</td>
+          <td style="text-align: left">将连续的机器人动作（如电压、角度、坐标）转化为离散的数字 Token，以便 Transformer 处理。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>联合训练</strong></td>
+          <td style="text-align: left">Co-training</td>
+          <td style="text-align: left">在 RT-2 中使用的方法，同时使用互联网图文数据和机器人操作数据进行训练，以实现知识迁移。</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><strong>跨形态</strong></td>
+          <td style="text-align: left">Cross-Embodiment</td>
+          <td style="text-align: left">指一个模型能够控制身体结构完全不同的多种机器人（如不同品牌、不同自由度的机械臂）。</td>
+      </tr>
+  </tbody>
+</table>
+<h3 id="总结-summary-9">总结 (Summary)<a hidden class="anchor" aria-hidden="true" href="#总结-summary-9">#</a></h3>
+<p>Week 10 告诉你 AI 的终极形态：</p>
+<ol>
+<li><strong>CLIP</strong> 让电脑学会了把“图”和“字”对上号。</li>
+<li><strong>LLaVA</strong> 让 LLM 长了眼睛，能看图说话。</li>
+<li><strong>SAM</strong> 提供了像素级的精确视觉能力。</li>
+<li><strong>RT-2 / VLA</strong> 把这一切装进了机器人的身体里，利用大模型学到的世界知识（语义），去指导物理世界的行动（操作）。
+<strong>从“读万卷书”（LLM）到“行万里路”（VLA），这就是 AI 的未来。</strong></li>
+</ol>
 
 
         </div>
