@@ -2,26 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gopherding.github.io/posts/tech/</loc>
-    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
+    <loc>https://gopherding.github.io/posts/read/</loc>
+    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/</loc>
+    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/</loc>
+    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/</loc>
+    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/read/%E6%98%A5/</loc>
+    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/%E6%95%A3%E6%96%87/</loc>
+    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/tech/</loc>
     <lastmod>2025-12-15T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/generative-ai/</loc>
     <lastmod>2025-12-15T15:55:23+08:00</lastmod>
   </url><url>
-    <loc>https://gopherding.github.io/</loc>
-    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
-  </url><url>
     <loc>https://gopherding.github.io/posts/tech/introduction-to-generative-ai/</loc>
     <lastmod>2025-12-15T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/tags/</loc>
-    <lastmod>2025-12-15T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/posts/read/</loc>
-    <lastmod>2025-11-28T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/lyrics/</loc>
     <lastmod>2025-11-28T15:55:23+08:00</lastmod>
@@ -276,9 +282,6 @@
     <lastmod>2024-10-16T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/read/%E5%8C%86%E5%8C%86/</loc>
-    <lastmod>2024-10-07T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/tags/%E6%95%A3%E6%96%87/</loc>
     <lastmod>2024-10-07T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/messagequeue/</loc>
