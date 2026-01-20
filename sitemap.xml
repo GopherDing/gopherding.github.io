@@ -2,16 +2,28 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://gopherding.github.io/posts/read/</loc>
-    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
-  </url><url>
     <loc>https://gopherding.github.io/posts/</loc>
-    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/english-poetry/</loc>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/</loc>
-    <lastmod>2025-12-22T15:55:23+08:00</lastmod>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/life/the-red-lantern-at-the-canyons-throat/</loc>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/life/</loc>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/</loc>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/tags/%E7%BF%BB%E8%AF%91/</loc>
+    <lastmod>2026-01-18T15:55:23+08:00</lastmod>
+  </url><url>
+    <loc>https://gopherding.github.io/posts/read/</loc>
     <lastmod>2025-12-22T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/read/%E6%98%A5/</loc>
@@ -29,13 +41,7 @@
     <loc>https://gopherding.github.io/posts/tech/introduction-to-generative-ai/</loc>
     <lastmod>2025-12-15T15:55:23+08:00</lastmod>
   </url><url>
-    <loc>https://gopherding.github.io/tags/english-poetry/</loc>
-    <lastmod>2025-12-04T15:55:23+08:00</lastmod>
-  </url><url>
     <loc>https://gopherding.github.io/posts/life/red-beacon/</loc>
-    <lastmod>2025-12-04T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/posts/life/</loc>
     <lastmod>2025-12-04T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/lyrics/</loc>
@@ -132,9 +138,6 @@
     <lastmod>2025-09-06T00:18:06+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/posts/life/sonnet-73-%E8%AF%91/</loc>
-    <lastmod>2025-09-05T15:55:23+08:00</lastmod>
-  </url><url>
-    <loc>https://gopherding.github.io/tags/%E7%BF%BB%E8%AF%91/</loc>
     <lastmod>2025-09-05T15:55:23+08:00</lastmod>
   </url><url>
     <loc>https://gopherding.github.io/tags/%E6%8A%A5%E5%91%8A%E6%96%87%E5%AD%A6/</loc>
