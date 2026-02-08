@@ -1,1123 +1,164 @@
-<!DOCTYPE html>
-<html lang="zh" dir="auto">
-
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>👨🏻‍💻 技术 | GopherDing&#39;s Blog</title>
-<meta name="keywords" content="">
-<meta name="description" content="Science and technology constitute a primary productive force.">
-<meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
-<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="google-site-verification" content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg" />
-<link rel="alternate" type="application/rss+xml" href="https://gopherding.github.io/posts/tech/index.xml">
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
-
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --hljs-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript>
-
-<script src="/js/busuanzi.pure.mini.js"></script>
-<link rel="stylesheet" href="/css/font-awesome.min.css">
-
-<script src="/js/jquery-3.7.1.min.js"></script>
-
-
-
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = ""; 
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<meta property="og:title" content="👨🏻‍💻 技术" />
-<meta property="og:description" content="Science and technology constitute a primary productive force." />
-<meta property="og:type" content="website" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="👨🏻‍💻 技术"/>
-<meta name="twitter:description" content="Science and technology constitute a primary productive force."/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-
-        {
-          "@type": "ListItem",
-          "position":  1 ,
-          "name": "📚文章",
-          "item": "https://gopherding.github.io/posts/"
-        }, 
-    {
-      "@type": "ListItem",
-      "position":  2 ,
-      "name": "👨🏻‍💻 技术",
-      "item": "https://gopherding.github.io/posts/tech/"
-    }
-  ]
-}
-</script>
-</head>
-
-<body class="list" id="top">
-<script>
-    (function () {
-        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
-        if(arr = document.cookie.match(reg)) {
-        } else {
-            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
-                document.body.classList.add('dark');
-                localStorage.setItem("pref-theme", 'dark');
-            } else {
-                document.body.classList.remove('dark');
-                localStorage.setItem("pref-theme", 'light');
-            }
-        }
-    })()
-
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-</script>
-
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
-            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
-                 height="50">GopherDing&#39;s Blog</a>
-            <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-                <ul class="lang-switch"><li>|</li>
-                </ul>
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="https://gopherding.github.io/" title="🏠 主页">
-                <span>🏠 主页</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
-                <span>🔍 搜索</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/tags" title="🧩 标签">
-                <span>🧩 标签</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
-                <span>⏱️ 时间轴</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
-                <span>🙋🏻‍♂️ 关于</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/links" title="🤝 友链">
-                <span>🤝 友链</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.travellings.cn/go.html" title="🚇 开往">
-                <span>🚇 开往</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main"> 
-<header class="page-header"><div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a></div>
-  <h1>👨🏻‍💻 技术</h1>
-  <div class="post-description">
-    Science and technology constitute a primary productive force.
-  </div>
-</header>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>自动监控报警的实现
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        Prometheus自动监控报警的实现
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-09
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>1749字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>4分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to 自动监控报警的实现" href="https://gopherding.github.io/posts/tech/%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7%E6%8A%A5%E8%AD%A6%E7%9A%84%E5%AE%9E%E7%8E%B0/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>HPA和Prometheus联动自动扩容
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        HPA和Prometheus联动自动扩容
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-08
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>1110字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>3分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-                &nbsp;<a href="https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/" style="color: var(--secondary)!important;">运维</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to HPA和Prometheus联动自动扩容" href="https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>XXXXXXXXXXXXXX
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        XXXXXXXXXXXXXXXXXXXXXXX
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-06
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>0字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>0分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to XXXXXXXXXXXXXX" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>XXXXXXXXXXXXXX
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        XXXXXXXXXXXXXXXXXXXXXXX
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-06
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>0字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>0分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to XXXXXXXXXXXXXX" href="https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>版本更新发布策略
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        粗略描述了版本更新发布策略
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-06
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>1113字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>3分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to 版本更新发布策略" href="https://gopherding.github.io/posts/tech/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%8F%91%E5%B8%83%E7%AD%96%E7%95%A5/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>金丝雀发布的使用方法
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        Kubernetes实现金丝雀发布
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-06
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>435字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>1分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to 金丝雀发布的使用方法" href="https://gopherding.github.io/posts/tech/%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>K8s的Yaml文件内容解析
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        K8s的Yaml文件内容解析
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-03
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>680字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>2分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to K8s的Yaml文件内容解析" href="https://gopherding.github.io/posts/tech/k8s%E7%9A%84yaml%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>kuberctl命令速查表
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        kuberctl的命令速查
-        
-        
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-03
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>615字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>2分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-                &nbsp;<a href="https://gopherding.github.io/tags/%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/" style="color: var(--secondary)!important;">命令速查表</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to kuberctl命令速查表" href="https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>K8s的组件构成
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        简述master节点和node节点构成
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-01-02
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>1672字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>4分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/kubernetes/" style="color: var(--secondary)!important;">Kubernetes</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to K8s的组件构成" href="https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E7%BB%84%E4%BB%B6%E6%9E%84%E6%88%90/"></a>
-</article>
-
-<article class="post-entry">
-  <div class="post-info">
-    <header class="entry-header">
-      <h2>3-PC和2-PC的区别
-      </h2>
-    </header>
-    <section class="entry-content">
-      <p>
-        3-PC or 2-PC? That is a question!
-        
-        ...
-      </p>
-    </section>
-    <footer class="entry-footer">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2023-12-14
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>1100字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>3分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/" style="color: var(--secondary)!important;">分布式系统</a>
-            </span>
-        </span>
-    </span>
-</span>
-</footer>
-  </div> 
-  <a class="entry-link" aria-label="post link to 3-PC和2-PC的区别" href="https://gopherding.github.io/posts/tech/3-pc%E5%92%8C2-pc%E7%9A%84%E5%8C%BA%E5%88%AB/"></a>
-</article>
-
-<br />
-<br />
-<footer class="page-footer">
-  <nav class="pagination">
-    
-    
-    
-    <span class="numFirst">
-        <a class="pageFirst" href="https://gopherding.github.io/posts/tech/">1</a>
-      </span>
-    &nbsp;...&nbsp;
-    <span class="numPrev">
-            <a class="pagePrev" href="https://gopherding.github.io/posts/tech/page/2/">2</a>
-          </span>
-
-    <span class="pageNum">
-      <a class="pageNow" href="https://gopherding.github.io/posts/tech/page/3/">3</a>
-    </span>
-    <span class="numNext">
-            <a class="pageNext" href="https://gopherding.github.io/posts/tech/page/4/">4</a>
-          </span>
-    &nbsp;...&nbsp;
-    <span class="numLast">
-        <a class="pageLast" href="https://gopherding.github.io/posts/tech/page/6/">6</a>
-      </span>
-
-    
-    
-    
-  </nav>
-</footer>
-
-<br />
-</main>
-
-<footer class="footer">
-    <span>
-        Copyright
-        &copy;
-        2021-2026
-        <a href="https://gopherding.github.io/" style="color:#939393; text-decoration:none;">GopherDing&#39;s Blog</a>
-        All Rights Reserved. Generated with 
-        <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank" style="text-decoration:none;">Hugo</a>
-        .Version 0.147.9.
-    </span>
-    
-    
-    <br>
-    <span id="busuanzi_container">
-        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
-        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
-    </span>
-</footer>
-
-
-
-
-  <script src="/js/typewriter.js"></script>
-
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <span class="topInner">
-        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-            <path d="M12 6H0l6-6z"/>
-        </svg>
-        <span id="read_progress"></span>
-    </span>
-</a>
-
-<script>
-    document.addEventListener('scroll', function (e) {
-        const readProgress = document.getElementById("read_progress");
-        const scrollHeight = document.documentElement.scrollHeight;
-        const clientHeight = document.documentElement.clientHeight;
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
-    })
-</script>
-
-<script>
-    let menu = document.getElementById('menu')
-    if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-</script>
-<script>
-    let mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        (function() {
-            document.cookie = "change-themes" + "="+ escape ("false");
-        })()
-
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    });
-</script>
-
-<script>
-    document.body.addEventListener('copy', function (e) {
-        if (window.getSelection().toString() && window.getSelection().toString().length > 100) {
-            let clipboardData = e.clipboardData || window.clipboardData;
-            if (clipboardData) {
-                e.preventDefault();
-                let htmlData = window.getSelection().toString() +
-                    '\r\n\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                let textData = window.getSelection().toString() +
-                    '\r\n\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                clipboardData.setData('text/html', htmlData);
-                clipboardData.setData('text/plain', textData);
-            }
-        }
-    });
-</script>
-</body>
-
-</html>
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>👨🏻‍💻 技术 | GopherDing's Blog</title><meta name=keywords content><meta name=description content="Science and technology constitute a primary productive force."><meta name=author content="GopherDing"><link rel=canonical href=https://gopherding.github.io/posts/tech/><link crossorigin=anonymous href=/assets/css/stylesheet.css rel="preload stylesheet" as=style><link rel=icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=16x16 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=32x32 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=apple-touch-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=mask-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><meta name=google-site-verification content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg"><link rel=alternate type=application/rss+xml href=https://gopherding.github.io/posts/tech/index.xml><link rel=alternate hreflang=zh href=https://gopherding.github.io/posts/tech/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script src=/js/busuanzi.pure.mini.js></script><link rel=stylesheet href=/css/font-awesome.min.css><script src=/js/jquery-3.7.1.min.js></script><meta property="og:title" content="👨🏻‍💻 技术"><meta property="og:description" content="Science and technology constitute a primary productive force."><meta property="og:type" content="website"><meta property="og:url" content="https://gopherding.github.io/posts/tech/"><meta name=twitter:card content="summary"><meta name=twitter:title content="👨🏻‍💻 技术"><meta name=twitter:description content="Science and technology constitute a primary productive force."><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"📚文章","item":"https://gopherding.github.io/posts/"},{"@type":"ListItem","position":2,"name":"👨🏻‍💻 技术","item":"https://gopherding.github.io/posts/tech/"}]}</script></head><body class=list id=top><script>(function(){let e,t=new RegExp("(^| )change-themes=([^;]*)(;|$)");(e=document.cookie.match(t))||((new Date).getHours()>=19||(new Date).getHours()<6?(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark")):(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")))})(),localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://gopherding.github.io/ accesskey=h title="GopherDing's Blog (Alt + H)"><img src=https://gopherding.github.io/img/GopherSpaceCommunity.png alt=logo aria-label=logo height=50>GopherDing's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)">
+<svg id="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button><ul class=lang-switch><li>|</li></ul></div></div><ul id=menu><li><a href=https://gopherding.github.io/ title="🏠 主页"><span>🏠 主页</span></a></li><li><a href=https://gopherding.github.io/search title="🔍 搜索 (Alt + /)" accesskey=/><span>🔍 搜索</span></a></li><li><a href=https://gopherding.github.io/tags title="🧩 标签"><span>🧩 标签</span></a></li><li><a href=https://gopherding.github.io/archives/ title="⏱️ 时间轴"><span>⏱️ 时间轴</span></a></li><li><a href=https://gopherding.github.io/about title="🙋🏻‍♂️ 关于"><span>🙋🏻‍♂️ 关于</span></a></li><li><a href=https://gopherding.github.io/links title="🤝 友链"><span>🤝 友链</span></a></li><li><a href=https://www.travellings.cn/go.html title="🚇 开往"><span>🚇 开往</span></a></li></ul></nav></header><main class=main><header class=page-header><div class=breadcrumbs><a href=https://gopherding.github.io/>🏠 主页</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/>📚文章</a></div><h1>👨🏻‍💻 技术</h1><div class=post-description>Science and technology constitute a primary productive force.</div></header><article class=post-entry><div class=post-info><header class=entry-header><h2>自动监控报警的实现</h2></header><section class=entry-content><p>Prometheus自动监控报警的实现
+...</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-09
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>1749字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>4分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to 自动监控报警的实现" href=https://gopherding.github.io/posts/tech/%E8%87%AA%E5%8A%A8%E7%9B%91%E6%8E%A7%E6%8A%A5%E8%AD%A6%E7%9A%84%E5%AE%9E%E7%8E%B0/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>HPA和Prometheus联动自动扩容</h2></header><section class=entry-content><p>HPA和Prometheus联动自动扩容
+...</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-08
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>1110字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>3分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a>
+&nbsp;<a href=https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/ style="color:var(--secondary) !important">运维</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to HPA和Prometheus联动自动扩容" href=https://gopherding.github.io/posts/tech/hpa%E5%92%8Cprometheus%E8%81%94%E5%8A%A8/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>XXXXXXXXXXXXXX</h2></header><section class=entry-content><p>XXXXXXXXXXXXXXXXXXXXXXX</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-06
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>0字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>0分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to XXXXXXXXXXXXXX" href=https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF---%E5%89%AF%E6%9C%AC/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>XXXXXXXXXXXXXX</h2></header><section class=entry-content><p>XXXXXXXXXXXXXXXXXXXXXXX</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-06
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>0字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>0分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to XXXXXXXXXXXXXX" href=https://gopherding.github.io/posts/tech/%E6%A8%A1%E6%9D%BF/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>版本更新发布策略</h2></header><section class=entry-content><p>粗略描述了版本更新发布策略</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-06
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>1113字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>3分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to 版本更新发布策略" href=https://gopherding.github.io/posts/tech/%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%8F%91%E5%B8%83%E7%AD%96%E7%95%A5/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>金丝雀发布的使用方法</h2></header><section class=entry-content><p>Kubernetes实现金丝雀发布
+...</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-06
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>435字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>1分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to 金丝雀发布的使用方法" href=https://gopherding.github.io/posts/tech/%E9%87%91%E4%B8%9D%E9%9B%80%E5%8F%91%E5%B8%83%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>K8s的Yaml文件内容解析</h2></header><section class=entry-content><p>K8s的Yaml文件内容解析
+...</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-03
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>680字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>2分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to K8s的Yaml文件内容解析" href=https://gopherding.github.io/posts/tech/k8s%E7%9A%84yaml%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9%E8%A7%A3%E6%9E%90/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>kuberctl命令速查表</h2></header><section class=entry-content><p>kuberctl的命令速查</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-03
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>615字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>2分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a>
+&nbsp;<a href=https://gopherding.github.io/tags/%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/ style="color:var(--secondary) !important">命令速查表</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to kuberctl命令速查表" href=https://gopherding.github.io/posts/tech/kuberctl%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5%E8%A1%A8/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>K8s的组件构成</h2></header><section class=entry-content><p>简述master节点和node节点构成
+...</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-01-02
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>1672字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>4分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/kubernetes/ style="color:var(--secondary) !important">Kubernetes</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to K8s的组件构成" href=https://gopherding.github.io/posts/tech/k8s%E7%9A%84%E7%BB%84%E4%BB%B6%E6%9E%84%E6%88%90/></a></article><article class=post-entry><div class=post-info><header class=entry-header><h2>3-PC和2-PC的区别</h2></header><section class=entry-content><p>3-PC or 2-PC? That is a question!
+...</p></section><footer class=entry-footer><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2023-12-14
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>1100字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>3分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E7%B3%BB%E7%BB%9F/ style="color:var(--secondary) !important">分布式系统</a></span></span></span></span></footer></div><a class=entry-link aria-label="post link to 3-PC和2-PC的区别" href=https://gopherding.github.io/posts/tech/3-pc%E5%92%8C2-pc%E7%9A%84%E5%8C%BA%E5%88%AB/></a></article><br><br><footer class=page-footer><nav class=pagination><span class=numFirst><a class=pageFirst href=https://gopherding.github.io/posts/tech/>1</a>
+</span>&nbsp;...&nbsp;
+<span class=numPrev><a class=pagePrev href=https://gopherding.github.io/posts/tech/page/2/>2</a>
+</span><span class=pageNum><a class=pageNow href=https://gopherding.github.io/posts/tech/page/3/>3</a>
+</span><span class=numNext><a class=pageNext href=https://gopherding.github.io/posts/tech/page/4/>4</a>
+</span>&nbsp;...&nbsp;
+<span class=numLast><a class=pageLast href=https://gopherding.github.io/posts/tech/page/6/>6</a></span></nav></footer><br></main><footer class=footer><span>Copyright
+&copy;
+2021-2026
+<a href=https://gopherding.github.io/ style=color:#939393;text-decoration:none>GopherDing's Blog</a>
+All Rights Reserved. Generated with
+<a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none>Hugo</a>
+.Version 0.147.9.</span><br><span id=busuanzi_container><span class="fa fa-user"></span> <span id=busuanzi_value_site_uv></span>
+<span class="fa fa-eye"></span> <span id=busuanzi_value_site_pv></span></span></footer><script src=/js/typewriter.js></script><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id=read_progress></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>let mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>200||document.documentElement.scrollTop>200?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{(function(){document.cookie="change-themes="+escape("false")})(),document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.body.addEventListener("copy",function(e){if(window.getSelection().toString()&&window.getSelection().toString().length>100){let t=e.clipboardData||window.clipboardData;if(t){e.preventDefault();let n=window.getSelection().toString()+`\r
+
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href,s=window.getSelection().toString()+`\r
+
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;t.setData("text/html",n),t.setData("text/plain",s)}}})</script></body></html>

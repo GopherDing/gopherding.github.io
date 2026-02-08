@@ -1,885 +1,157 @@
-<!DOCTYPE html>
-<html lang="zh" dir="auto">
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>折腾一天：终于给副标题加上了打字轮询动画 | GopherDing's Blog</title><meta name=keywords content><meta name=description content="对我这样一个前端小白来说也算是一大挑战了"><meta name=author content="GopherDing"><link rel=canonical href=https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/><link crossorigin=anonymous href=/assets/css/stylesheet.css rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.js onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=16x16 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=32x32 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=apple-touch-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=mask-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><meta name=google-site-verification content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg"><link rel=alternate hreflang=zh href=https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script src=/js/busuanzi.pure.mini.js></script><link rel=stylesheet href=/css/font-awesome.min.css><script src=/js/jquery-3.7.1.min.js></script><meta property="og:title" content="折腾一天：终于给副标题加上了打字轮询动画"><meta property="og:description" content="对我这样一个前端小白来说也算是一大挑战了"><meta property="og:type" content="article"><meta property="og:url" content="https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2025-09-25T15:55:23+08:00"><meta property="article:modified_time" content="2025-09-25T15:55:23+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="折腾一天：终于给副标题加上了打字轮询动画"><meta name=twitter:description content="对我这样一个前端小白来说也算是一大挑战了"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"📚文章","item":"https://gopherding.github.io/posts/"},{"@type":"ListItem","position":2,"name":"🧱 建站","item":"https://gopherding.github.io/posts/blog/"},{"@type":"ListItem","position":3,"name":"折腾一天：终于给副标题加上了打字轮询动画","item":"https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"折腾一天：终于给副标题加上了打字轮询动画","name":"折腾一天：终于给副标题加上了打字轮询动画","description":"对我这样一个前端小白来说也算是一大挑战了","keywords":[""],"articleBody":"作为一个喜欢折腾博客细节的人，我一直觉得 Hugo PaperMod 主题的首页副标题太 “安静” 了 —— 静态文字放在那里，少了点互动感。于是今天给自己定了个小目标：给副标题加个「打字轮询动画」：文字逐字敲出、带闪烁光标，还能自动切换不同的句子。本以为是 “复制粘贴代码” 的小事，结果踩了好几个坑，好在最后完美实现。这篇就记录下整个过程，希望能帮到同样想折腾的朋友。\n一、先看最终效果：我想要的是什么？ 在动手前先明确需求，避免后续跑偏：\n打字效果：文字不是一次性出来，而是像键盘敲击一样逐字显示； 闪烁光标：文字右侧跟着一个竖线光标，模仿真实打字体验； 自动轮询：打完一句后，逐字删除，再随机切换下一句（不重复）； 不破坏主题：尽量不改主题核心文件，后续升级 PaperMod 不丢配置。 最终实现的效果是：首页 profile 区域，光标先闪，然后逐字 “敲” 出句子，停顿 2 秒后删光，再切换下一句，循环往复 —— 看起来像是博客在 “自言自语”，多了点灵动的感觉。\n二、从零开始：分 5 步实现动画 整个过程围绕「配置→模板→逻辑→样式→加载」展开，每个步骤都有需要注意的细节，尤其是 Hugo 的模板语法和资源处理逻辑，踩坑也多在这上面。\n第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子 首先要把想轮询的句子存在配置里，方便后续修改（不用改代码）。打开项目根目录的 config.yml，在 params 下加两个关键配置：\nparams: # 1. 启用首页 profile 模式（必须开，否则副标题不显示） profileMode: enabled: true # 核心开关，关了整个 profile 都没了 title: \"我的博客\" # 主标题不变 subtitle: \"\" # 副标题留空！后面让 JS 填内容 imageUrl: \"img/avatar.jpg\" # 头像路径（放 static/img 里） imageWidth: 275 imageHeight: 275 # 2. 要轮询的句子列表（和 profileMode 平级！别嵌套进去） quotes: - \"生命不是要超越别人，而是要超越自己。\" - \"人生伟业的建立，不在能知，乃在能行。\" - \"任何的限制，都是从自己内心开始的。\" - \"含泪播种的人一定能含笑收获。\" 这里踩了第一个坑：一开始把 quotes 嵌套进 profileMode 里（比如 params → profileMode → quotes），结果后续 JS 根本读不到句子 ——Hugo 对 YAML 层级极敏感，必须确保 quotes 和 profileMode 是 “兄弟” 关系，都在 params 下面。\n第二步：改模板 —— 给副标题 “挂标识” PaperMod 渲染首页 profile 的模板是 index_profile.html，需要给副标题加两个东西：\nclass=\"profile-subtitle\"：让 JS/CSS 能定位到这个元素； data-quotes：把 config.yml 里的句子列表以 JSON 格式 “注入” 到元素里，供 JS 读取。 操作时要注意：不要直接改主题文件夹的模板（升级会覆盖），先复制到项目目录：\n把 themes/PaperMod/layouts/partials/index_profile.html 复制到 项目根目录/layouts/partials/index_profile.html（没有 partials 文件夹就手动建）； 打开复制后的文件，找到原副标题代码（通常是 {{ .subtitle | markdownify }}），替换成： \u003cspan class=\"profile-subtitle\" data-quotes='{{ site.Params.quotes | jsonify | safeHTMLAttr }}'\u003e \u003c/span\u003e 解释下这行代码：\nsite.Params.quotes：读取配置里的句子列表； jsonify：把列表转成 JSON 格式（JS 能解析）； safeHTMLAttr：防止 Hugo 转义引号（比如把 \" 变成 \"），确保 JSON 格式正确。 第三步：写 JS 逻辑 —— 实现打字 + 轮询 这是核心步骤，要让 JS 完成 “读句子→打字→删除→切换” 的循环。在 项目根目录/assets/js/ 下新建 typewriter.js（assets 是 Hugo 处理资源的目录，比 static 更灵活）：\n// 等 DOM 加载完再执行，避免找不到元素 document.addEventListener(\"DOMContentLoaded\", () =\u003e { // 1. 找到副标题元素 const subtitle = document.querySelector(\".profile-subtitle\"); if (!subtitle) return; // 没找到元素就退出，避免报错 // 2. 读取 data-quotes 里的句子列表 const quotes = JSON.parse(subtitle.dataset.quotes || \"[]\"); if (quotes.length === 0) return; // 没句子也退出 // 3. 动画参数（可自己调速度） const typingSpeed = 100; // 打字速度（毫秒/字） const deletingSpeed = 50; // 删除速度 const pauseAfterTyping = 2000; // 打完停顿2秒 const pauseAfterDeleting = 500;// 删除完停顿0.5秒 // 4. 状态变量 let currentQuoteIndex = Math.floor(Math.random() * quotes.length); // 随机开始第一句 let currentText = \"\"; // 当前显示的文字 let charIndex = 0; // 当前处理的字符索引 let isDeleting = false; // 是否在删除状态 // 5. 核心打字函数 function typeWriter() { const currentQuote = quotes[currentQuoteIndex]; if (isDeleting) { // 删除阶段：逐字减少 currentText = currentQuote.substring(0, charIndex - 1); charIndex--; } else { // 打字阶段：逐字增加 currentText = currentQuote.substring(0, charIndex + 1); charIndex++; } // 更新副标题内容 subtitle.textContent = currentText; // 切换状态/句子 if (!isDeleting \u0026\u0026 charIndex === currentQuote.length) { // 打完一句，准备删除 isDeleting = true; setTimeout(typeWriter, pauseAfterTyping); } else if (isDeleting \u0026\u0026 charIndex === 0) { // 删除完，切换下一句（避免重复） isDeleting = false; let newIndex; do { newIndex = Math.floor(Math.random() * quotes.length); } while (newIndex === currentQuoteIndex); currentQuoteIndex = newIndex; setTimeout(typeWriter, pauseAfterDeleting); } else { // 继续打字/删除 setTimeout(typeWriter, isDeleting ? deletingSpeed : typingSpeed); } } // 6. 启动动画 typeWriter(); }); 这段代码的逻辑很直观：先读句子，然后循环 “打字→停顿→删除→换句子”，还加了随机开始和避免重复的逻辑，体验更自然。\n第四步：写 CSS 样式 —— 让光标闪起来 光有文字打字还不够，得加个闪烁的光标。在 项目根目录/assets/css/extended/ 下新建 custom.css：\n/* 副标题基础样式：确保文字可见 */ .profile-subtitle { position: relative; /* 给光标定位用 */ display: inline-block; /* 避免光标换行 */ color: inherit !important; /* 继承父元素颜色，防止和背景同色 */ white-space: nowrap; /* 文字不换行 */ } /* 光标样式：用伪元素生成竖线 */ .profile-subtitle::after { content: \"|\"; /* 光标符号 */ position: absolute; /* 绝对定位，跟着文字走 */ right: -6px; /* 光标在文字右侧的距离 */ animation: blink 1s step-end infinite; /* 1秒闪烁一次 */ color: inherit; /* 光标颜色和文字一致 */ } /* 光标闪烁动画 */ @keyframes blink { from, to { opacity: 1; } /* 开始和结束显示 */ 50% { opacity: 0; } /* 中间隐藏 */ } 这里用 ::after 伪元素生成光标，比直接写在 JS 里更灵活，样式也更容易调整 —— 想换光标颜色或速度，改 CSS 就行，不用动 JS。\n第五步：加载资源 —— 让 JS 和 CSS 生效 Hugo 不会自动加载 assets 里的文件，必须手动配置。一开始我想改 baseof.html（所有页面的根模板），但后来觉得不够 “优雅”，最终选择更规范的方式：\n1. CSS 加载：放在 head.html 里 CSS 适合在头部加载，避免页面闪烁。把主题的 themes/PaperMod/layouts/partials/head.html 复制到 项目根目录/layouts/partials/head.html，在 标签内的 “样式加载区”（比如最后一个 后面）加：\n{{ $customCss := resources.Get \"css/extended/custom.css\" }} {{ if $customCss }} \u003clink rel=\"stylesheet\" href=\"{{ $customCss.RelPermalink }}\"\u003e {{ end }} 2. JS 加载：放在 footer.html 里 JS 放在页脚加载，避免阻塞页面渲染。把主题的 themes/PaperMod/layouts/partials/footer.html 复制到 项目根目录/layouts/partials/footer.html，在 标签后面加：\n{{ $typewriter := resources.Get \"js/typewriter.js\" }} {{ if $typewriter }} \u003cscript src=\"{{ $typewriter.RelPermalink }}\"\u003e\u003c/script\u003e {{ end }} 这里又踩了个坑：一开始我把 JS 放在 static/js/ 目录，还用 custom/js.html 加载，结果页面源代码里根本找不到脚本标签 —— 后来才知道 PaperMod 旧版本不默认加载 custom 目录的 partial，直接改 footer.html 才是 “万能方案”。\n三、那些让人头大的坑：解决了才敢分享 折腾过程中遇到几个问题，差点放弃，最后靠调试工具和查文档解决了，记录下来帮大家避坑：\n坑 1：只有光标，没有文字 现象：光标闪得很欢，但看不到打字的文字。\n原因：文字颜色和背景色一致（我的博客是深色模式，文字默认白色，背景也是白色）。\n解决：在 custom.css 里加 color: inherit !important，让文字继承父元素颜色，确保可见。\n坑 2：删了 CSS 引用，样式还生效 现象：我在 head.html 里删了 custom.css 的加载代码，结果光标样式还在。\n原因：看了 head.html 源码才发现，主题用 resources.Match \"css/extended/*.css\" 批量合并了 css/extended 目录下的所有 CSS，custom.css 正好在这个目录里，被自动打包进总样式文件了。\n解决：如果想彻底移除，要么把 custom.css 移到其他目录（比如 css/my-custom），要么在合并逻辑里排除它（用 where \"Name\" \"not in\" \"css/extended/custom.css\"）。\n四、总结：折腾一天的收获 Hugo 读配置全靠层级，quotes 和 profileMode 必须平级，差一层就报错； 改主题模板时，先复制到项目目录再改，避免升级主题时被覆盖； F12 控制台查 JS 错误，Elements 看元素是否存在，Network 看资源是否加载，遇到问题先看这三个地方； CSS 放头部，JS 放页脚，符合网页性能规范，体验更好。 现在打开博客，看着副标题逐字敲出，光标跟着闪烁，再自动切换句子，感觉之前的折腾都值了。如果你也想给 Hugo 博客加这个小动画，跟着上面的步骤来，应该能少踩很多坑～\n","wordCount":"3111","inLanguage":"zh","datePublished":"2025-09-25T15:55:23+08:00","dateModified":"2025-09-25T15:55:23+08:00","author":[{"@type":"Person","name":"GopherDing"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/"},"publisher":{"@type":"Organization","name":"GopherDing's Blog","logo":{"@type":"ImageObject","url":"https://gopherding.github.io/img/GopherSpaceCommunity.png"}}}</script></head><body id=top><script>(function(){let e,t=new RegExp("(^| )change-themes=([^;]*)(;|$)");(e=document.cookie.match(t))||((new Date).getHours()>=19||(new Date).getHours()<6?(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark")):(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")))})(),localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://gopherding.github.io/ accesskey=h title="GopherDing's Blog (Alt + H)"><img src=https://gopherding.github.io/img/GopherSpaceCommunity.png alt=logo aria-label=logo height=50>GopherDing's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)">
+<svg id="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button><ul class=lang-switch><li>|</li></ul></div></div><ul id=menu><li><a href=https://gopherding.github.io/ title="🏠 主页"><span>🏠 主页</span></a></li><li><a href=https://gopherding.github.io/search title="🔍 搜索 (Alt + /)" accesskey=/><span>🔍 搜索</span></a></li><li><a href=https://gopherding.github.io/tags title="🧩 标签"><span>🧩 标签</span></a></li><li><a href=https://gopherding.github.io/archives/ title="⏱️ 时间轴"><span>⏱️ 时间轴</span></a></li><li><a href=https://gopherding.github.io/about title="🙋🏻‍♂️ 关于"><span>🙋🏻‍♂️ 关于</span></a></li><li><a href=https://gopherding.github.io/links title="🤝 友链"><span>🤝 友链</span></a></li><li><a href=https://www.travellings.cn/go.html title="🚇 开往"><span>🚇 开往</span></a></li></ul></nav></header><main class="main page"><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}</style><article class=post-single><div id=single-content><header class=post-header><div class=breadcrumbs><a href=https://gopherding.github.io/>🏠 主页</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/>📚文章</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/blog/>🧱 建站</a></div><h1 class=post-title>折腾一天：终于给副标题加上了打字轮询动画</h1><div class=post-description>对我这样一个前端小白来说也算是一大挑战了</div><div class=post-meta><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2025-09-25
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>3111字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>7分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/%E5%BB%BA%E7%AB%99/ style="color:var(--secondary) !important">建站</a>
+</span></span></span></span><span style=opacity:.8><span id=post_meta_style_7>&nbsp;&nbsp;
+<span class="fa fa-eye"></span>
+<span><span id=busuanzi_container_page_pv><span id=busuanzi_value_page_pv></span></span>
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_8><span class="fa fa-commenting-o"></span>
+<span><script src=https://cdn.staticfile.org/twikoo//twikoo.all.min.js></script><script>let url=document.documentURI,dnsUrl="https://gopherding.github.io/",urlSplit=url.split(dnsUrl),finalUrl=urlSplit[1];finalUrl[0]!=="/"&&(finalUrl="/"+finalUrl),twikoo.getCommentsCount({envId:null,region:null,urls:[finalUrl],includeReply:!1}).then(function(e){let t=e[0].count;const n=document.getElementById("comment_count");n.innerText=t}).catch(function(e){console.error(e)})</script><span id=comment_count></span></span></span></span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e4%b8%80%e5%85%88%e7%9c%8b%e6%9c%80%e7%bb%88%e6%95%88%e6%9e%9c%e6%88%91%e6%83%b3%e8%a6%81%e7%9a%84%e6%98%af%e4%bb%80%e4%b9%88 aria-label=一、先看最终效果：我想要的是什么？>一、先看最终效果：我想要的是什么？</a></li><li><a href=#%e4%ba%8c%e4%bb%8e%e9%9b%b6%e5%bc%80%e5%a7%8b%e5%88%86-5-%e6%ad%a5%e5%ae%9e%e7%8e%b0%e5%8a%a8%e7%94%bb aria-label="二、从零开始：分 5 步实现动画">二、从零开始：分 5 步实现动画</a><ul><li><a href=#%e7%ac%ac%e4%b8%80%e6%ad%a5%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e5%9f%8b-%e4%bc%8f%e7%ac%94-%e9%9b%86%e4%b8%ad%e7%ae%a1%e7%90%86%e8%a6%81%e8%bd%ae%e8%af%a2%e7%9a%84%e5%8f%a5%e5%ad%90 aria-label="第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子">第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子</a></li><li><a href=#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e6%94%b9%e6%a8%a1%e6%9d%bf--%e7%bb%99%e5%89%af%e6%a0%87%e9%a2%98-%e6%8c%82%e6%a0%87%e8%af%86 aria-label="第二步：改模板 —— 给副标题 “挂标识”">第二步：改模板 —— 给副标题 “挂标识”</a></li><li><a href=#%e7%ac%ac%e4%b8%89%e6%ad%a5%e5%86%99-js-%e9%80%bb%e8%be%91--%e5%ae%9e%e7%8e%b0%e6%89%93%e5%ad%97--%e8%bd%ae%e8%af%a2 aria-label="第三步：写 JS 逻辑 —— 实现打字 + 轮询">第三步：写 JS 逻辑 —— 实现打字 + 轮询</a></li><li><a href=#%e7%ac%ac%e5%9b%9b%e6%ad%a5%e5%86%99-css-%e6%a0%b7%e5%bc%8f--%e8%ae%a9%e5%85%89%e6%a0%87%e9%97%aa%e8%b5%b7%e6%9d%a5 aria-label="第四步：写 CSS 样式 —— 让光标闪起来">第四步：写 CSS 样式 —— 让光标闪起来</a></li><li><a href=#%e7%ac%ac%e4%ba%94%e6%ad%a5%e5%8a%a0%e8%bd%bd%e8%b5%84%e6%ba%90--%e8%ae%a9-js-%e5%92%8c-css-%e7%94%9f%e6%95%88 aria-label="第五步：加载资源 —— 让 JS 和 CSS 生效">第五步：加载资源 —— 让 JS 和 CSS 生效</a><ul><li><a href=#1-css-%e5%8a%a0%e8%bd%bd%e6%94%be%e5%9c%a8-headhtml-%e9%87%8c aria-label="1. CSS 加载：放在 head.html 里">1. CSS 加载：放在 <code>head.html</code> 里</a></li><li><a href=#2-js-%e5%8a%a0%e8%bd%bd%e6%94%be%e5%9c%a8-footerhtml-%e9%87%8c aria-label="2. JS 加载：放在 footer.html 里">2. JS 加载：放在 <code>footer.html</code> 里</a></li></ul></li></ul></li><li><a href=#%e4%b8%89%e9%82%a3%e4%ba%9b%e8%ae%a9%e4%ba%ba%e5%a4%b4%e5%a4%a7%e7%9a%84%e5%9d%91%e8%a7%a3%e5%86%b3%e4%ba%86%e6%89%8d%e6%95%a2%e5%88%86%e4%ba%ab aria-label=三、那些让人头大的坑：解决了才敢分享>三、那些让人头大的坑：解决了才敢分享</a><ul><li><a href=#%e5%9d%91-1%e5%8f%aa%e6%9c%89%e5%85%89%e6%a0%87%e6%b2%a1%e6%9c%89%e6%96%87%e5%ad%97 aria-label="坑 1：只有光标，没有文字">坑 1：只有光标，没有文字</a></li><li><a href=#%e5%9d%91-2%e5%88%a0%e4%ba%86-css-%e5%bc%95%e7%94%a8%e6%a0%b7%e5%bc%8f%e8%bf%98%e7%94%9f%e6%95%88 aria-label="坑 2：删了 CSS 引用，样式还生效">坑 2：删了 CSS 引用，样式还生效</a></li></ul></li><li><a href=#%e5%9b%9b%e6%80%bb%e7%bb%93%e6%8a%98%e8%85%be%e4%b8%80%e5%a4%a9%e7%9a%84%e6%94%b6%e8%8e%b7 aria-label=四、总结：折腾一天的收获>四、总结：折腾一天的收获</a></li></ul></div></details></div></aside><script>let activeElement,elements;window.addEventListener("DOMContentLoaded",function(){checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),activeElement=elements[0];const t=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active")},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{elements&&(activeElement=Array.from(elements).find(e=>{if(getOffsetTop(e)-window.pageYOffset>0&&getOffsetTop(e)-window.pageYOffset<window.innerHeight/2)return e})||activeElement,elements.forEach(e=>{const t=encodeURI(e.getAttribute("id")).toLowerCase();e===activeElement?document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active"):document.querySelector(`.inner ul li a[href="#${t}"]`).classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><p>作为一个喜欢折腾博客细节的人，我一直觉得 Hugo PaperMod 主题的首页副标题太 “安静” 了 —— 静态文字放在那里，少了点互动感。于是今天给自己定了个小目标：给副标题加个「打字轮询动画」：文字逐字敲出、带闪烁光标，还能自动切换不同的句子。本以为是 “复制粘贴代码” 的小事，结果踩了好几个坑，好在最后完美实现。这篇就记录下整个过程，希望能帮到同样想折腾的朋友。</p><h3 id=一先看最终效果我想要的是什么>一、先看最终效果：我想要的是什么？<a hidden class=anchor aria-hidden=true href=#一先看最终效果我想要的是什么>#</a></h3><p>在动手前先明确需求，避免后续跑偏：</p><ol><li><strong>打字效果</strong>：文字不是一次性出来，而是像键盘敲击一样逐字显示；</li><li><strong>闪烁光标</strong>：文字右侧跟着一个竖线光标，模仿真实打字体验；</li><li><strong>自动轮询</strong>：打完一句后，逐字删除，再随机切换下一句（不重复）；</li><li><strong>不破坏主题</strong>：尽量不改主题核心文件，后续升级 PaperMod 不丢配置。</li></ol><p>最终实现的效果是：首页 profile 区域，光标先闪，然后逐字 “敲” 出句子，停顿 2 秒后删光，再切换下一句，循环往复 —— 看起来像是博客在 “自言自语”，多了点灵动的感觉。</p><h3 id=二从零开始分-5-步实现动画>二、从零开始：分 5 步实现动画<a hidden class=anchor aria-hidden=true href=#二从零开始分-5-步实现动画>#</a></h3><p>整个过程围绕「配置→模板→逻辑→样式→加载」展开，每个步骤都有需要注意的细节，尤其是 Hugo 的模板语法和资源处理逻辑，踩坑也多在这上面。</p><h4 id=第一步配置文件埋-伏笔-集中管理要轮询的句子>第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子<a hidden class=anchor aria-hidden=true href=#第一步配置文件埋-伏笔-集中管理要轮询的句子>#</a></h4><p>首先要把想轮询的句子存在配置里，方便后续修改（不用改代码）。打开项目根目录的 <code>config.yml</code>，在 <code>params</code> 下加两个关键配置：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=display:flex><span><span style=color:#f92672>params</span>:
+</span></span><span style=display:flex><span>  <span style=color:#75715e># 1. 启用首页 profile 模式（必须开，否则副标题不显示）</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>profileMode</span>:
+</span></span><span style=display:flex><span>    <span style=color:#f92672>enabled</span>: <span style=color:#66d9ef>true</span>                <span style=color:#75715e># 核心开关，关了整个 profile 都没了</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>title</span>: <span style=color:#e6db74>&#34;我的博客&#34;</span>             <span style=color:#75715e># 主标题不变</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>subtitle</span>: <span style=color:#e6db74>&#34;&#34;</span>                 <span style=color:#75715e># 副标题留空！后面让 JS 填内容</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>imageUrl</span>: <span style=color:#e6db74>&#34;img/avatar.jpg&#34;</span>   <span style=color:#75715e># 头像路径（放 static/img 里）</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>imageWidth</span>: <span style=color:#ae81ff>275</span>
+</span></span><span style=display:flex><span>    <span style=color:#f92672>imageHeight</span>: <span style=color:#ae81ff>275</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e># 2. 要轮询的句子列表（和 profileMode 平级！别嵌套进去）</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>quotes</span>:
+</span></span><span style=display:flex><span>    - <span style=color:#e6db74>&#34;生命不是要超越别人，而是要超越自己。&#34;</span>
+</span></span><span style=display:flex><span>    - <span style=color:#e6db74>&#34;人生伟业的建立，不在能知，乃在能行。&#34;</span>
+</span></span><span style=display:flex><span>    - <span style=color:#e6db74>&#34;任何的限制，都是从自己内心开始的。&#34;</span>
+</span></span><span style=display:flex><span>    - <span style=color:#e6db74>&#34;含泪播种的人一定能含笑收获。&#34;</span>
+</span></span></code></pre></div><p><strong>这里踩了第一个坑</strong>：一开始把 <code>quotes</code> 嵌套进 <code>profileMode</code> 里（比如 <code>params → profileMode → quotes</code>），结果后续 JS 根本读不到句子 ——Hugo 对 YAML 层级极敏感，必须确保 <code>quotes</code> 和 <code>profileMode</code> 是 “兄弟” 关系，都在 <code>params</code> 下面。</p><h4 id=第二步改模板--给副标题-挂标识>第二步：改模板 —— 给副标题 “挂标识”<a hidden class=anchor aria-hidden=true href=#第二步改模板--给副标题-挂标识>#</a></h4><p>PaperMod 渲染首页 profile 的模板是 <code>index_profile.html</code>，需要给副标题加两个东西：</p><ul><li><code>class="profile-subtitle"</code>：让 JS/CSS 能定位到这个元素；</li><li><code>data-quotes</code>：把 <code>config.yml</code> 里的句子列表以 JSON 格式 “注入” 到元素里，供 JS 读取。</li></ul><p>操作时要注意：<strong>不要直接改主题文件夹的模板</strong>（升级会覆盖），先复制到项目目录：</p><ol><li>把 <code>themes/PaperMod/layouts/partials/index_profile.html</code> 复制到 <code>项目根目录/layouts/partials/index_profile.html</code>（没有 <code>partials</code> 文件夹就手动建）；</li><li>打开复制后的文件，找到原副标题代码（通常是 <code>&lt;span>{{ .subtitle | markdownify }}&lt;/span></code>），替换成：</li></ol><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#75715e>&lt;!-- 副标题：加 class 供定位，加 data-quotes 传句子列表 --&gt;</span>
+</span></span><span style=display:flex><span>&lt;<span style=color:#f92672>span</span> <span style=color:#a6e22e>class</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;profile-subtitle&#34;</span> 
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>data-quotes</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#39;{{ site.Params.quotes | jsonify | safeHTMLAttr }}&#39;</span>&gt;
+</span></span><span style=display:flex><span>&lt;/<span style=color:#f92672>span</span>&gt;
+</span></span></code></pre></div><p>解释下这行代码：</p><ul><li><code>site.Params.quotes</code>：读取配置里的句子列表；</li><li><code>jsonify</code>：把列表转成 JSON 格式（JS 能解析）；</li><li><code>safeHTMLAttr</code>：防止 Hugo 转义引号（比如把 <code>"</code> 变成 <code>"</code>），确保 JSON 格式正确。</li></ul><h4 id=第三步写-js-逻辑--实现打字--轮询>第三步：写 JS 逻辑 —— 实现打字 + 轮询<a hidden class=anchor aria-hidden=true href=#第三步写-js-逻辑--实现打字--轮询>#</a></h4><p>这是核心步骤，要让 JS 完成 “读句子→打字→删除→切换” 的循环。在 <code>项目根目录/assets/js/</code> 下新建 <code>typewriter.js</code>（<code>assets</code> 是 Hugo 处理资源的目录，比 <code>static</code> 更灵活）：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-javascript data-lang=javascript><span style=display:flex><span><span style=color:#75715e>// 等 DOM 加载完再执行，避免找不到元素
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>document.<span style=color:#a6e22e>addEventListener</span>(<span style=color:#e6db74>&#34;DOMContentLoaded&#34;</span>, () =&gt; {
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 1. 找到副标题元素
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>subtitle</span> <span style=color:#f92672>=</span> document.<span style=color:#a6e22e>querySelector</span>(<span style=color:#e6db74>&#34;.profile-subtitle&#34;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>subtitle</span>) <span style=color:#66d9ef>return</span>; <span style=color:#75715e>// 没找到元素就退出，避免报错
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 2. 读取 data-quotes 里的句子列表
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>quotes</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>JSON</span>.<span style=color:#a6e22e>parse</span>(<span style=color:#a6e22e>subtitle</span>.<span style=color:#a6e22e>dataset</span>.<span style=color:#a6e22e>quotes</span> <span style=color:#f92672>||</span> <span style=color:#e6db74>&#34;[]&#34;</span>);
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>quotes</span>.<span style=color:#a6e22e>length</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>0</span>) <span style=color:#66d9ef>return</span>; <span style=color:#75715e>// 没句子也退出
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 3. 动画参数（可自己调速度）
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>typingSpeed</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>100</span>;       <span style=color:#75715e>// 打字速度（毫秒/字）
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>deletingSpeed</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>50</span>;      <span style=color:#75715e>// 删除速度
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>pauseAfterTyping</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>2000</span>; <span style=color:#75715e>// 打完停顿2秒
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>pauseAfterDeleting</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>500</span>;<span style=color:#75715e>// 删除完停顿0.5秒
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 4. 状态变量
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>currentQuoteIndex</span> <span style=color:#f92672>=</span> Math.<span style=color:#a6e22e>floor</span>(Math.<span style=color:#a6e22e>random</span>() <span style=color:#f92672>*</span> <span style=color:#a6e22e>quotes</span>.<span style=color:#a6e22e>length</span>); <span style=color:#75715e>// 随机开始第一句
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>currentText</span> <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;&#34;</span>;         <span style=color:#75715e>// 当前显示的文字
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>charIndex</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>;            <span style=color:#75715e>// 当前处理的字符索引
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>isDeleting</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;       <span style=color:#75715e>// 是否在删除状态
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 5. 核心打字函数
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#66d9ef>function</span> <span style=color:#a6e22e>typeWriter</span>() {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>const</span> <span style=color:#a6e22e>currentQuote</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>quotes</span>[<span style=color:#a6e22e>currentQuoteIndex</span>];
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>isDeleting</span>) {
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 删除阶段：逐字减少
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>currentText</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>currentQuote</span>.<span style=color:#a6e22e>substring</span>(<span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>charIndex</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>charIndex</span><span style=color:#f92672>--</span>;
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 打字阶段：逐字增加
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>currentText</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>currentQuote</span>.<span style=color:#a6e22e>substring</span>(<span style=color:#ae81ff>0</span>, <span style=color:#a6e22e>charIndex</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>);
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>charIndex</span><span style=color:#f92672>++</span>;
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 更新副标题内容
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#a6e22e>subtitle</span>.<span style=color:#a6e22e>textContent</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>currentText</span>;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 切换状态/句子
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span><span style=color:#a6e22e>isDeleting</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>charIndex</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>currentQuote</span>.<span style=color:#a6e22e>length</span>) {
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 打完一句，准备删除
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>isDeleting</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>true</span>;
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>setTimeout</span>(<span style=color:#a6e22e>typeWriter</span>, <span style=color:#a6e22e>pauseAfterTyping</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> <span style=color:#66d9ef>if</span> (<span style=color:#a6e22e>isDeleting</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#a6e22e>charIndex</span> <span style=color:#f92672>===</span> <span style=color:#ae81ff>0</span>) {
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 删除完，切换下一句（避免重复）
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>isDeleting</span> <span style=color:#f92672>=</span> <span style=color:#66d9ef>false</span>;
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>let</span> <span style=color:#a6e22e>newIndex</span>;
+</span></span><span style=display:flex><span>      <span style=color:#66d9ef>do</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>newIndex</span> <span style=color:#f92672>=</span> Math.<span style=color:#a6e22e>floor</span>(Math.<span style=color:#a6e22e>random</span>() <span style=color:#f92672>*</span> <span style=color:#a6e22e>quotes</span>.<span style=color:#a6e22e>length</span>);
+</span></span><span style=display:flex><span>      } <span style=color:#66d9ef>while</span> (<span style=color:#a6e22e>newIndex</span> <span style=color:#f92672>===</span> <span style=color:#a6e22e>currentQuoteIndex</span>);
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>currentQuoteIndex</span> <span style=color:#f92672>=</span> <span style=color:#a6e22e>newIndex</span>;
+</span></span><span style=display:flex><span>      <span style=color:#a6e22e>setTimeout</span>(<span style=color:#a6e22e>typeWriter</span>, <span style=color:#a6e22e>pauseAfterDeleting</span>);
+</span></span><span style=display:flex><span>    } <span style=color:#66d9ef>else</span> {
+</span></span><span style=display:flex><span>      <span style=color:#75715e>// 继续打字/删除
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>      <span style=color:#a6e22e>setTimeout</span>(<span style=color:#a6e22e>typeWriter</span>, <span style=color:#a6e22e>isDeleting</span> <span style=color:#f92672>?</span> <span style=color:#a6e22e>deletingSpeed</span> <span style=color:#f92672>:</span> <span style=color:#a6e22e>typingSpeed</span>);
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>  }
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>  <span style=color:#75715e>// 6. 启动动画
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>  <span style=color:#a6e22e>typeWriter</span>();
+</span></span><span style=display:flex><span>});
+</span></span></code></pre></div><p>这段代码的逻辑很直观：先读句子，然后循环 “打字→停顿→删除→换句子”，还加了随机开始和避免重复的逻辑，体验更自然。</p><h4 id=第四步写-css-样式--让光标闪起来>第四步：写 CSS 样式 —— 让光标闪起来<a hidden class=anchor aria-hidden=true href=#第四步写-css-样式--让光标闪起来>#</a></h4><p>光有文字打字还不够，得加个闪烁的光标。在 <code>项目根目录/assets/css/extended/</code> 下新建 <code>custom.css</code>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-css data-lang=css><span style=display:flex><span><span style=color:#75715e>/* 副标题基础样式：确保文字可见 */</span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>profile-subtitle</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>position</span>: <span style=color:#66d9ef>relative</span>;        <span style=color:#75715e>/* 给光标定位用 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>display</span>: <span style=color:#66d9ef>inline-block</span>;     <span style=color:#75715e>/* 避免光标换行 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>inherit</span> <span style=color:#75715e>!important</span>; <span style=color:#75715e>/* 继承父元素颜色，防止和背景同色 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>white-space</span>: <span style=color:#66d9ef>nowrap</span>;       <span style=color:#75715e>/* 文字不换行 */</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>/* 光标样式：用伪元素生成竖线 */</span>
+</span></span><span style=display:flex><span>.<span style=color:#a6e22e>profile-subtitle</span>::<span style=color:#a6e22e>after</span> {
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>content</span>: <span style=color:#e6db74>&#34;|&#34;</span>;                <span style=color:#75715e>/* 光标符号 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>position</span>: <span style=color:#66d9ef>absolute</span>;          <span style=color:#75715e>/* 绝对定位，跟着文字走 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>right</span>: <span style=color:#ae81ff>-6</span><span style=color:#66d9ef>px</span>;                 <span style=color:#75715e>/* 光标在文字右侧的距离 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>animation</span>: <span style=color:#66d9ef>blink</span> <span style=color:#ae81ff>1</span><span style=color:#66d9ef>s</span> <span style=color:#66d9ef>step-end</span> <span style=color:#66d9ef>infinite</span>; <span style=color:#75715e>/* 1秒闪烁一次 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#66d9ef>color</span>: <span style=color:#66d9ef>inherit</span>;              <span style=color:#75715e>/* 光标颜色和文字一致 */</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>/* 光标闪烁动画 */</span>
+</span></span><span style=display:flex><span>@<span style=color:#66d9ef>keyframes</span> <span style=color:#f92672>blink</span> {
+</span></span><span style=display:flex><span>  <span style=color:#f92672>from</span><span style=color:#f92672>,</span> <span style=color:#f92672>to</span> { <span style=color:#66d9ef>opacity</span>: <span style=color:#ae81ff>1</span>; } <span style=color:#75715e>/* 开始和结束显示 */</span>
+</span></span><span style=display:flex><span>  <span style=color:#f92672>50</span><span style=color:#f92672>%</span> { <span style=color:#66d9ef>opacity</span>: <span style=color:#ae81ff>0</span>; }      <span style=color:#75715e>/* 中间隐藏 */</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p>这里用 <code>::after</code> 伪元素生成光标，比直接写在 JS 里更灵活，样式也更容易调整 —— 想换光标颜色或速度，改 CSS 就行，不用动 JS。</p><h4 id=第五步加载资源--让-js-和-css-生效>第五步：加载资源 —— 让 JS 和 CSS 生效<a hidden class=anchor aria-hidden=true href=#第五步加载资源--让-js-和-css-生效>#</a></h4><p>Hugo 不会自动加载 <code>assets</code> 里的文件，必须手动配置。一开始我想改 <code>baseof.html</code>（所有页面的根模板），但后来觉得不够 “优雅”，最终选择更规范的方式：</p><h5 id=1-css-加载放在-headhtml-里>1. CSS 加载：放在 <code>head.html</code> 里<a hidden class=anchor aria-hidden=true href=#1-css-加载放在-headhtml-里>#</a></h5><p>CSS 适合在头部加载，避免页面闪烁。把主题的 <code>themes/PaperMod/layouts/partials/head.html</code> 复制到 <code>项目根目录/layouts/partials/head.html</code>，在 <code>&lt;head></code> 标签内的 “样式加载区”（比如最后一个 <code>&lt;link></code> 后面）加：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#75715e>&lt;!-- 加载光标样式 CSS --&gt;</span>
+</span></span><span style=display:flex><span>{{ $customCss := resources.Get &#34;css/extended/custom.css&#34; }}
+</span></span><span style=display:flex><span>{{ if $customCss }}
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>link</span> <span style=color:#a6e22e>rel</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;stylesheet&#34;</span> <span style=color:#a6e22e>href</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;{{ $customCss.RelPermalink }}&#34;</span>&gt;
+</span></span><span style=display:flex><span>{{ end }}
+</span></span></code></pre></div><h5 id=2-js-加载放在-footerhtml-里>2. JS 加载：放在 <code>footer.html</code> 里<a hidden class=anchor aria-hidden=true href=#2-js-加载放在-footerhtml-里>#</a></h5><p>JS 放在页脚加载，避免阻塞页面渲染。把主题的 <code>themes/PaperMod/layouts/partials/footer.html</code> 复制到 <code>项目根目录/layouts/partials/footer.html</code>，在 <code>&lt;/footer></code> 标签后面加：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#75715e>&lt;!-- 加载打字动画 JS --&gt;</span>
+</span></span><span style=display:flex><span>{{ $typewriter := resources.Get &#34;js/typewriter.js&#34; }}
+</span></span><span style=display:flex><span>{{ if $typewriter }}
+</span></span><span style=display:flex><span>  &lt;<span style=color:#f92672>script</span> <span style=color:#a6e22e>src</span><span style=color:#f92672>=</span><span style=color:#e6db74>&#34;{{ $typewriter.RelPermalink }}&#34;</span>&gt;&lt;/<span style=color:#f92672>script</span>&gt;
+</span></span><span style=display:flex><span>{{ end }}
+</span></span></code></pre></div><p><strong>这里又踩了个坑</strong>：一开始我把 JS 放在 <code>static/js/</code> 目录，还用 <code>custom/js.html</code> 加载，结果页面源代码里根本找不到脚本标签 —— 后来才知道 PaperMod 旧版本不默认加载 <code>custom</code> 目录的 partial，直接改 <code>footer.html</code> 才是 “万能方案”。</p><h3 id=三那些让人头大的坑解决了才敢分享>三、那些让人头大的坑：解决了才敢分享<a hidden class=anchor aria-hidden=true href=#三那些让人头大的坑解决了才敢分享>#</a></h3><p>折腾过程中遇到几个问题，差点放弃，最后靠调试工具和查文档解决了，记录下来帮大家避坑：</p><h4 id=坑-1只有光标没有文字>坑 1：只有光标，没有文字<a hidden class=anchor aria-hidden=true href=#坑-1只有光标没有文字>#</a></h4><p>现象：光标闪得很欢，但看不到打字的文字。</p><p>原因：文字颜色和背景色一致（我的博客是深色模式，文字默认白色，背景也是白色）。</p><p>解决：在 <code>custom.css</code> 里加 <code>color: inherit !important</code>，让文字继承父元素颜色，确保可见。</p><h4 id=坑-2删了-css-引用样式还生效>坑 2：删了 CSS 引用，样式还生效<a hidden class=anchor aria-hidden=true href=#坑-2删了-css-引用样式还生效>#</a></h4><p>现象：我在 <code>head.html</code> 里删了 <code>custom.css</code> 的加载代码，结果光标样式还在。</p><p>原因：看了 <code>head.html</code> 源码才发现，主题用 <code>resources.Match "css/extended/*.css"</code> 批量合并了 <code>css/extended</code> 目录下的所有 CSS，<code>custom.css</code> 正好在这个目录里，被自动打包进总样式文件了。</p><p>解决：如果想彻底移除，要么把 <code>custom.css</code> 移到其他目录（比如 <code>css/my-custom</code>），要么在合并逻辑里排除它（用 <code>where "Name" "not in" "css/extended/custom.css"</code>）。</p><h3 id=四总结折腾一天的收获>四、总结：折腾一天的收获<a hidden class=anchor aria-hidden=true href=#四总结折腾一天的收获>#</a></h3><ol><li>Hugo 读配置全靠层级，<code>quotes</code> 和 <code>profileMode</code> 必须平级，差一层就报错；</li><li>改主题模板时，先复制到项目目录再改，避免升级主题时被覆盖；</li><li>F12 控制台查 JS 错误，Elements 看元素是否存在，Network 看资源是否加载，遇到问题先看这三个地方；</li><li>CSS 放头部，JS 放页脚，符合网页性能规范，体验更好。</li></ol><p>现在打开博客，看着副标题逐字敲出，光标跟着闪烁，再自动切换句子，感觉之前的折腾都值了。如果你也想给 Hugo 博客加这个小动画，跟着上面的步骤来，应该能少踩很多坑～</p></div><footer class=post-footer><nav class=paginav><a class=prev href=https://gopherding.github.io/posts/blog/%E5%A6%82%E4%BD%95%E5%AF%B9%E5%8D%9A%E5%AE%A2%E8%BF%9B%E8%A1%8C%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%B9%B6%E6%8E%A8%E9%80%81/><span class=title>« 上一页</span><br><span>如何对博客进行版本更新并推送</span>
+</a><a class=next href=https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/><span class=title>下一页 »</span><br><span>We choose to go to the Moon</span></a></nav></footer></div><style>.comments_details summary::marker{font-size:20px;content:'👉展开评论';color:var(--content)}.comments_details[open] summary::marker{font-size:20px;content:'👇关闭评论';color:var(--content)}</style><div><details class=comments_details><summary style="cursor:pointer;margin:50px 0 20px;width:130px"><span style=font-size:20px;color:var(--content)>...</span></summary><div id=tcomment></div></details><script src=https://cdn.staticfile.org/twikoo//twikoo.all.min.js></script><script>twikoo.init({envId:null,el:"#tcomment",lang:"zh-CN",region:null,path:window.TWIKOO_MAGIC_PATH||window.location.pathname})</script></div></article></main><footer class=footer><span>Copyright
+&copy;
+2021-2026
+<a href=https://gopherding.github.io/ style=color:#939393;text-decoration:none>GopherDing's Blog</a>
+All Rights Reserved. Generated with
+<a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none>Hugo</a>
+.Version 0.147.9.</span><br><span id=busuanzi_container><span class="fa fa-user"></span> <span id=busuanzi_value_site_uv></span>
+<span class="fa fa-eye"></span> <span id=busuanzi_value_site_pv></span></span></footer><script src=/js/typewriter.js></script><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id=read_progress></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>let mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>200||document.documentElement.scrollTop>200?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{(function(){document.cookie="change-themes="+escape("false")})(),document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.body.addEventListener("copy",function(e){if(window.getSelection().toString()&&window.getSelection().toString().length>100){let t=e.clipboardData||window.clipboardData;if(t){e.preventDefault();let n=window.getSelection().toString()+`\r
 
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>折腾一天：终于给副标题加上了打字轮询动画 | GopherDing&#39;s Blog</title>
-<meta name="keywords" content="">
-<meta name="description" content="对我这样一个前端小白来说也算是一大挑战了">
-<meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
-<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="google-site-verification" content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg" />
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href,s=window.getSelection().toString()+`\r
 
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --hljs-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript>
-
-<script src="/js/busuanzi.pure.mini.js"></script>
-<link rel="stylesheet" href="/css/font-awesome.min.css">
-
-<script src="/js/jquery-3.7.1.min.js"></script>
-
-
-
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = ""; 
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<meta property="og:title" content="折腾一天：终于给副标题加上了打字轮询动画" />
-<meta property="og:description" content="对我这样一个前端小白来说也算是一大挑战了" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2025-09-25T15:55:23+08:00" />
-<meta property="article:modified_time" content="2025-09-25T15:55:23+08:00" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="折腾一天：终于给副标题加上了打字轮询动画"/>
-<meta name="twitter:description" content="对我这样一个前端小白来说也算是一大挑战了"/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-
-        {
-          "@type": "ListItem",
-          "position":  1 ,
-          "name": "📚文章",
-          "item": "https://gopherding.github.io/posts/"
-        },
-
-        {
-          "@type": "ListItem",
-          "position":  2 ,
-          "name": "🧱 建站",
-          "item": "https://gopherding.github.io/posts/blog/"
-        }, 
-    {
-      "@type": "ListItem",
-      "position":  3 ,
-      "name": "折腾一天：终于给副标题加上了打字轮询动画",
-      "item": "https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "折腾一天：终于给副标题加上了打字轮询动画",
-  "name": "折腾一天：终于给副标题加上了打字轮询动画",
-  "description": "对我这样一个前端小白来说也算是一大挑战了",
-  "keywords": [
-    ""
-  ],
-  "articleBody": "作为一个喜欢折腾博客细节的人，我一直觉得 Hugo PaperMod 主题的首页副标题太 “安静” 了 —— 静态文字放在那里，少了点互动感。于是今天给自己定了个小目标：给副标题加个「打字轮询动画」：文字逐字敲出、带闪烁光标，还能自动切换不同的句子。本以为是 “复制粘贴代码” 的小事，结果踩了好几个坑，好在最后完美实现。这篇就记录下整个过程，希望能帮到同样想折腾的朋友。\n一、先看最终效果：我想要的是什么？ 在动手前先明确需求，避免后续跑偏：\n打字效果：文字不是一次性出来，而是像键盘敲击一样逐字显示； 闪烁光标：文字右侧跟着一个竖线光标，模仿真实打字体验； 自动轮询：打完一句后，逐字删除，再随机切换下一句（不重复）； 不破坏主题：尽量不改主题核心文件，后续升级 PaperMod 不丢配置。 最终实现的效果是：首页 profile 区域，光标先闪，然后逐字 “敲” 出句子，停顿 2 秒后删光，再切换下一句，循环往复 —— 看起来像是博客在 “自言自语”，多了点灵动的感觉。\n二、从零开始：分 5 步实现动画 整个过程围绕「配置→模板→逻辑→样式→加载」展开，每个步骤都有需要注意的细节，尤其是 Hugo 的模板语法和资源处理逻辑，踩坑也多在这上面。\n第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子 首先要把想轮询的句子存在配置里，方便后续修改（不用改代码）。打开项目根目录的 config.yml，在 params 下加两个关键配置：\nparams: # 1. 启用首页 profile 模式（必须开，否则副标题不显示） profileMode: enabled: true # 核心开关，关了整个 profile 都没了 title: \"我的博客\" # 主标题不变 subtitle: \"\" # 副标题留空！后面让 JS 填内容 imageUrl: \"img/avatar.jpg\" # 头像路径（放 static/img 里） imageWidth: 275 imageHeight: 275 # 2. 要轮询的句子列表（和 profileMode 平级！别嵌套进去） quotes: - \"生命不是要超越别人，而是要超越自己。\" - \"人生伟业的建立，不在能知，乃在能行。\" - \"任何的限制，都是从自己内心开始的。\" - \"含泪播种的人一定能含笑收获。\" 这里踩了第一个坑：一开始把 quotes 嵌套进 profileMode 里（比如 params → profileMode → quotes），结果后续 JS 根本读不到句子 ——Hugo 对 YAML 层级极敏感，必须确保 quotes 和 profileMode 是 “兄弟” 关系，都在 params 下面。\n第二步：改模板 —— 给副标题 “挂标识” PaperMod 渲染首页 profile 的模板是 index_profile.html，需要给副标题加两个东西：\nclass=\"profile-subtitle\"：让 JS/CSS 能定位到这个元素； data-quotes：把 config.yml 里的句子列表以 JSON 格式 “注入” 到元素里，供 JS 读取。 操作时要注意：不要直接改主题文件夹的模板（升级会覆盖），先复制到项目目录：\n把 themes/PaperMod/layouts/partials/index_profile.html 复制到 项目根目录/layouts/partials/index_profile.html（没有 partials 文件夹就手动建）； 打开复制后的文件，找到原副标题代码（通常是 {{ .subtitle | markdownify }}），替换成： \u003cspan class=\"profile-subtitle\" data-quotes='{{ site.Params.quotes | jsonify | safeHTMLAttr }}'\u003e \u003c/span\u003e 解释下这行代码：\nsite.Params.quotes：读取配置里的句子列表； jsonify：把列表转成 JSON 格式（JS 能解析）； safeHTMLAttr：防止 Hugo 转义引号（比如把 \" 变成 \"），确保 JSON 格式正确。 第三步：写 JS 逻辑 —— 实现打字 + 轮询 这是核心步骤，要让 JS 完成 “读句子→打字→删除→切换” 的循环。在 项目根目录/assets/js/ 下新建 typewriter.js（assets 是 Hugo 处理资源的目录，比 static 更灵活）：\n// 等 DOM 加载完再执行，避免找不到元素 document.addEventListener(\"DOMContentLoaded\", () =\u003e { // 1. 找到副标题元素 const subtitle = document.querySelector(\".profile-subtitle\"); if (!subtitle) return; // 没找到元素就退出，避免报错 // 2. 读取 data-quotes 里的句子列表 const quotes = JSON.parse(subtitle.dataset.quotes || \"[]\"); if (quotes.length === 0) return; // 没句子也退出 // 3. 动画参数（可自己调速度） const typingSpeed = 100; // 打字速度（毫秒/字） const deletingSpeed = 50; // 删除速度 const pauseAfterTyping = 2000; // 打完停顿2秒 const pauseAfterDeleting = 500;// 删除完停顿0.5秒 // 4. 状态变量 let currentQuoteIndex = Math.floor(Math.random() * quotes.length); // 随机开始第一句 let currentText = \"\"; // 当前显示的文字 let charIndex = 0; // 当前处理的字符索引 let isDeleting = false; // 是否在删除状态 // 5. 核心打字函数 function typeWriter() { const currentQuote = quotes[currentQuoteIndex]; if (isDeleting) { // 删除阶段：逐字减少 currentText = currentQuote.substring(0, charIndex - 1); charIndex--; } else { // 打字阶段：逐字增加 currentText = currentQuote.substring(0, charIndex + 1); charIndex++; } // 更新副标题内容 subtitle.textContent = currentText; // 切换状态/句子 if (!isDeleting \u0026\u0026 charIndex === currentQuote.length) { // 打完一句，准备删除 isDeleting = true; setTimeout(typeWriter, pauseAfterTyping); } else if (isDeleting \u0026\u0026 charIndex === 0) { // 删除完，切换下一句（避免重复） isDeleting = false; let newIndex; do { newIndex = Math.floor(Math.random() * quotes.length); } while (newIndex === currentQuoteIndex); currentQuoteIndex = newIndex; setTimeout(typeWriter, pauseAfterDeleting); } else { // 继续打字/删除 setTimeout(typeWriter, isDeleting ? deletingSpeed : typingSpeed); } } // 6. 启动动画 typeWriter(); }); 这段代码的逻辑很直观：先读句子，然后循环 “打字→停顿→删除→换句子”，还加了随机开始和避免重复的逻辑，体验更自然。\n第四步：写 CSS 样式 —— 让光标闪起来 光有文字打字还不够，得加个闪烁的光标。在 项目根目录/assets/css/extended/ 下新建 custom.css：\n/* 副标题基础样式：确保文字可见 */ .profile-subtitle { position: relative; /* 给光标定位用 */ display: inline-block; /* 避免光标换行 */ color: inherit !important; /* 继承父元素颜色，防止和背景同色 */ white-space: nowrap; /* 文字不换行 */ } /* 光标样式：用伪元素生成竖线 */ .profile-subtitle::after { content: \"|\"; /* 光标符号 */ position: absolute; /* 绝对定位，跟着文字走 */ right: -6px; /* 光标在文字右侧的距离 */ animation: blink 1s step-end infinite; /* 1秒闪烁一次 */ color: inherit; /* 光标颜色和文字一致 */ } /* 光标闪烁动画 */ @keyframes blink { from, to { opacity: 1; } /* 开始和结束显示 */ 50% { opacity: 0; } /* 中间隐藏 */ } 这里用 ::after 伪元素生成光标，比直接写在 JS 里更灵活，样式也更容易调整 —— 想换光标颜色或速度，改 CSS 就行，不用动 JS。\n第五步：加载资源 —— 让 JS 和 CSS 生效 Hugo 不会自动加载 assets 里的文件，必须手动配置。一开始我想改 baseof.html（所有页面的根模板），但后来觉得不够 “优雅”，最终选择更规范的方式：\n1. CSS 加载：放在 head.html 里 CSS 适合在头部加载，避免页面闪烁。把主题的 themes/PaperMod/layouts/partials/head.html 复制到 项目根目录/layouts/partials/head.html，在 标签内的 “样式加载区”（比如最后一个 后面）加：\n{{ $customCss := resources.Get \"css/extended/custom.css\" }} {{ if $customCss }} \u003clink rel=\"stylesheet\" href=\"{{ $customCss.RelPermalink }}\"\u003e {{ end }} 2. JS 加载：放在 footer.html 里 JS 放在页脚加载，避免阻塞页面渲染。把主题的 themes/PaperMod/layouts/partials/footer.html 复制到 项目根目录/layouts/partials/footer.html，在 标签后面加：\n{{ $typewriter := resources.Get \"js/typewriter.js\" }} {{ if $typewriter }} \u003cscript src=\"{{ $typewriter.RelPermalink }}\"\u003e\u003c/script\u003e {{ end }} 这里又踩了个坑：一开始我把 JS 放在 static/js/ 目录，还用 custom/js.html 加载，结果页面源代码里根本找不到脚本标签 —— 后来才知道 PaperMod 旧版本不默认加载 custom 目录的 partial，直接改 footer.html 才是 “万能方案”。\n三、那些让人头大的坑：解决了才敢分享 折腾过程中遇到几个问题，差点放弃，最后靠调试工具和查文档解决了，记录下来帮大家避坑：\n坑 1：只有光标，没有文字 现象：光标闪得很欢，但看不到打字的文字。\n原因：文字颜色和背景色一致（我的博客是深色模式，文字默认白色，背景也是白色）。\n解决：在 custom.css 里加 color: inherit !important，让文字继承父元素颜色，确保可见。\n坑 2：删了 CSS 引用，样式还生效 现象：我在 head.html 里删了 custom.css 的加载代码，结果光标样式还在。\n原因：看了 head.html 源码才发现，主题用 resources.Match \"css/extended/*.css\" 批量合并了 css/extended 目录下的所有 CSS，custom.css 正好在这个目录里，被自动打包进总样式文件了。\n解决：如果想彻底移除，要么把 custom.css 移到其他目录（比如 css/my-custom），要么在合并逻辑里排除它（用 where \"Name\" \"not in\" \"css/extended/custom.css\"）。\n四、总结：折腾一天的收获 Hugo 读配置全靠层级，quotes 和 profileMode 必须平级，差一层就报错； 改主题模板时，先复制到项目目录再改，避免升级主题时被覆盖； F12 控制台查 JS 错误，Elements 看元素是否存在，Network 看资源是否加载，遇到问题先看这三个地方； CSS 放头部，JS 放页脚，符合网页性能规范，体验更好。 现在打开博客，看着副标题逐字敲出，光标跟着闪烁，再自动切换句子，感觉之前的折腾都值了。如果你也想给 Hugo 博客加这个小动画，跟着上面的步骤来，应该能少踩很多坑～\n",
-  "wordCount" : "3111",
-  "inLanguage": "zh",
-  "datePublished": "2025-09-25T15:55:23+08:00",
-  "dateModified": "2025-09-25T15:55:23+08:00",
-  "author":[{
-    "@type": "Person",
-    "name": "GopherDing"
-  }],
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/blog/%E6%8A%98%E8%85%BE%E4%B8%80%E5%A4%A9%E7%BB%88%E4%BA%8E%E7%BB%99%E5%89%AF%E6%A0%87%E9%A2%98%E5%8A%A0%E4%B8%8A%E4%BA%86%E6%89%93%E5%AD%97%E8%BD%AE%E8%AF%A2%E5%8A%A8%E7%94%BB/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "GopherDing's Blog",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
-    }
-  }
-}
-</script>
-</head>
-
-<body class="" id="top">
-<script>
-    (function () {
-        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
-        if(arr = document.cookie.match(reg)) {
-        } else {
-            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
-                document.body.classList.add('dark');
-                localStorage.setItem("pref-theme", 'dark');
-            } else {
-                document.body.classList.remove('dark');
-                localStorage.setItem("pref-theme", 'light');
-            }
-        }
-    })()
-
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-</script>
-
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
-            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
-                 height="50">GopherDing&#39;s Blog</a>
-            <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-                <ul class="lang-switch"><li>|</li>
-                </ul>
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="https://gopherding.github.io/" title="🏠 主页">
-                <span>🏠 主页</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
-                <span>🔍 搜索</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/tags" title="🧩 标签">
-                <span>🧩 标签</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
-                <span>⏱️ 时间轴</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
-                <span>🙋🏻‍♂️ 关于</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/links" title="🤝 友链">
-                <span>🤝 友链</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.travellings.cn/go.html" title="🚇 开往">
-                <span>🚇 开往</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main page">
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-</style>
-
-<article class="post-single">
-    <div id="single-content">
-        <header class="post-header">
-            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/blog/">🧱 建站</a></div>
-            <h1 class="post-title">
-                折腾一天：终于给副标题加上了打字轮询动画
-            </h1>
-            <div class="post-description">
-                对我这样一个前端小白来说也算是一大挑战了
-            </div>
-            <div class="post-meta">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2025-09-25
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>3111字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>7分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/%E5%BB%BA%E7%AB%99/" style="color: var(--secondary)!important;">建站</a>
-            </span>
-        </span>
-    </span>
-</span>
-<span style="opacity: 0.8;">
-                    <span id="post_meta_style_7">
-                        &nbsp;&nbsp;
-                        <span class="fa fa-eye" ></span>
-                        <span>
-                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
-                            &nbsp;&nbsp;
-                        </span>
-                    </span>
-                    <span id="post_meta_style_8">
-                        <span class="fa fa-commenting-o"></span>
-                        <span>
-                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
-                            <script>
-                                let url = document.documentURI
-                                
-                                let dnsUrl = "https://gopherding.github.io/"
-                                let urlSplit = url.split(dnsUrl)
-                                let finalUrl = urlSplit[1]
-                                if (finalUrl[0] !== '/') {
-                                    finalUrl = '/'+finalUrl
-                                }
-                                twikoo.getCommentsCount({
-                                    envId:  null , 
-                                region:  null , 
-                                urls: [ 
-                                    
-                                    finalUrl,
-                                ],
-                                    includeReply: false 
-                                }).then(function (res) {
-                                    let count = res[0].count
-                                    const obj = document.getElementById("comment_count");
-                                    obj.innerText = count
-                                    
-                                    
-                                    
-                                }).catch(function (err) {
-                                    
-                                    console.error(err);
-                                });
-                            </script>
-                            <span id="comment_count"></span>
-                        </span>
-                    </span>
-                </span>
-
-</div>
-        </header> <aside id="toc-container" class="toc-container wide">
-    <div class="toc">
-        <details  open>
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">目录</span>
-        </summary>
-
-        <div class="inner"><ul>
-                <li>
-                    <a href="#%e4%b8%80%e5%85%88%e7%9c%8b%e6%9c%80%e7%bb%88%e6%95%88%e6%9e%9c%e6%88%91%e6%83%b3%e8%a6%81%e7%9a%84%e6%98%af%e4%bb%80%e4%b9%88" aria-label="一、先看最终效果：我想要的是什么？">一、先看最终效果：我想要的是什么？</a></li>
-                <li>
-                    <a href="#%e4%ba%8c%e4%bb%8e%e9%9b%b6%e5%bc%80%e5%a7%8b%e5%88%86-5-%e6%ad%a5%e5%ae%9e%e7%8e%b0%e5%8a%a8%e7%94%bb" aria-label="二、从零开始：分 5 步实现动画">二、从零开始：分 5 步实现动画</a><ul>
-                        
-                <li>
-                    <a href="#%e7%ac%ac%e4%b8%80%e6%ad%a5%e9%85%8d%e7%bd%ae%e6%96%87%e4%bb%b6%e5%9f%8b-%e4%bc%8f%e7%ac%94-%e9%9b%86%e4%b8%ad%e7%ae%a1%e7%90%86%e8%a6%81%e8%bd%ae%e8%af%a2%e7%9a%84%e5%8f%a5%e5%ad%90" aria-label="第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子">第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子</a></li>
-                <li>
-                    <a href="#%e7%ac%ac%e4%ba%8c%e6%ad%a5%e6%94%b9%e6%a8%a1%e6%9d%bf--%e7%bb%99%e5%89%af%e6%a0%87%e9%a2%98-%e6%8c%82%e6%a0%87%e8%af%86" aria-label="第二步：改模板 —— 给副标题 “挂标识”">第二步：改模板 —— 给副标题 “挂标识”</a></li>
-                <li>
-                    <a href="#%e7%ac%ac%e4%b8%89%e6%ad%a5%e5%86%99-js-%e9%80%bb%e8%be%91--%e5%ae%9e%e7%8e%b0%e6%89%93%e5%ad%97--%e8%bd%ae%e8%af%a2" aria-label="第三步：写 JS 逻辑 —— 实现打字 &#43; 轮询">第三步：写 JS 逻辑 —— 实现打字 + 轮询</a></li>
-                <li>
-                    <a href="#%e7%ac%ac%e5%9b%9b%e6%ad%a5%e5%86%99-css-%e6%a0%b7%e5%bc%8f--%e8%ae%a9%e5%85%89%e6%a0%87%e9%97%aa%e8%b5%b7%e6%9d%a5" aria-label="第四步：写 CSS 样式 —— 让光标闪起来">第四步：写 CSS 样式 —— 让光标闪起来</a></li>
-                <li>
-                    <a href="#%e7%ac%ac%e4%ba%94%e6%ad%a5%e5%8a%a0%e8%bd%bd%e8%b5%84%e6%ba%90--%e8%ae%a9-js-%e5%92%8c-css-%e7%94%9f%e6%95%88" aria-label="第五步：加载资源 —— 让 JS 和 CSS 生效">第五步：加载资源 —— 让 JS 和 CSS 生效</a><ul>
-                        
-                <li>
-                    <a href="#1-css-%e5%8a%a0%e8%bd%bd%e6%94%be%e5%9c%a8-headhtml-%e9%87%8c" aria-label="1. CSS 加载：放在 head.html 里">1. CSS 加载：放在 <code>head.html</code> 里</a></li>
-                <li>
-                    <a href="#2-js-%e5%8a%a0%e8%bd%bd%e6%94%be%e5%9c%a8-footerhtml-%e9%87%8c" aria-label="2. JS 加载：放在 footer.html 里">2. JS 加载：放在 <code>footer.html</code> 里</a></li></ul>
-                </li></ul>
-                </li>
-                <li>
-                    <a href="#%e4%b8%89%e9%82%a3%e4%ba%9b%e8%ae%a9%e4%ba%ba%e5%a4%b4%e5%a4%a7%e7%9a%84%e5%9d%91%e8%a7%a3%e5%86%b3%e4%ba%86%e6%89%8d%e6%95%a2%e5%88%86%e4%ba%ab" aria-label="三、那些让人头大的坑：解决了才敢分享">三、那些让人头大的坑：解决了才敢分享</a><ul>
-                        
-                <li>
-                    <a href="#%e5%9d%91-1%e5%8f%aa%e6%9c%89%e5%85%89%e6%a0%87%e6%b2%a1%e6%9c%89%e6%96%87%e5%ad%97" aria-label="坑 1：只有光标，没有文字">坑 1：只有光标，没有文字</a></li>
-                <li>
-                    <a href="#%e5%9d%91-2%e5%88%a0%e4%ba%86-css-%e5%bc%95%e7%94%a8%e6%a0%b7%e5%bc%8f%e8%bf%98%e7%94%9f%e6%95%88" aria-label="坑 2：删了 CSS 引用，样式还生效">坑 2：删了 CSS 引用，样式还生效</a></li></ul>
-                </li>
-                <li>
-                    <a href="#%e5%9b%9b%e6%80%bb%e7%bb%93%e6%8a%98%e8%85%be%e4%b8%80%e5%a4%a9%e7%9a%84%e6%94%b6%e8%8e%b7" aria-label="四、总结：折腾一天的收获">四、总结：折腾一天的收获</a>
-                </li>
-            </ul>
-        </div>
-        </details>
-    </div>
-</aside>
-<script>
-    let activeElement;
-    let elements;
-    window.addEventListener('DOMContentLoaded', function (event) {
-        checkTocPosition();
-
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
-        
-        activeElement = elements[0];
-        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-    }, false);
-
-    window.addEventListener('resize', function(event) {
-        checkTocPosition();
-    }, false);
-
-    window.addEventListener('scroll', () => {
-        
-        if (elements) {
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
-                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
-                    return element;
-                }
-            }) || activeElement
-
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                if (element === activeElement){
-                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-                } else {
-                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
-                }
-            })
-        }
-    }, false);
-
-    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
-    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
-    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-
-    function checkTocPosition() {
-        const width = document.body.scrollWidth;
-        if (width - main - (toc * 2) - (gap * 4) > 0) {
-            document.getElementById("toc-container").classList.add("wide");
-        } else {
-            document.getElementById("toc-container").classList.remove("wide");
-        }
-    }
-
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;
-    }
-</script>
-        <div class="post-content"><p>作为一个喜欢折腾博客细节的人，我一直觉得 Hugo PaperMod 主题的首页副标题太 “安静” 了 —— 静态文字放在那里，少了点互动感。于是今天给自己定了个小目标：给副标题加个「打字轮询动画」：文字逐字敲出、带闪烁光标，还能自动切换不同的句子。本以为是 “复制粘贴代码” 的小事，结果踩了好几个坑，好在最后完美实现。这篇就记录下整个过程，希望能帮到同样想折腾的朋友。</p>
-<h3 id="一先看最终效果我想要的是什么">一、先看最终效果：我想要的是什么？<a hidden class="anchor" aria-hidden="true" href="#一先看最终效果我想要的是什么">#</a></h3>
-<p>在动手前先明确需求，避免后续跑偏：</p>
-<ol>
-<li><strong>打字效果</strong>：文字不是一次性出来，而是像键盘敲击一样逐字显示；</li>
-<li><strong>闪烁光标</strong>：文字右侧跟着一个竖线光标，模仿真实打字体验；</li>
-<li><strong>自动轮询</strong>：打完一句后，逐字删除，再随机切换下一句（不重复）；</li>
-<li><strong>不破坏主题</strong>：尽量不改主题核心文件，后续升级 PaperMod 不丢配置。</li>
-</ol>
-<p>最终实现的效果是：首页 profile 区域，光标先闪，然后逐字 “敲” 出句子，停顿 2 秒后删光，再切换下一句，循环往复 —— 看起来像是博客在 “自言自语”，多了点灵动的感觉。</p>
-<h3 id="二从零开始分-5-步实现动画">二、从零开始：分 5 步实现动画<a hidden class="anchor" aria-hidden="true" href="#二从零开始分-5-步实现动画">#</a></h3>
-<p>整个过程围绕「配置→模板→逻辑→样式→加载」展开，每个步骤都有需要注意的细节，尤其是 Hugo 的模板语法和资源处理逻辑，踩坑也多在这上面。</p>
-<h4 id="第一步配置文件埋-伏笔-集中管理要轮询的句子">第一步：配置文件埋 “伏笔”—— 集中管理要轮询的句子<a hidden class="anchor" aria-hidden="true" href="#第一步配置文件埋-伏笔-集中管理要轮询的句子">#</a></h4>
-<p>首先要把想轮询的句子存在配置里，方便后续修改（不用改代码）。打开项目根目录的 <code>config.yml</code>，在 <code>params</code> 下加两个关键配置：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-yaml" data-lang="yaml"><span style="display:flex;"><span><span style="color:#f92672">params</span>:
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 1. 启用首页 profile 模式（必须开，否则副标题不显示）</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">profileMode</span>:
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">enabled</span>: <span style="color:#66d9ef">true</span>                <span style="color:#75715e"># 核心开关，关了整个 profile 都没了</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">title</span>: <span style="color:#e6db74">&#34;我的博客&#34;</span>             <span style="color:#75715e"># 主标题不变</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">subtitle</span>: <span style="color:#e6db74">&#34;&#34;</span>                 <span style="color:#75715e"># 副标题留空！后面让 JS 填内容</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">imageUrl</span>: <span style="color:#e6db74">&#34;img/avatar.jpg&#34;</span>   <span style="color:#75715e"># 头像路径（放 static/img 里）</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">imageWidth</span>: <span style="color:#ae81ff">275</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">imageHeight</span>: <span style="color:#ae81ff">275</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e"># 2. 要轮询的句子列表（和 profileMode 平级！别嵌套进去）</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">quotes</span>:
-</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#34;生命不是要超越别人，而是要超越自己。&#34;</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#34;人生伟业的建立，不在能知，乃在能行。&#34;</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#34;任何的限制，都是从自己内心开始的。&#34;</span>
-</span></span><span style="display:flex;"><span>    - <span style="color:#e6db74">&#34;含泪播种的人一定能含笑收获。&#34;</span>
-</span></span></code></pre></div><p><strong>这里踩了第一个坑</strong>：一开始把 <code>quotes</code> 嵌套进 <code>profileMode</code> 里（比如 <code>params → profileMode → quotes</code>），结果后续 JS 根本读不到句子 ——Hugo 对 YAML 层级极敏感，必须确保 <code>quotes</code> 和 <code>profileMode</code> 是 “兄弟” 关系，都在 <code>params</code> 下面。</p>
-<h4 id="第二步改模板--给副标题-挂标识">第二步：改模板 —— 给副标题 “挂标识”<a hidden class="anchor" aria-hidden="true" href="#第二步改模板--给副标题-挂标识">#</a></h4>
-<p>PaperMod 渲染首页 profile 的模板是 <code>index_profile.html</code>，需要给副标题加两个东西：</p>
-<ul>
-<li><code>class=&quot;profile-subtitle&quot;</code>：让 JS/CSS 能定位到这个元素；</li>
-<li><code>data-quotes</code>：把 <code>config.yml</code> 里的句子列表以 JSON 格式 “注入” 到元素里，供 JS 读取。</li>
-</ul>
-<p>操作时要注意：<strong>不要直接改主题文件夹的模板</strong>（升级会覆盖），先复制到项目目录：</p>
-<ol>
-<li>把 <code>themes/PaperMod/layouts/partials/index_profile.html</code> 复制到 <code>项目根目录/layouts/partials/index_profile.html</code>（没有 <code>partials</code> 文件夹就手动建）；</li>
-<li>打开复制后的文件，找到原副标题代码（通常是 <code>&lt;span&gt;{{ .subtitle | markdownify }}&lt;/span&gt;</code>），替换成：</li>
-</ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- 副标题：加 class 供定位，加 data-quotes 传句子列表 --&gt;</span>
-</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">span</span> <span style="color:#a6e22e">class</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;profile-subtitle&#34;</span> 
-</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">data-quotes</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#39;{{ site.Params.quotes | jsonify | safeHTMLAttr }}&#39;</span>&gt;
-</span></span><span style="display:flex;"><span>&lt;/<span style="color:#f92672">span</span>&gt;
-</span></span></code></pre></div><p>解释下这行代码：</p>
-<ul>
-<li><code>site.Params.quotes</code>：读取配置里的句子列表；</li>
-<li><code>jsonify</code>：把列表转成 JSON 格式（JS 能解析）；</li>
-<li><code>safeHTMLAttr</code>：防止 Hugo 转义引号（比如把 <code>&quot;</code> 变成 <code>&quot;</code>），确保 JSON 格式正确。</li>
-</ul>
-<h4 id="第三步写-js-逻辑--实现打字--轮询">第三步：写 JS 逻辑 —— 实现打字 + 轮询<a hidden class="anchor" aria-hidden="true" href="#第三步写-js-逻辑--实现打字--轮询">#</a></h4>
-<p>这是核心步骤，要让 JS 完成 “读句子→打字→删除→切换” 的循环。在 <code>项目根目录/assets/js/</code> 下新建 <code>typewriter.js</code>（<code>assets</code> 是 Hugo 处理资源的目录，比 <code>static</code> 更灵活）：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-javascript" data-lang="javascript"><span style="display:flex;"><span><span style="color:#75715e">// 等 DOM 加载完再执行，避免找不到元素
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>document.<span style="color:#a6e22e">addEventListener</span>(<span style="color:#e6db74">&#34;DOMContentLoaded&#34;</span>, () =&gt; {
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 1. 找到副标题元素
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">subtitle</span> <span style="color:#f92672">=</span> document.<span style="color:#a6e22e">querySelector</span>(<span style="color:#e6db74">&#34;.profile-subtitle&#34;</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">subtitle</span>) <span style="color:#66d9ef">return</span>; <span style="color:#75715e">// 没找到元素就退出，避免报错
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 2. 读取 data-quotes 里的句子列表
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">quotes</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">JSON</span>.<span style="color:#a6e22e">parse</span>(<span style="color:#a6e22e">subtitle</span>.<span style="color:#a6e22e">dataset</span>.<span style="color:#a6e22e">quotes</span> <span style="color:#f92672">||</span> <span style="color:#e6db74">&#34;[]&#34;</span>);
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">quotes</span>.<span style="color:#a6e22e">length</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">0</span>) <span style="color:#66d9ef">return</span>; <span style="color:#75715e">// 没句子也退出
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 3. 动画参数（可自己调速度）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">typingSpeed</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">100</span>;       <span style="color:#75715e">// 打字速度（毫秒/字）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">deletingSpeed</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">50</span>;      <span style="color:#75715e">// 删除速度
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pauseAfterTyping</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">2000</span>; <span style="color:#75715e">// 打完停顿2秒
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">pauseAfterDeleting</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">500</span>;<span style="color:#75715e">// 删除完停顿0.5秒
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 4. 状态变量
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">currentQuoteIndex</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">floor</span>(Math.<span style="color:#a6e22e">random</span>() <span style="color:#f92672">*</span> <span style="color:#a6e22e">quotes</span>.<span style="color:#a6e22e">length</span>); <span style="color:#75715e">// 随机开始第一句
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">currentText</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span>;         <span style="color:#75715e">// 当前显示的文字
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">charIndex</span> <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;            <span style="color:#75715e">// 当前处理的字符索引
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">isDeleting</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;       <span style="color:#75715e">// 是否在删除状态
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 5. 核心打字函数
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">function</span> <span style="color:#a6e22e">typeWriter</span>() {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#a6e22e">currentQuote</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">quotes</span>[<span style="color:#a6e22e">currentQuoteIndex</span>];
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isDeleting</span>) {
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 删除阶段：逐字减少
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">currentText</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentQuote</span>.<span style="color:#a6e22e">substring</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">charIndex</span> <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">charIndex</span><span style="color:#f92672">--</span>;
-</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 打字阶段：逐字增加
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">currentText</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentQuote</span>.<span style="color:#a6e22e">substring</span>(<span style="color:#ae81ff">0</span>, <span style="color:#a6e22e">charIndex</span> <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">charIndex</span><span style="color:#f92672">++</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 更新副标题内容
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#a6e22e">subtitle</span>.<span style="color:#a6e22e">textContent</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">currentText</span>;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 切换状态/句子
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span><span style="color:#a6e22e">isDeleting</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">charIndex</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">currentQuote</span>.<span style="color:#a6e22e">length</span>) {
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 打完一句，准备删除
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">isDeleting</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">setTimeout</span>(<span style="color:#a6e22e">typeWriter</span>, <span style="color:#a6e22e">pauseAfterTyping</span>);
-</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (<span style="color:#a6e22e">isDeleting</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">charIndex</span> <span style="color:#f92672">===</span> <span style="color:#ae81ff">0</span>) {
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 删除完，切换下一句（避免重复）
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">isDeleting</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">let</span> <span style="color:#a6e22e">newIndex</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#66d9ef">do</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">newIndex</span> <span style="color:#f92672">=</span> Math.<span style="color:#a6e22e">floor</span>(Math.<span style="color:#a6e22e">random</span>() <span style="color:#f92672">*</span> <span style="color:#a6e22e">quotes</span>.<span style="color:#a6e22e">length</span>);
-</span></span><span style="display:flex;"><span>      } <span style="color:#66d9ef">while</span> (<span style="color:#a6e22e">newIndex</span> <span style="color:#f92672">===</span> <span style="color:#a6e22e">currentQuoteIndex</span>);
-</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">currentQuoteIndex</span> <span style="color:#f92672">=</span> <span style="color:#a6e22e">newIndex</span>;
-</span></span><span style="display:flex;"><span>      <span style="color:#a6e22e">setTimeout</span>(<span style="color:#a6e22e">typeWriter</span>, <span style="color:#a6e22e">pauseAfterDeleting</span>);
-</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
-</span></span><span style="display:flex;"><span>      <span style="color:#75715e">// 继续打字/删除
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>      <span style="color:#a6e22e">setTimeout</span>(<span style="color:#a6e22e">typeWriter</span>, <span style="color:#a6e22e">isDeleting</span> <span style="color:#f92672">?</span> <span style="color:#a6e22e">deletingSpeed</span> <span style="color:#f92672">:</span> <span style="color:#a6e22e">typingSpeed</span>);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>  }
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>  <span style="color:#75715e">// 6. 启动动画
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#a6e22e">typeWriter</span>();
-</span></span><span style="display:flex;"><span>});
-</span></span></code></pre></div><p>这段代码的逻辑很直观：先读句子，然后循环 “打字→停顿→删除→换句子”，还加了随机开始和避免重复的逻辑，体验更自然。</p>
-<h4 id="第四步写-css-样式--让光标闪起来">第四步：写 CSS 样式 —— 让光标闪起来<a hidden class="anchor" aria-hidden="true" href="#第四步写-css-样式--让光标闪起来">#</a></h4>
-<p>光有文字打字还不够，得加个闪烁的光标。在 <code>项目根目录/assets/css/extended/</code> 下新建 <code>custom.css</code>：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-css" data-lang="css"><span style="display:flex;"><span><span style="color:#75715e">/* 副标题基础样式：确保文字可见 */</span>
-</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">profile-subtitle</span> {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">relative</span>;        <span style="color:#75715e">/* 给光标定位用 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">display</span>: <span style="color:#66d9ef">inline-block</span>;     <span style="color:#75715e">/* 避免光标换行 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">color</span>: <span style="color:#66d9ef">inherit</span> <span style="color:#75715e">!important</span>; <span style="color:#75715e">/* 继承父元素颜色，防止和背景同色 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">white-space</span>: <span style="color:#66d9ef">nowrap</span>;       <span style="color:#75715e">/* 文字不换行 */</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 光标样式：用伪元素生成竖线 */</span>
-</span></span><span style="display:flex;"><span>.<span style="color:#a6e22e">profile-subtitle</span>::<span style="color:#a6e22e">after</span> {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">content</span>: <span style="color:#e6db74">&#34;|&#34;</span>;                <span style="color:#75715e">/* 光标符号 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">position</span>: <span style="color:#66d9ef">absolute</span>;          <span style="color:#75715e">/* 绝对定位，跟着文字走 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">right</span>: <span style="color:#ae81ff">-6</span><span style="color:#66d9ef">px</span>;                 <span style="color:#75715e">/* 光标在文字右侧的距离 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">animation</span>: <span style="color:#66d9ef">blink</span> <span style="color:#ae81ff">1</span><span style="color:#66d9ef">s</span> <span style="color:#66d9ef">step-end</span> <span style="color:#66d9ef">infinite</span>; <span style="color:#75715e">/* 1秒闪烁一次 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">color</span>: <span style="color:#66d9ef">inherit</span>;              <span style="color:#75715e">/* 光标颜色和文字一致 */</span>
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">/* 光标闪烁动画 */</span>
-</span></span><span style="display:flex;"><span>@<span style="color:#66d9ef">keyframes</span> <span style="color:#f92672">blink</span> {
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">from</span><span style="color:#f92672">,</span> <span style="color:#f92672">to</span> { <span style="color:#66d9ef">opacity</span>: <span style="color:#ae81ff">1</span>; } <span style="color:#75715e">/* 开始和结束显示 */</span>
-</span></span><span style="display:flex;"><span>  <span style="color:#f92672">50</span><span style="color:#f92672">%</span> { <span style="color:#66d9ef">opacity</span>: <span style="color:#ae81ff">0</span>; }      <span style="color:#75715e">/* 中间隐藏 */</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>这里用 <code>::after</code> 伪元素生成光标，比直接写在 JS 里更灵活，样式也更容易调整 —— 想换光标颜色或速度，改 CSS 就行，不用动 JS。</p>
-<h4 id="第五步加载资源--让-js-和-css-生效">第五步：加载资源 —— 让 JS 和 CSS 生效<a hidden class="anchor" aria-hidden="true" href="#第五步加载资源--让-js-和-css-生效">#</a></h4>
-<p>Hugo 不会自动加载 <code>assets</code> 里的文件，必须手动配置。一开始我想改 <code>baseof.html</code>（所有页面的根模板），但后来觉得不够 “优雅”，最终选择更规范的方式：</p>
-<h5 id="1-css-加载放在-headhtml-里">1. CSS 加载：放在 <code>head.html</code> 里<a hidden class="anchor" aria-hidden="true" href="#1-css-加载放在-headhtml-里">#</a></h5>
-<p>CSS 适合在头部加载，避免页面闪烁。把主题的 <code>themes/PaperMod/layouts/partials/head.html</code> 复制到 <code>项目根目录/layouts/partials/head.html</code>，在 <code>&lt;head&gt;</code> 标签内的 “样式加载区”（比如最后一个 <code>&lt;link&gt;</code> 后面）加：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- 加载光标样式 CSS --&gt;</span>
-</span></span><span style="display:flex;"><span>{{ $customCss := resources.Get &#34;css/extended/custom.css&#34; }}
-</span></span><span style="display:flex;"><span>{{ if $customCss }}
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">link</span> <span style="color:#a6e22e">rel</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;stylesheet&#34;</span> <span style="color:#a6e22e">href</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $customCss.RelPermalink }}&#34;</span>&gt;
-</span></span><span style="display:flex;"><span>{{ end }}
-</span></span></code></pre></div><h5 id="2-js-加载放在-footerhtml-里">2. JS 加载：放在 <code>footer.html</code> 里<a hidden class="anchor" aria-hidden="true" href="#2-js-加载放在-footerhtml-里">#</a></h5>
-<p>JS 放在页脚加载，避免阻塞页面渲染。把主题的 <code>themes/PaperMod/layouts/partials/footer.html</code> 复制到 <code>项目根目录/layouts/partials/footer.html</code>，在 <code>&lt;/footer&gt;</code> 标签后面加：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span><span style="color:#75715e">&lt;!-- 加载打字动画 JS --&gt;</span>
-</span></span><span style="display:flex;"><span>{{ $typewriter := resources.Get &#34;js/typewriter.js&#34; }}
-</span></span><span style="display:flex;"><span>{{ if $typewriter }}
-</span></span><span style="display:flex;"><span>  &lt;<span style="color:#f92672">script</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $typewriter.RelPermalink }}&#34;</span>&gt;&lt;/<span style="color:#f92672">script</span>&gt;
-</span></span><span style="display:flex;"><span>{{ end }}
-</span></span></code></pre></div><p><strong>这里又踩了个坑</strong>：一开始我把 JS 放在 <code>static/js/</code> 目录，还用 <code>custom/js.html</code> 加载，结果页面源代码里根本找不到脚本标签 —— 后来才知道 PaperMod 旧版本不默认加载 <code>custom</code> 目录的 partial，直接改 <code>footer.html</code> 才是 “万能方案”。</p>
-<h3 id="三那些让人头大的坑解决了才敢分享">三、那些让人头大的坑：解决了才敢分享<a hidden class="anchor" aria-hidden="true" href="#三那些让人头大的坑解决了才敢分享">#</a></h3>
-<p>折腾过程中遇到几个问题，差点放弃，最后靠调试工具和查文档解决了，记录下来帮大家避坑：</p>
-<h4 id="坑-1只有光标没有文字">坑 1：只有光标，没有文字<a hidden class="anchor" aria-hidden="true" href="#坑-1只有光标没有文字">#</a></h4>
-<p>现象：光标闪得很欢，但看不到打字的文字。</p>
-<p>原因：文字颜色和背景色一致（我的博客是深色模式，文字默认白色，背景也是白色）。</p>
-<p>解决：在 <code>custom.css</code> 里加 <code>color: inherit !important</code>，让文字继承父元素颜色，确保可见。</p>
-<h4 id="坑-2删了-css-引用样式还生效">坑 2：删了 CSS 引用，样式还生效<a hidden class="anchor" aria-hidden="true" href="#坑-2删了-css-引用样式还生效">#</a></h4>
-<p>现象：我在 <code>head.html</code> 里删了 <code>custom.css</code> 的加载代码，结果光标样式还在。</p>
-<p>原因：看了 <code>head.html</code> 源码才发现，主题用 <code>resources.Match &quot;css/extended/*.css&quot;</code> 批量合并了 <code>css/extended</code> 目录下的所有 CSS，<code>custom.css</code> 正好在这个目录里，被自动打包进总样式文件了。</p>
-<p>解决：如果想彻底移除，要么把 <code>custom.css</code> 移到其他目录（比如 <code>css/my-custom</code>），要么在合并逻辑里排除它（用 <code>where &quot;Name&quot; &quot;not in&quot; &quot;css/extended/custom.css&quot;</code>）。</p>
-<h3 id="四总结折腾一天的收获">四、总结：折腾一天的收获<a hidden class="anchor" aria-hidden="true" href="#四总结折腾一天的收获">#</a></h3>
-<ol>
-<li>Hugo 读配置全靠层级，<code>quotes</code> 和 <code>profileMode</code> 必须平级，差一层就报错；</li>
-<li>改主题模板时，先复制到项目目录再改，避免升级主题时被覆盖；</li>
-<li>F12 控制台查 JS 错误，Elements 看元素是否存在，Network 看资源是否加载，遇到问题先看这三个地方；</li>
-<li>CSS 放头部，JS 放页脚，符合网页性能规范，体验更好。</li>
-</ol>
-<p>现在打开博客，看着副标题逐字敲出，光标跟着闪烁，再自动切换句子，感觉之前的折腾都值了。如果你也想给 Hugo 博客加这个小动画，跟着上面的步骤来，应该能少踩很多坑～</p>
-
-
-        </div>
-
-        <footer class="post-footer">
-            
-<nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/blog/%E5%A6%82%E4%BD%95%E5%AF%B9%E5%8D%9A%E5%AE%A2%E8%BF%9B%E8%A1%8C%E7%89%88%E6%9C%AC%E6%9B%B4%E6%96%B0%E5%B9%B6%E6%8E%A8%E9%80%81/">
-    <span class="title">« 上一页</span>
-    <br>
-    <span>如何对博客进行版本更新并推送</span>
-  </a>
-  <a class="next" href="https://gopherding.github.io/posts/read/we-choose-to-go-to-the-moon/">
-    <span class="title">下一页 »</span>
-    <br>
-    <span>We choose to go to the Moon</span>
-  </a>
-</nav>
-
-        </footer>
-    </div>
-
-<style>
-    .comments_details summary::marker {
-        font-size: 20px;
-        content: '👉展开评论';
-        color: var(--content);
-    }
-    .comments_details[open] summary::marker{
-        font-size: 20px;
-        content: '👇关闭评论';
-        color: var(--content);
-    }
-</style>
-
-
-<div>
-    <details class="comments_details">
-        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
-            <span style="font-size: 20px;color: var(--content);">...</span>
-        </summary>
-        <div id="tcomment"></div>
-    </details>
-    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
-    </script>
-    <script>
-        twikoo.init({
-            envId:  null ,
-        el: "#tcomment",
-            lang: 'zh-CN',
-            region:  null ,
-        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
-        })
-    </script>
-</div>
-</article>
-</main>
-
-<footer class="footer">
-    <span>
-        Copyright
-        &copy;
-        2021-2026
-        <a href="https://gopherding.github.io/" style="color:#939393; text-decoration:none;">GopherDing&#39;s Blog</a>
-        All Rights Reserved. Generated with 
-        <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank" style="text-decoration:none;">Hugo</a>
-        .Version 0.147.9.
-    </span>
-    
-    
-    <br>
-    <span id="busuanzi_container">
-        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
-        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
-    </span>
-</footer>
-
-
-
-
-  <script src="/js/typewriter.js"></script>
-
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <span class="topInner">
-        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-            <path d="M12 6H0l6-6z"/>
-        </svg>
-        <span id="read_progress"></span>
-    </span>
-</a>
-
-<script>
-    document.addEventListener('scroll', function (e) {
-        const readProgress = document.getElementById("read_progress");
-        const scrollHeight = document.documentElement.scrollHeight;
-        const clientHeight = document.documentElement.clientHeight;
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
-    })
-</script>
-
-<script>
-    let menu = document.getElementById('menu')
-    if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-</script>
-<script>
-    let mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        (function() {
-            document.cookie = "change-themes" + "="+ escape ("false");
-        })()
-
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    });
-</script>
-
-<script>
-    document.body.addEventListener('copy', function (e) {
-        if (window.getSelection().toString() && window.getSelection().toString().length > 100) {
-            let clipboardData = e.clipboardData || window.clipboardData;
-            if (clipboardData) {
-                e.preventDefault();
-                let htmlData = window.getSelection().toString() +
-                    '\r\n\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                let textData = window.getSelection().toString() +
-                    '\r\n\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                clipboardData.setData('text/html', htmlData);
-                clipboardData.setData('text/plain', textData);
-            }
-        }
-    });
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerText = '复制';
-
-        function copyingDone() {
-            copybutton.innerText = '已复制！';
-            setTimeout(() => {
-                copybutton.innerText = '复制';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                let text = codeblock.textContent +
-                    '\r\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                navigator.clipboard.writeText(text);
-                copyingDone();
-                return;
-            }
-
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try {
-                document.execCommand('copy');
-                copyingDone();
-            } catch (e) {}
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-            
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
-</script>
-</body>
-
-</html>
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;t.setData("text/html",n),t.setData("text/plain",s)}}})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerText="复制";function s(){t.innerText="已复制！",setTimeout(()=>{t.innerText="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){let t=e.textContent+`\r
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;navigator.clipboard.writeText(t),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>

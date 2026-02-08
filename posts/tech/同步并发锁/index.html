@@ -1,920 +1,101 @@
-<!DOCTYPE html>
-<html lang="zh" dir="auto">
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>同步并发&锁 | GopherDing's Blog</title><meta name=keywords content><meta name=description content="竞态问题的处理"><meta name=author content="GopherDing"><link rel=canonical href=https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/><link crossorigin=anonymous href=/assets/css/stylesheet.css rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.js onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=16x16 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=32x32 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=apple-touch-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=mask-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><meta name=google-site-verification content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg"><link rel=alternate hreflang=zh href=https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script src=/js/busuanzi.pure.mini.js></script><link rel=stylesheet href=/css/font-awesome.min.css><script src=/js/jquery-3.7.1.min.js></script><meta property="og:title" content="同步并发&锁"><meta property="og:description" content="竞态问题的处理"><meta property="og:type" content="article"><meta property="og:url" content="https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2024-03-20T15:55:23+08:00"><meta property="article:modified_time" content="2024-03-20T15:55:23+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="同步并发&锁"><meta name=twitter:description content="竞态问题的处理"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"📚文章","item":"https://gopherding.github.io/posts/"},{"@type":"ListItem","position":2,"name":"👨🏻‍💻 技术","item":"https://gopherding.github.io/posts/tech/"},{"@type":"ListItem","position":3,"name":"同步并发\u0026锁","item":"https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"同步并发\u0026锁","name":"同步并发\u0026锁","description":"竞态问题的处理","keywords":[""],"articleBody":"有时候我们的代码中可能会存在多个 goroutine 同时操作一个资源（临界区）的情况，这种情况下就会发生竞态问题（数据竞态race condition）。\n原则：对一个共享资源的读和写操作必须是原子化的——同一时刻只能有一个 goroutine 对共享资源进行读和写操作。\n互斥锁： Go 语言中使用sync包中提供的Mutex类型来实现互斥锁。\nfunc (m *Mutex) Lock() 获取互斥锁 func (m *Mutex) Unlock() 释放互斥锁 使用互斥锁能够保证同一时间有且只有一个 goroutine 进入临界区，其他的 goroutine 则在等待锁；当互斥锁释放后，等待的 goroutine 才可以获取锁进入临界区，多个 goroutine 同时等待一个锁时，唤醒的策略是随机的。\n锁的两种模式 互斥锁在设计上主要有两种模式： 正常模式和饥饿模式。\n之所以引入了饥饿模式，是为了保证goroutine获取互斥锁的公平性。所谓公平性，其实就是多个goroutine在获取锁时，goroutine获取锁的顺序，和请求锁的顺序一致，则为公平。\n正常模式下，所有阻塞在等待队列中的goroutine会按顺序进行锁获取，当唤醒一个等待队列中的goroutine时，此goroutine并不会直接获取到锁，而是会和新请求锁的goroutine竞争。 通常新请求锁的goroutine更容易获取锁，这是因为新请求锁的goroutine正在占用cpu片执行，大概率可以直接执行到获取到锁的逻辑。\n饥饿模式下， 新请求锁的goroutine不会进行锁获取，而是加入到队列尾部阻塞等待获取锁。\n饥饿模式的触发条件： 当一个goroutine等待锁的时间超过1ms时，互斥锁会切换到饥饿模式 饥饿模式的取消条件： 当获取到锁的这个goroutine是等待锁队列中的最后一个goroutine，互斥锁会切换到正常模式 当获取到锁的这个goroutine的等待时间在1ms之内，互斥锁会切换到正常模式 sync.Mutex的数据结构 Go中的sync.Mutex的结构体为：\ntype Mutex struct { state int32 sema uint32 } Sync.Mutex由两个字段构成，state用来表示当前互斥锁处于的状态，sema用于控制锁状态的信号量。相信各位道友读完这两个字段的描述后，好像懂了，又好像没懂。下面我们详细理解下这两个字段到底都作了哪些事。\n互斥锁state主要记录了如下四种状态：\n![image-20240320224646795](C:\\Users\\GEORGE DING\\AppData\\Roaming\\Typora\\typora-user-images\\image-20240320224646795.png)\nwaiter_num： 记录了当前等待抢这个锁的goroutine数量\nstarving： 当前锁是否处于饥饿状态 (后文会详解锁的饥饿状态) 0: 正常状态 1: 饥饿状态\nwoken： 当前锁是否有goroutine已被唤醒。 0：没有goroutine被唤醒； 1: 有goroutine正在加锁过程\nlocked： 当前锁是否被goroutine持有。 0: 未被持有 1: 已被持有\nsema信号量的作用：\n当持有锁的gorouine释放锁后，会释放sema信号量，这个信号量会唤醒之前抢锁阻塞的gorouine来获取锁。\nTo know much more, here （Mutex底层结构）!\n读写互斥锁： 互斥锁是完全互斥的，但是实际上有很多场景是读多写少的，当我们并发的去读取一个资源而不涉及资源修改的时候是没有必要加互斥锁的，这种场景下使用读写锁是更好的一种选择。读写锁在 Go 语言中使用sync包中的RWMutex类型。\n方法名 功能 func (rw *RWMutex) Lock() 获取写锁 func (rw *RWMutex) Unlock() 释放写锁 func (rw *RWMutex) RLock() 获取读锁 func (rw *RWMutex) RUnlock() 释放读锁 func (rw *RWMutex) RLocker() Locker 返回一个实现Locker接口的读写锁 当一个 goroutine 获取到读锁之后，其他的 goroutine 如果是获取读锁会继续获得锁，如果是获取写锁就会等待；而当一个 goroutine 获取写锁之后，其他的 goroutine 无论是获取读锁还是写锁都会等待。\n即：读锁可读不可写，写锁读写均不可。\nsync.WaitGroup 方法名 功能 func (wg * WaitGroup) Add(delta int) 计数器+delta (wg *WaitGroup) Done() 计数器-1 (wg *WaitGroup) Wait() 阻塞直到计数器变为0 sync.WaitGroup 内部维护着一个计数器，计数器的值可以增加和减少。例如当我们启动了 N 个并发任务时，就将计数器值增加N。每个任务完成时通过调用 Done 方法将计数器减1。通过调用 Wait 来等待并发任务执行完，当计数器值为 0 时，表示所有并发任务已经完成。\nsync.Once 在某些场景下我们需要确保某些操作即使在高并发的场景下也只会被执行一次，例如只加载一次配置文件等。\nGo语言中的sync包中提供了一个针对只执行一次场景的解决方案——sync.Once，sync.Once只有一个Do方法，其签名如下：\nfunc (o *Once) Do(f func()) sync.Once其实内部包含一个互斥锁和一个布尔值，互斥锁保证布尔值和数据的安全，而布尔值用来记录初始化是否完成。这样设计就能保证初始化操作的时候是并发安全的并且初始化操作也不会被执行多次，源码如下：\nfunc (o *Once) doSlow(f func()) { o.m.Lock() defer o.m.Unlock() if o.done.Load() == 0 { defer o.done.Store(1) f() } } sync.Map 先来看一下源码注释罢：\n// The Map type is optimized for two common use cases: (1) when the entry for a given // key is only ever written once but read many times, as in caches that only grow, // or (2) when multiple goroutines read, write, and overwrite entries for disjoint // sets of keys. In these two cases, use of a Map may significantly reduce lock // contention compared to a Go map paired with a separate Mutex or RWMutex. 使用方法：\nfunc main() { var m sync.Map // 1. 写入 m.Store(\"qwe\", 18) m.Store(\"asd\", 20) // 2. 读取 age, _ := m.Load(\"qwe\") fmt.Println(age.(int)) // 3. 遍历 m.Range(func(key, value interface{}) bool { name := key.(string) age := value.(int) fmt.Println(name, age) return true }) // 4. 删除 m.Delete(\"qwe\") age, ok := m.Load(\"qwe\") fmt.Println(age, ok) // 5. 读取或写入，这个 key 已经存在，因此写入不成功，并且读出原值。 m.LoadOrStore(\"asd\", 100) age, _ = m.Load(\"asd\") fmt.Println(age) } 方法名 功能 func (m *Map) Store(key, value interface{}) 存储key-value数据 func (m *Map) Load(key interface{}) (value interface{}, ok bool) 查询key对应的value func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool) 查询或存储key对应的value func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool) 查询并删除key func (m *Map) Delete(key interface{}) 删除key func (m *Map) Range(f func(key, value interface{}) bool) 对map中的每个key-value依次调用f 浅浅看一下源码罢：\ntype Map struct { mu Mutex // readOnly,`read` 是 atomic.Value 类型，可以并发地读。但如果需要更新 `read`，则需要加锁保护。对于 read 中存储的 entry 字段，可能会被并发地 CAS 更新。但是如果要更新一个之前已被删除的 entry，则需要先将其状态从 expunged 改为 nil，再拷贝到 dirty 中，然后再更新。 read atomic.Value //`dirty` 是一个非线程安全的原始 map。包含新写入的 key，并且包含 `read` 中的所有未被删除的 key。这样，可以快速地将 `dirty` 提升为 `read` 对外提供服务。如果 `dirty` 为 nil，那么下一次写入时，会新建一个新的 `dirty`，这个初始的 `dirty` 是 `read` 的一个拷贝，但除掉了其中已被删除的 key。 dirty map[interface{}]*entry //每当从 read 中读取失败，都会将 `misses` 的计数值加 1，当加到一定阈值以后，需要将 dirty 提升为 read，以期减少 miss 的情形。 misses int } sync.map 适用于读多写少的场景。对于写多的场景，会导致 read map 缓存失效，需要加锁，导致冲突变多；而且由于未命中 read map 次数过多，导致 dirty map 提升为 read map，这是一个 O(N) 的操作，会进一步降低性能。\n总之： sync.map 是线程安全的，读取，插入，删除也都保持着常数级的时间复杂度。 通过读写分离，降低锁时间来提高效率，适用于读多写少的场景。 Range 操作需要提供一个函数，参数是 k,v，返回值是一个布尔值：f func(key, value interface{}) bool。 调用 Load 或 LoadOrStore 函数时，如果在 read 中没有找到 key，则会将 misses 值原子地增加 1，当 misses 增加到和 dirty 的长度相等时，会将 dirty 提升为 read。以期减少“读 miss”。 新写入的 key 会保存到 dirty 中，如果这时 dirty 为 nil，就会先新创建一个 dirty，并将 read 中未被删除的元素拷贝到 dirty。 当 dirty 为 nil 的时候，read 就代表 map 所有的数据；当 dirty 不为 nil 的时候，dirty 才代表 map 所有的数据。 ","wordCount":"2808","inLanguage":"zh","datePublished":"2024-03-20T15:55:23+08:00","dateModified":"2024-03-20T15:55:23+08:00","author":[{"@type":"Person","name":"GopherDing"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/"},"publisher":{"@type":"Organization","name":"GopherDing's Blog","logo":{"@type":"ImageObject","url":"https://gopherding.github.io/img/GopherSpaceCommunity.png"}}}</script></head><body id=top><script>(function(){let e,t=new RegExp("(^| )change-themes=([^;]*)(;|$)");(e=document.cookie.match(t))||((new Date).getHours()>=19||(new Date).getHours()<6?(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark")):(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")))})(),localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://gopherding.github.io/ accesskey=h title="GopherDing's Blog (Alt + H)"><img src=https://gopherding.github.io/img/GopherSpaceCommunity.png alt=logo aria-label=logo height=50>GopherDing's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)">
+<svg id="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button><ul class=lang-switch><li>|</li></ul></div></div><ul id=menu><li><a href=https://gopherding.github.io/ title="🏠 主页"><span>🏠 主页</span></a></li><li><a href=https://gopherding.github.io/search title="🔍 搜索 (Alt + /)" accesskey=/><span>🔍 搜索</span></a></li><li><a href=https://gopherding.github.io/tags title="🧩 标签"><span>🧩 标签</span></a></li><li><a href=https://gopherding.github.io/archives/ title="⏱️ 时间轴"><span>⏱️ 时间轴</span></a></li><li><a href=https://gopherding.github.io/about title="🙋🏻‍♂️ 关于"><span>🙋🏻‍♂️ 关于</span></a></li><li><a href=https://gopherding.github.io/links title="🤝 友链"><span>🤝 友链</span></a></li><li><a href=https://www.travellings.cn/go.html title="🚇 开往"><span>🚇 开往</span></a></li></ul></nav></header><main class="main page"><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}</style><article class=post-single><div id=single-content><header class=post-header><div class=breadcrumbs><a href=https://gopherding.github.io/>🏠 主页</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/>📚文章</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/tech/>👨🏻‍💻 技术</a></div><h1 class=post-title>同步并发&锁</h1><div class=post-description>竞态问题的处理</div><div class=post-meta><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2024-03-20
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>2808字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>6分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/golang/ style="color:var(--secondary) !important">Golang</a>
+</span></span></span></span><span style=opacity:.8><span id=post_meta_style_7>&nbsp;&nbsp;
+<span class="fa fa-eye"></span>
+<span><span id=busuanzi_container_page_pv><span id=busuanzi_value_page_pv></span></span>
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_8><span class="fa fa-commenting-o"></span>
+<span><script src=https://cdn.staticfile.org/twikoo//twikoo.all.min.js></script><script>let url=document.documentURI,dnsUrl="https://gopherding.github.io/",urlSplit=url.split(dnsUrl),finalUrl=urlSplit[1];finalUrl[0]!=="/"&&(finalUrl="/"+finalUrl),twikoo.getCommentsCount({envId:null,region:null,urls:[finalUrl],includeReply:!1}).then(function(e){let t=e[0].count;const n=document.getElementById("comment_count");n.innerText=t}).catch(function(e){console.error(e)})</script><span id=comment_count></span></span></span></span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e4%ba%92%e6%96%a5%e9%94%81 aria-label=互斥锁：>互斥锁：</a><ul><li><a href=#%e9%94%81%e7%9a%84%e4%b8%a4%e7%a7%8d%e6%a8%a1%e5%bc%8f aria-label=锁的两种模式>锁的两种模式</a><ul><li><a href=#%e9%a5%a5%e9%a5%bf%e6%a8%a1%e5%bc%8f%e7%9a%84%e8%a7%a6%e5%8f%91%e6%9d%a1%e4%bb%b6 aria-label=饥饿模式的触发条件：>饥饿模式的触发条件：</a></li><li><a href=#%e9%a5%a5%e9%a5%bf%e6%a8%a1%e5%bc%8f%e7%9a%84%e5%8f%96%e6%b6%88%e6%9d%a1%e4%bb%b6 aria-label=饥饿模式的取消条件：>饥饿模式的取消条件：</a></li></ul></li><li><a href=#syncmutex%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84 aria-label=sync.Mutex的数据结构>sync.Mutex的数据结构</a></li></ul></li><li><a href=#%e8%af%bb%e5%86%99%e4%ba%92%e6%96%a5%e9%94%81 aria-label=读写互斥锁：>读写互斥锁：</a></li><li><a href=#syncwaitgroup aria-label=sync.WaitGroup>sync.WaitGroup</a></li><li><a href=#synconce aria-label=sync.Once>sync.Once</a></li><li><a href=#syncmap aria-label=sync.Map>sync.Map</a><ul><li><a href=#%e6%80%bb%e4%b9%8b aria-label=总之：>总之：</a></li></ul></li></ul></div></details></div></aside><script>let activeElement,elements;window.addEventListener("DOMContentLoaded",function(){checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),activeElement=elements[0];const t=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active")},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{elements&&(activeElement=Array.from(elements).find(e=>{if(getOffsetTop(e)-window.pageYOffset>0&&getOffsetTop(e)-window.pageYOffset<window.innerHeight/2)return e})||activeElement,elements.forEach(e=>{const t=encodeURI(e.getAttribute("id")).toLowerCase();e===activeElement?document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active"):document.querySelector(`.inner ul li a[href="#${t}"]`).classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><p>有时候我们的代码中可能会存在多个 goroutine 同时操作一个资源（临界区）的情况，这种情况下就会发生竞态问题（数据竞态race condition）。</p><p><strong>原则：对一个共享资源的读和写操作必须是原子化的——同一时刻只能有一个 goroutine 对共享资源进行读和写操作。</strong></p><h3 id=互斥锁>互斥锁：<a hidden class=anchor aria-hidden=true href=#互斥锁>#</a></h3><p>Go 语言中使用<code>sync</code>包中提供的<code>Mutex</code>类型来实现互斥锁。</p><table><thead><tr><th style=text-align:center>func (m *Mutex) Lock()</th><th style=text-align:center>获取互斥锁</th></tr></thead><tbody><tr><td style=text-align:center>func (m *Mutex) Unlock()</td><td style=text-align:center>释放互斥锁</td></tr></tbody></table><p>使用互斥锁能够保证同一时间有且只有一个 goroutine 进入临界区，其他的 goroutine 则在等待锁；当互斥锁释放后，等待的 goroutine 才可以获取锁进入临界区，多个 goroutine 同时等待一个锁时，唤醒的策略是随机的。</p><h4 id=锁的两种模式>锁的两种模式<a hidden class=anchor aria-hidden=true href=#锁的两种模式>#</a></h4><p>互斥锁在设计上主要有两种模式： 正常模式和饥饿模式。</p><p>之所以引入了饥饿模式，是为了保证goroutine获取互斥锁的公平性。所谓公平性，其实就是多个goroutine在获取锁时，goroutine获取锁的顺序，和请求锁的顺序一致，则为公平。</p><p><strong>正常模式</strong>下，所有阻塞在等待队列中的goroutine会按顺序进行锁获取，当唤醒一个等待队列中的goroutine时，此goroutine并不会直接获取到锁，而是会和新请求锁的goroutine竞争。 通常新请求锁的goroutine更容易获取锁，这是因为新请求锁的goroutine正在占用cpu片执行，大概率可以直接执行到获取到锁的逻辑。</p><p><strong>饥饿模式</strong>下， 新请求锁的goroutine不会进行锁获取，而是加入到队列尾部阻塞等待获取锁。</p><h5 id=饥饿模式的触发条件>饥饿模式的触发条件：<a hidden class=anchor aria-hidden=true href=#饥饿模式的触发条件>#</a></h5><ul><li>当一个goroutine等待锁的时间超过1ms时，互斥锁会切换到饥饿模式</li></ul><h5 id=饥饿模式的取消条件>饥饿模式的取消条件：<a hidden class=anchor aria-hidden=true href=#饥饿模式的取消条件>#</a></h5><ul><li>当获取到锁的这个goroutine是等待锁队列中的最后一个goroutine，互斥锁会切换到正常模式</li><li>当获取到锁的这个goroutine的等待时间在1ms之内，互斥锁会切换到正常模式</li></ul><h4 id=syncmutex的数据结构>sync.Mutex的数据结构<a hidden class=anchor aria-hidden=true href=#syncmutex的数据结构>#</a></h4><p>Go中的sync.Mutex的结构体为：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Mutex</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>state</span> <span style=color:#66d9ef>int32</span>
+</span></span><span style=display:flex><span>	<span style=color:#a6e22e>sema</span>  <span style=color:#66d9ef>uint32</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><strong>Sync.Mutex由两个字段构成，state用来表示当前互斥锁处于的状态，sema用于控制锁状态的信号量</strong>。相信各位道友读完这两个字段的描述后，好像懂了，又好像没懂。下面我们详细理解下这两个字段到底都作了哪些事。</p><p><strong>互斥锁state主要记录了如下四种状态：</strong></p><p>![image-20240320224646795](C:\Users\GEORGE DING\AppData\Roaming\Typora\typora-user-images\image-20240320224646795.png)</p><p><strong>waiter_num：</strong> 记录了当前等待抢这个锁的goroutine数量</p><p><strong>starving：</strong> 当前锁是否处于<strong>饥饿状态</strong> (后文会详解锁的饥饿状态) 0: 正常状态 1: 饥饿状态</p><p><strong>woken：</strong> 当前锁是否有goroutine已被唤醒。 0：没有goroutine被唤醒； 1: 有goroutine正在加锁过程</p><p><strong>locked：</strong> 当前锁是否被goroutine持有。 0: 未被持有 1: 已被持有</p><p><strong>sema信号量的作用：</strong></p><p>当持有锁的gorouine释放锁后，会释放sema信号量，这个信号量会唤醒之前抢锁阻塞的gorouine来获取锁。</p><p><a href=https://zhuanlan.zhihu.com/p/152214855>To know much more, here （Mutex底层结构）!</a></p><hr><h3 id=读写互斥锁>读写互斥锁：<a hidden class=anchor aria-hidden=true href=#读写互斥锁>#</a></h3><p>互斥锁是完全互斥的，但是实际上有很多场景是读多写少的，当我们并发的去读取一个资源而不涉及资源修改的时候是没有必要加互斥锁的，这种场景下使用读写锁是更好的一种选择。读写锁在 Go 语言中使用<code>sync</code>包中的<code>RWMutex</code>类型。</p><table><thead><tr><th style=text-align:center>方法名</th><th style=text-align:center>功能</th></tr></thead><tbody><tr><td style=text-align:center>func (rw *RWMutex) Lock()</td><td style=text-align:center>获取写锁</td></tr><tr><td style=text-align:center>func (rw *RWMutex) Unlock()</td><td style=text-align:center>释放写锁</td></tr><tr><td style=text-align:center>func (rw *RWMutex) RLock()</td><td style=text-align:center>获取读锁</td></tr><tr><td style=text-align:center>func (rw *RWMutex) RUnlock()</td><td style=text-align:center>释放读锁</td></tr><tr><td style=text-align:center>func (rw *RWMutex) RLocker() Locker</td><td style=text-align:center>返回一个实现Locker接口的读写锁</td></tr></tbody></table><p>当一个 goroutine 获取到读锁之后，其他的 goroutine 如果是获取读锁会继续获得锁，如果是获取写锁就会等待；而当一个 goroutine 获取写锁之后，其他的 goroutine 无论是获取读锁还是写锁都会等待。</p><p>即：读锁可读不可写，写锁读写均不可。</p><hr><h3 id=syncwaitgroup>sync.WaitGroup<a hidden class=anchor aria-hidden=true href=#syncwaitgroup>#</a></h3><table><thead><tr><th style=text-align:center>方法名</th><th style=text-align:center>功能</th></tr></thead><tbody><tr><td style=text-align:center>func (wg * WaitGroup) Add(delta int)</td><td style=text-align:center>计数器+delta</td></tr><tr><td style=text-align:center>(wg *WaitGroup) Done()</td><td style=text-align:center>计数器-1</td></tr><tr><td style=text-align:center>(wg *WaitGroup) Wait()</td><td style=text-align:center>阻塞直到计数器变为0</td></tr></tbody></table><p>sync.WaitGroup 内部维护着一个计数器，计数器的值可以增加和减少。例如当我们启动了 N 个并发任务时，就将计数器值增加N。每个任务完成时通过调用 Done 方法将计数器减1。通过调用 Wait 来等待并发任务执行完，当计数器值为 0 时，表示所有并发任务已经完成。</p><hr><h3 id=synconce>sync.Once<a hidden class=anchor aria-hidden=true href=#synconce>#</a></h3><p>在某些场景下我们需要确保某些操作即使在高并发的场景下也只会被执行一次，例如只加载一次配置文件等。</p><p>Go语言中的<code>sync</code>包中提供了一个针对只执行一次场景的解决方案——<code>sync.Once</code>，<code>sync.Once</code>只有一个<code>Do</code>方法，其签名如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>o</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Once</span>) <span style=color:#a6e22e>Do</span>(<span style=color:#a6e22e>f</span> <span style=color:#66d9ef>func</span>())
+</span></span></code></pre></div><p><code>sync.Once</code>其实内部包含一个互斥锁和一个布尔值，互斥锁保证布尔值和数据的安全，而布尔值用来记录初始化是否完成。这样设计就能保证初始化操作的时候是并发安全的并且初始化操作也不会被执行多次，源码如下：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> (<span style=color:#a6e22e>o</span> <span style=color:#f92672>*</span><span style=color:#a6e22e>Once</span>) <span style=color:#a6e22e>doSlow</span>(<span style=color:#a6e22e>f</span> <span style=color:#66d9ef>func</span>()) {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>o</span>.<span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Lock</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>o</span>.<span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Unlock</span>()
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#a6e22e>o</span>.<span style=color:#a6e22e>done</span>.<span style=color:#a6e22e>Load</span>() <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> {
+</span></span><span style=display:flex><span>       <span style=color:#66d9ef>defer</span> <span style=color:#a6e22e>o</span>.<span style=color:#a6e22e>done</span>.<span style=color:#a6e22e>Store</span>(<span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>       <span style=color:#a6e22e>f</span>()
+</span></span><span style=display:flex><span>    }
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><hr><h3 id=syncmap>sync.Map<a hidden class=anchor aria-hidden=true href=#syncmap>#</a></h3><p>先来看一下源码注释罢：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>// The Map type is optimized for two common use cases: (1) when the entry for a given
+</span></span><span style=display:flex><span>// key is only ever written once but read many times, as in caches that only grow,
+</span></span><span style=display:flex><span>// or (2) when multiple goroutines read, write, and overwrite entries for disjoint
+</span></span><span style=display:flex><span>// sets of keys. In these two cases, use of a Map may significantly reduce lock
+</span></span><span style=display:flex><span>// contention compared to a Go map paired with a separate Mutex or RWMutex.
+</span></span></code></pre></div><p>使用方法：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>func</span> <span style=color:#a6e22e>main</span>()  {
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>var</span> <span style=color:#a6e22e>m</span> <span style=color:#a6e22e>sync</span>.<span style=color:#a6e22e>Map</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 1. 写入</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Store</span>(<span style=color:#e6db74>&#34;qwe&#34;</span>, <span style=color:#ae81ff>18</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Store</span>(<span style=color:#e6db74>&#34;asd&#34;</span>, <span style=color:#ae81ff>20</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 2. 读取</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>_</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Load</span>(<span style=color:#e6db74>&#34;qwe&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>age</span>.(<span style=color:#66d9ef>int</span>))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 3. 遍历</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Range</span>(<span style=color:#66d9ef>func</span>(<span style=color:#a6e22e>key</span>, <span style=color:#a6e22e>value</span> <span style=color:#66d9ef>interface</span>{}) <span style=color:#66d9ef>bool</span> {
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>name</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>key</span>.(<span style=color:#66d9ef>string</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>age</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>value</span>.(<span style=color:#66d9ef>int</span>)
+</span></span><span style=display:flex><span>        <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>name</span>, <span style=color:#a6e22e>age</span>)
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> <span style=color:#66d9ef>true</span>
+</span></span><span style=display:flex><span>    })
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 4. 删除</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Delete</span>(<span style=color:#e6db74>&#34;qwe&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>ok</span> <span style=color:#f92672>:=</span> <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Load</span>(<span style=color:#e6db74>&#34;qwe&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>ok</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// 5. 读取或写入，这个 key 已经存在，因此写入不成功，并且读出原值。</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>LoadOrStore</span>(<span style=color:#e6db74>&#34;asd&#34;</span>, <span style=color:#ae81ff>100</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>age</span>, <span style=color:#a6e22e>_</span> = <span style=color:#a6e22e>m</span>.<span style=color:#a6e22e>Load</span>(<span style=color:#e6db74>&#34;asd&#34;</span>)
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>fmt</span>.<span style=color:#a6e22e>Println</span>(<span style=color:#a6e22e>age</span>)
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><table><thead><tr><th style=text-align:center>方法名</th><th style=text-align:center>功能</th></tr></thead><tbody><tr><td style=text-align:center>func (m *Map) Store(key, value interface{})</td><td style=text-align:center>存储key-value数据</td></tr><tr><td style=text-align:center>func (m *Map) Load(key interface{}) (value interface{}, ok bool)</td><td style=text-align:center>查询key对应的value</td></tr><tr><td style=text-align:center>func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool)</td><td style=text-align:center>查询或存储key对应的value</td></tr><tr><td style=text-align:center>func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool)</td><td style=text-align:center>查询并删除key</td></tr><tr><td style=text-align:center>func (m *Map) Delete(key interface{})</td><td style=text-align:center>删除key</td></tr><tr><td style=text-align:center>func (m *Map) Range(f func(key, value interface{}) bool)</td><td style=text-align:center>对map中的每个key-value依次调用f</td></tr></tbody></table><p>浅浅看一下源码罢：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-go data-lang=go><span style=display:flex><span><span style=color:#66d9ef>type</span> <span style=color:#a6e22e>Map</span> <span style=color:#66d9ef>struct</span> {
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>mu</span> <span style=color:#a6e22e>Mutex</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>     <span style=color:#75715e>// readOnly,`read` 是 atomic.Value 类型，可以并发地读。但如果需要更新 `read`，则需要加锁保护。对于 read 中存储的 entry 字段，可能会被并发地 CAS 更新。但是如果要更新一个之前已被删除的 entry，则需要先将其状态从 expunged 改为 nil，再拷贝到 dirty 中，然后再更新。</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>read</span> <span style=color:#a6e22e>atomic</span>.<span style=color:#a6e22e>Value</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//`dirty` 是一个非线程安全的原始 map。包含新写入的 key，并且包含 `read` 中的所有未被删除的 key。这样，可以快速地将 `dirty` 提升为 `read` 对外提供服务。如果 `dirty` 为 nil，那么下一次写入时，会新建一个新的 `dirty`，这个初始的 `dirty` 是 `read` 的一个拷贝，但除掉了其中已被删除的 key。</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>dirty</span> <span style=color:#66d9ef>map</span>[<span style=color:#66d9ef>interface</span>{}]<span style=color:#f92672>*</span><span style=color:#a6e22e>entry</span> 
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#75715e>//每当从 read 中读取失败，都会将 `misses` 的计数值加 1，当加到一定阈值以后，需要将 dirty 提升为 read，以期减少 miss 的情形。</span>
+</span></span><span style=display:flex><span>    <span style=color:#a6e22e>misses</span> <span style=color:#66d9ef>int</span>
+</span></span><span style=display:flex><span>}
+</span></span></code></pre></div><p><code>sync.map</code> 适用于读多写少的场景。对于写多的场景，会导致 read map 缓存失效，需要加锁，导致冲突变多；而且由于未命中 read map 次数过多，导致 dirty map 提升为 read map，这是一个 O(N) 的操作，会进一步降低性能。</p><h4 id=总之>总之：<a hidden class=anchor aria-hidden=true href=#总之>#</a></h4><ol><li>sync.map 是线程安全的，读取，插入，删除也都保持着常数级的时间复杂度。</li><li>通过读写分离，降低锁时间来提高效率，适用于读多写少的场景。</li><li>Range 操作需要提供一个函数，参数是 <code>k,v</code>，返回值是一个布尔值：<code>f func(key, value interface{}) bool</code>。</li><li>调用 Load 或 LoadOrStore 函数时，如果在 read 中没有找到 key，则会将 misses 值原子地增加 1，当 misses 增加到和 dirty 的长度相等时，会将 dirty 提升为 read。以期减少“读 miss”。</li><li>新写入的 key 会保存到 dirty 中，如果这时 dirty 为 nil，就会先新创建一个 dirty，并将 read 中未被删除的元素拷贝到 dirty。</li><li>当 dirty 为 nil 的时候，read 就代表 map 所有的数据；当 dirty 不为 nil 的时候，dirty 才代表 map 所有的数据。</li></ol></div><footer class=post-footer><nav class=paginav><a class=prev href=https://gopherding.github.io/posts/read/%E9%A1%B9%E8%84%8A%E8%BD%A9%E5%BF%97/><span class=title>« 上一页</span><br><span>项脊轩志</span>
+</a><a class=next href=https://gopherding.github.io/posts/tech/postgresql%E5%92%8Cmysql%E5%8C%BA%E5%88%AB/><span class=title>下一页 »</span><br><span>PostgreSQL和MySQL区别</span></a></nav></footer></div><style>.comments_details summary::marker{font-size:20px;content:'👉展开评论';color:var(--content)}.comments_details[open] summary::marker{font-size:20px;content:'👇关闭评论';color:var(--content)}</style><div><details class=comments_details><summary style="cursor:pointer;margin:50px 0 20px;width:130px"><span style=font-size:20px;color:var(--content)>...</span></summary><div id=tcomment></div></details><script src=https://cdn.staticfile.org/twikoo//twikoo.all.min.js></script><script>twikoo.init({envId:null,el:"#tcomment",lang:"zh-CN",region:null,path:window.TWIKOO_MAGIC_PATH||window.location.pathname})</script></div></article></main><footer class=footer><span>Copyright
+&copy;
+2021-2026
+<a href=https://gopherding.github.io/ style=color:#939393;text-decoration:none>GopherDing's Blog</a>
+All Rights Reserved. Generated with
+<a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none>Hugo</a>
+.Version 0.147.9.</span><br><span id=busuanzi_container><span class="fa fa-user"></span> <span id=busuanzi_value_site_uv></span>
+<span class="fa fa-eye"></span> <span id=busuanzi_value_site_pv></span></span></footer><script src=/js/typewriter.js></script><a href=#top aria-label="go to top" title="Go to Top (Alt + G)" class=top-link id=top-link accesskey=g><span class=topInner><svg class="topSvg" viewBox="0 0 12 6" fill="currentColor"><path d="M12 6H0l6-6z"/></svg>
+<span id=read_progress></span>
+</span></a><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>let mybutton=document.getElementById("top-link");window.onscroll=function(){document.body.scrollTop>200||document.documentElement.scrollTop>200?(mybutton.style.visibility="visible",mybutton.style.opacity="1"):(mybutton.style.visibility="hidden",mybutton.style.opacity="0")}</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{(function(){document.cookie="change-themes="+escape("false")})(),document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.body.addEventListener("copy",function(e){if(window.getSelection().toString()&&window.getSelection().toString().length>100){let t=e.clipboardData||window.clipboardData;if(t){e.preventDefault();let n=window.getSelection().toString()+`\r
 
-<head><meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="robots" content="index, follow">
-<title>同步并发&amp;锁 | GopherDing&#39;s Blog</title>
-<meta name="keywords" content="">
-<meta name="description" content="竞态问题的处理">
-<meta name="author" content="GopherDing">
-<link rel="canonical" href="https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/">
-<link crossorigin="anonymous" href="/assets/css/stylesheet.css" rel="preload stylesheet" as="style">
-<script defer crossorigin="anonymous" src="/assets/js/highlight.js" onload="hljs.initHighlightingOnLoad();"></script>
-<link rel="icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="icon" type="image/png" sizes="16x16" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="icon" type="image/png" sizes="32x32" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="apple-touch-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<link rel="mask-icon" href="https://gopherding.github.io/img/GopherSpaceCommunity.png">
-<meta name="theme-color" content="#2e2e33">
-<meta name="msapplication-TileColor" content="#2e2e33">
-<meta name="google-site-verification" content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg" />
-<link rel="alternate" hreflang="zh" href="https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/">
-<noscript>
-    <style>
-        #theme-toggle,
-        .top-link {
-            display: none;
-        }
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href,s=window.getSelection().toString()+`\r
 
-    </style>
-    <style>
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --theme: rgb(29, 30, 32);
-                --entry: rgb(46, 46, 51);
-                --primary: rgb(218, 218, 219);
-                --secondary: rgb(155, 156, 157);
-                --tertiary: rgb(65, 66, 68);
-                --content: rgb(196, 196, 197);
-                --hljs-bg: rgb(46, 46, 51);
-                --code-bg: rgb(55, 56, 62);
-                --border: rgb(51, 51, 51);
-            }
-
-            .list {
-                background: var(--theme);
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-track {
-                background: 0 0;
-            }
-
-            .list:not(.dark)::-webkit-scrollbar-thumb {
-                border-color: var(--theme);
-            }
-        }
-
-    </style>
-</noscript>
-
-<script src="/js/busuanzi.pure.mini.js"></script>
-<link rel="stylesheet" href="/css/font-awesome.min.css">
-
-<script src="/js/jquery-3.7.1.min.js"></script>
-
-
-
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = ""; 
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-<meta property="og:title" content="同步并发&amp;锁" />
-<meta property="og:description" content="竞态问题的处理" />
-<meta property="og:type" content="article" />
-<meta property="og:url" content="https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2024-03-20T15:55:23+08:00" />
-<meta property="article:modified_time" content="2024-03-20T15:55:23+08:00" />
-
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="同步并发&amp;锁"/>
-<meta name="twitter:description" content="竞态问题的处理"/>
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BreadcrumbList",
-  "itemListElement": [
-
-        {
-          "@type": "ListItem",
-          "position":  1 ,
-          "name": "📚文章",
-          "item": "https://gopherding.github.io/posts/"
-        },
-
-        {
-          "@type": "ListItem",
-          "position":  2 ,
-          "name": "👨🏻‍💻 技术",
-          "item": "https://gopherding.github.io/posts/tech/"
-        }, 
-    {
-      "@type": "ListItem",
-      "position":  3 ,
-      "name": "同步并发\u0026锁",
-      "item": "https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/"
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": "同步并发\u0026锁",
-  "name": "同步并发\u0026锁",
-  "description": "竞态问题的处理",
-  "keywords": [
-    ""
-  ],
-  "articleBody": "有时候我们的代码中可能会存在多个 goroutine 同时操作一个资源（临界区）的情况，这种情况下就会发生竞态问题（数据竞态race condition）。\n原则：对一个共享资源的读和写操作必须是原子化的——同一时刻只能有一个 goroutine 对共享资源进行读和写操作。\n互斥锁： Go 语言中使用sync包中提供的Mutex类型来实现互斥锁。\nfunc (m *Mutex) Lock() 获取互斥锁 func (m *Mutex) Unlock() 释放互斥锁 使用互斥锁能够保证同一时间有且只有一个 goroutine 进入临界区，其他的 goroutine 则在等待锁；当互斥锁释放后，等待的 goroutine 才可以获取锁进入临界区，多个 goroutine 同时等待一个锁时，唤醒的策略是随机的。\n锁的两种模式 互斥锁在设计上主要有两种模式： 正常模式和饥饿模式。\n之所以引入了饥饿模式，是为了保证goroutine获取互斥锁的公平性。所谓公平性，其实就是多个goroutine在获取锁时，goroutine获取锁的顺序，和请求锁的顺序一致，则为公平。\n正常模式下，所有阻塞在等待队列中的goroutine会按顺序进行锁获取，当唤醒一个等待队列中的goroutine时，此goroutine并不会直接获取到锁，而是会和新请求锁的goroutine竞争。 通常新请求锁的goroutine更容易获取锁，这是因为新请求锁的goroutine正在占用cpu片执行，大概率可以直接执行到获取到锁的逻辑。\n饥饿模式下， 新请求锁的goroutine不会进行锁获取，而是加入到队列尾部阻塞等待获取锁。\n饥饿模式的触发条件： 当一个goroutine等待锁的时间超过1ms时，互斥锁会切换到饥饿模式 饥饿模式的取消条件： 当获取到锁的这个goroutine是等待锁队列中的最后一个goroutine，互斥锁会切换到正常模式 当获取到锁的这个goroutine的等待时间在1ms之内，互斥锁会切换到正常模式 sync.Mutex的数据结构 Go中的sync.Mutex的结构体为：\ntype Mutex struct { state int32 sema uint32 } Sync.Mutex由两个字段构成，state用来表示当前互斥锁处于的状态，sema用于控制锁状态的信号量。相信各位道友读完这两个字段的描述后，好像懂了，又好像没懂。下面我们详细理解下这两个字段到底都作了哪些事。\n互斥锁state主要记录了如下四种状态：\n![image-20240320224646795](C:\\Users\\GEORGE DING\\AppData\\Roaming\\Typora\\typora-user-images\\image-20240320224646795.png)\nwaiter_num： 记录了当前等待抢这个锁的goroutine数量\nstarving： 当前锁是否处于饥饿状态 (后文会详解锁的饥饿状态) 0: 正常状态 1: 饥饿状态\nwoken： 当前锁是否有goroutine已被唤醒。 0：没有goroutine被唤醒； 1: 有goroutine正在加锁过程\nlocked： 当前锁是否被goroutine持有。 0: 未被持有 1: 已被持有\nsema信号量的作用：\n当持有锁的gorouine释放锁后，会释放sema信号量，这个信号量会唤醒之前抢锁阻塞的gorouine来获取锁。\nTo know much more, here （Mutex底层结构）!\n读写互斥锁： 互斥锁是完全互斥的，但是实际上有很多场景是读多写少的，当我们并发的去读取一个资源而不涉及资源修改的时候是没有必要加互斥锁的，这种场景下使用读写锁是更好的一种选择。读写锁在 Go 语言中使用sync包中的RWMutex类型。\n方法名 功能 func (rw *RWMutex) Lock() 获取写锁 func (rw *RWMutex) Unlock() 释放写锁 func (rw *RWMutex) RLock() 获取读锁 func (rw *RWMutex) RUnlock() 释放读锁 func (rw *RWMutex) RLocker() Locker 返回一个实现Locker接口的读写锁 当一个 goroutine 获取到读锁之后，其他的 goroutine 如果是获取读锁会继续获得锁，如果是获取写锁就会等待；而当一个 goroutine 获取写锁之后，其他的 goroutine 无论是获取读锁还是写锁都会等待。\n即：读锁可读不可写，写锁读写均不可。\nsync.WaitGroup 方法名 功能 func (wg * WaitGroup) Add(delta int) 计数器+delta (wg *WaitGroup) Done() 计数器-1 (wg *WaitGroup) Wait() 阻塞直到计数器变为0 sync.WaitGroup 内部维护着一个计数器，计数器的值可以增加和减少。例如当我们启动了 N 个并发任务时，就将计数器值增加N。每个任务完成时通过调用 Done 方法将计数器减1。通过调用 Wait 来等待并发任务执行完，当计数器值为 0 时，表示所有并发任务已经完成。\nsync.Once 在某些场景下我们需要确保某些操作即使在高并发的场景下也只会被执行一次，例如只加载一次配置文件等。\nGo语言中的sync包中提供了一个针对只执行一次场景的解决方案——sync.Once，sync.Once只有一个Do方法，其签名如下：\nfunc (o *Once) Do(f func()) sync.Once其实内部包含一个互斥锁和一个布尔值，互斥锁保证布尔值和数据的安全，而布尔值用来记录初始化是否完成。这样设计就能保证初始化操作的时候是并发安全的并且初始化操作也不会被执行多次，源码如下：\nfunc (o *Once) doSlow(f func()) { o.m.Lock() defer o.m.Unlock() if o.done.Load() == 0 { defer o.done.Store(1) f() } } sync.Map 先来看一下源码注释罢：\n// The Map type is optimized for two common use cases: (1) when the entry for a given // key is only ever written once but read many times, as in caches that only grow, // or (2) when multiple goroutines read, write, and overwrite entries for disjoint // sets of keys. In these two cases, use of a Map may significantly reduce lock // contention compared to a Go map paired with a separate Mutex or RWMutex. 使用方法：\nfunc main() { var m sync.Map // 1. 写入 m.Store(\"qwe\", 18) m.Store(\"asd\", 20) // 2. 读取 age, _ := m.Load(\"qwe\") fmt.Println(age.(int)) // 3. 遍历 m.Range(func(key, value interface{}) bool { name := key.(string) age := value.(int) fmt.Println(name, age) return true }) // 4. 删除 m.Delete(\"qwe\") age, ok := m.Load(\"qwe\") fmt.Println(age, ok) // 5. 读取或写入，这个 key 已经存在，因此写入不成功，并且读出原值。 m.LoadOrStore(\"asd\", 100) age, _ = m.Load(\"asd\") fmt.Println(age) } 方法名 功能 func (m *Map) Store(key, value interface{}) 存储key-value数据 func (m *Map) Load(key interface{}) (value interface{}, ok bool) 查询key对应的value func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool) 查询或存储key对应的value func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool) 查询并删除key func (m *Map) Delete(key interface{}) 删除key func (m *Map) Range(f func(key, value interface{}) bool) 对map中的每个key-value依次调用f 浅浅看一下源码罢：\ntype Map struct { mu Mutex // readOnly,`read` 是 atomic.Value 类型，可以并发地读。但如果需要更新 `read`，则需要加锁保护。对于 read 中存储的 entry 字段，可能会被并发地 CAS 更新。但是如果要更新一个之前已被删除的 entry，则需要先将其状态从 expunged 改为 nil，再拷贝到 dirty 中，然后再更新。 read atomic.Value //`dirty` 是一个非线程安全的原始 map。包含新写入的 key，并且包含 `read` 中的所有未被删除的 key。这样，可以快速地将 `dirty` 提升为 `read` 对外提供服务。如果 `dirty` 为 nil，那么下一次写入时，会新建一个新的 `dirty`，这个初始的 `dirty` 是 `read` 的一个拷贝，但除掉了其中已被删除的 key。 dirty map[interface{}]*entry //每当从 read 中读取失败，都会将 `misses` 的计数值加 1，当加到一定阈值以后，需要将 dirty 提升为 read，以期减少 miss 的情形。 misses int } sync.map 适用于读多写少的场景。对于写多的场景，会导致 read map 缓存失效，需要加锁，导致冲突变多；而且由于未命中 read map 次数过多，导致 dirty map 提升为 read map，这是一个 O(N) 的操作，会进一步降低性能。\n总之： sync.map 是线程安全的，读取，插入，删除也都保持着常数级的时间复杂度。 通过读写分离，降低锁时间来提高效率，适用于读多写少的场景。 Range 操作需要提供一个函数，参数是 k,v，返回值是一个布尔值：f func(key, value interface{}) bool。 调用 Load 或 LoadOrStore 函数时，如果在 read 中没有找到 key，则会将 misses 值原子地增加 1，当 misses 增加到和 dirty 的长度相等时，会将 dirty 提升为 read。以期减少“读 miss”。 新写入的 key 会保存到 dirty 中，如果这时 dirty 为 nil，就会先新创建一个 dirty，并将 read 中未被删除的元素拷贝到 dirty。 当 dirty 为 nil 的时候，read 就代表 map 所有的数据；当 dirty 不为 nil 的时候，dirty 才代表 map 所有的数据。 ",
-  "wordCount" : "2808",
-  "inLanguage": "zh",
-  "datePublished": "2024-03-20T15:55:23+08:00",
-  "dateModified": "2024-03-20T15:55:23+08:00",
-  "author":[{
-    "@type": "Person",
-    "name": "GopherDing"
-  }],
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "https://gopherding.github.io/posts/tech/%E5%90%8C%E6%AD%A5%E5%B9%B6%E5%8F%91%E9%94%81/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "GopherDing's Blog",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://gopherding.github.io/img/GopherSpaceCommunity.png"
-    }
-  }
-}
-</script>
-</head>
-
-<body class="" id="top">
-<script>
-    (function () {
-        let  arr,reg = new RegExp("(^| )"+"change-themes"+"=([^;]*)(;|$)");
-        if(arr = document.cookie.match(reg)) {
-        } else {
-            if (new Date().getHours() >= 19 || new Date().getHours() < 6) {
-                document.body.classList.add('dark');
-                localStorage.setItem("pref-theme", 'dark');
-            } else {
-                document.body.classList.remove('dark');
-                localStorage.setItem("pref-theme", 'light');
-            }
-        }
-    })()
-
-    if (localStorage.getItem("pref-theme") === "dark") {
-        document.body.classList.add('dark');
-    } else if (localStorage.getItem("pref-theme") === "light") {
-        document.body.classList.remove('dark')
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        document.body.classList.add('dark');
-    }
-</script>
-
-<header class="header">
-    <nav class="nav">
-        <div class="logo">
-            <a href="https://gopherding.github.io/" accesskey="h" title="GopherDing&#39;s Blog (Alt + H)">
-            <img src="https://gopherding.github.io/img/GopherSpaceCommunity.png" alt="logo" aria-label="logo"
-                 height="50">GopherDing&#39;s Blog</a>
-            <div class="logo-switches">
-                <button id="theme-toggle" accesskey="t" title="(Alt + T)">
-                    <svg id="moon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg id="sun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button>
-                <ul class="lang-switch"><li>|</li>
-                </ul>
-            </div>
-        </div>
-        <ul id="menu">
-            <li>
-                <a href="https://gopherding.github.io/" title="🏠 主页">
-                <span>🏠 主页</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/search" title="🔍 搜索 (Alt &#43; /)" accesskey=/>
-                <span>🔍 搜索</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/tags" title="🧩 标签">
-                <span>🧩 标签</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/archives/" title="⏱️ 时间轴">
-                <span>⏱️ 时间轴</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/about" title="🙋🏻‍♂️ 关于">
-                <span>🙋🏻‍♂️ 关于</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://gopherding.github.io/links" title="🤝 友链">
-                <span>🤝 友链</span>
-                </a>
-            </li>
-            <li>
-                <a href="https://www.travellings.cn/go.html" title="🚇 开往">
-                <span>🚇 开往</span>
-                </a>
-            </li>
-        </ul>
-    </nav>
-</header>
-<main class="main page">
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-</style>
-
-<article class="post-single">
-    <div id="single-content">
-        <header class="post-header">
-            <div class="breadcrumbs"><a href="https://gopherding.github.io/">🏠 主页</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/">📚文章</a>&nbsp;»&nbsp;<a href="https://gopherding.github.io/posts/tech/">👨🏻‍💻 技术</a></div>
-            <h1 class="post-title">
-                同步并发&amp;锁
-            </h1>
-            <div class="post-description">
-                竞态问题的处理
-            </div>
-            <div class="post-meta">
-
-<style>
-    i[id*="post_meta_style"] {
-        display: flex;
-        align-items: center;
-        margin: 0 0 10px 0;
-    }
-
-    .parent-post-meta {
-        display: flex;
-        flex-wrap: wrap;
-        opacity: 0.8;
-    }
-</style>
-
-<span class="parent-post-meta">
-    <span id="post_meta_style_1">
-        <span class="fa fa-calendar-check-o"></span>
-        <span>2024-03-20
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    
-    
-    
-    
-    
-    
-    
-    <span id="post_meta_style_3">
-        <span class="fa fa-file-word-o"></span>
-        <span>2808字
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_4">
-        <span class="fa fa-clock-o"></span>
-        <span>6分钟
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_5">
-        <span class="fa fa-user-o"></span>
-        <span>GopherDing
-            &nbsp;&nbsp;
-        </span>
-    </span>
-    <span id="post_meta_style_6">
-        <span class="fa fa-tags" style="opacity: 0.8"></span>
-        <span>
-            <span class="post-tags-meta">
-                <a href="https://gopherding.github.io/tags/golang/" style="color: var(--secondary)!important;">Golang</a>
-            </span>
-        </span>
-    </span>
-</span>
-<span style="opacity: 0.8;">
-                    <span id="post_meta_style_7">
-                        &nbsp;&nbsp;
-                        <span class="fa fa-eye" ></span>
-                        <span>
-                            <span id="busuanzi_container_page_pv"><span id="busuanzi_value_page_pv"></span></span>
-                            &nbsp;&nbsp;
-                        </span>
-                    </span>
-                    <span id="post_meta_style_8">
-                        <span class="fa fa-commenting-o"></span>
-                        <span>
-                            <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js"></script>
-                            <script>
-                                let url = document.documentURI
-                                
-                                let dnsUrl = "https://gopherding.github.io/"
-                                let urlSplit = url.split(dnsUrl)
-                                let finalUrl = urlSplit[1]
-                                if (finalUrl[0] !== '/') {
-                                    finalUrl = '/'+finalUrl
-                                }
-                                twikoo.getCommentsCount({
-                                    envId:  null , 
-                                region:  null , 
-                                urls: [ 
-                                    
-                                    finalUrl,
-                                ],
-                                    includeReply: false 
-                                }).then(function (res) {
-                                    let count = res[0].count
-                                    const obj = document.getElementById("comment_count");
-                                    obj.innerText = count
-                                    
-                                    
-                                    
-                                }).catch(function (err) {
-                                    
-                                    console.error(err);
-                                });
-                            </script>
-                            <span id="comment_count"></span>
-                        </span>
-                    </span>
-                </span>
-
-</div>
-        </header> <aside id="toc-container" class="toc-container wide">
-    <div class="toc">
-        <details  open>
-        <summary accesskey="c" title="(Alt + C)">
-            <span class="details">目录</span>
-        </summary>
-
-        <div class="inner"><ul>
-                <li>
-                    <a href="#%e4%ba%92%e6%96%a5%e9%94%81" aria-label="互斥锁：">互斥锁：</a><ul>
-                        
-                <li>
-                    <a href="#%e9%94%81%e7%9a%84%e4%b8%a4%e7%a7%8d%e6%a8%a1%e5%bc%8f" aria-label="锁的两种模式">锁的两种模式</a><ul>
-                        
-                <li>
-                    <a href="#%e9%a5%a5%e9%a5%bf%e6%a8%a1%e5%bc%8f%e7%9a%84%e8%a7%a6%e5%8f%91%e6%9d%a1%e4%bb%b6" aria-label="饥饿模式的触发条件：">饥饿模式的触发条件：</a></li>
-                <li>
-                    <a href="#%e9%a5%a5%e9%a5%bf%e6%a8%a1%e5%bc%8f%e7%9a%84%e5%8f%96%e6%b6%88%e6%9d%a1%e4%bb%b6" aria-label="饥饿模式的取消条件：">饥饿模式的取消条件：</a></li></ul>
-                </li>
-                <li>
-                    <a href="#syncmutex%e7%9a%84%e6%95%b0%e6%8d%ae%e7%bb%93%e6%9e%84" aria-label="sync.Mutex的数据结构">sync.Mutex的数据结构</a></li></ul>
-                </li>
-                <li>
-                    <a href="#%e8%af%bb%e5%86%99%e4%ba%92%e6%96%a5%e9%94%81" aria-label="读写互斥锁：">读写互斥锁：</a></li>
-                <li>
-                    <a href="#syncwaitgroup" aria-label="sync.WaitGroup">sync.WaitGroup</a></li>
-                <li>
-                    <a href="#synconce" aria-label="sync.Once">sync.Once</a></li>
-                <li>
-                    <a href="#syncmap" aria-label="sync.Map">sync.Map</a><ul>
-                        
-                <li>
-                    <a href="#%e6%80%bb%e4%b9%8b" aria-label="总之：">总之：</a>
-                </li>
-            </ul>
-            </li>
-            </ul>
-        </div>
-        </details>
-    </div>
-</aside>
-<script>
-    let activeElement;
-    let elements;
-    window.addEventListener('DOMContentLoaded', function (event) {
-        checkTocPosition();
-
-        elements = document.querySelectorAll('h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]');
-        
-        activeElement = elements[0];
-        const id = encodeURI(activeElement.getAttribute('id')).toLowerCase();
-        document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-    }, false);
-
-    window.addEventListener('resize', function(event) {
-        checkTocPosition();
-    }, false);
-
-    window.addEventListener('scroll', () => {
-        
-        if (elements) {
-            activeElement = Array.from(elements).find((element) => {
-                if ((getOffsetTop(element) - window.pageYOffset) > 0 &&
-                    (getOffsetTop(element) - window.pageYOffset) < window.innerHeight/2) {
-                    return element;
-                }
-            }) || activeElement
-
-            elements.forEach(element => {
-                const id = encodeURI(element.getAttribute('id')).toLowerCase();
-                if (element === activeElement){
-                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.add('active');
-                } else {
-                    document.querySelector(`.inner ul li a[href="#${id}"]`).classList.remove('active');
-                }
-            })
-        }
-    }, false);
-
-    const main = parseInt(getComputedStyle(document.body).getPropertyValue('--article-width'), 10);
-    const toc = parseInt(getComputedStyle(document.body).getPropertyValue('--toc-width'), 10);
-    const gap = parseInt(getComputedStyle(document.body).getPropertyValue('--gap'), 10);
-
-    function checkTocPosition() {
-        const width = document.body.scrollWidth;
-        if (width - main - (toc * 2) - (gap * 4) > 0) {
-            document.getElementById("toc-container").classList.add("wide");
-        } else {
-            document.getElementById("toc-container").classList.remove("wide");
-        }
-    }
-
-    function getOffsetTop(element) {
-        if (!element.getClientRects().length) {
-            return 0;
-        }
-        let rect = element.getBoundingClientRect();
-        let win = element.ownerDocument.defaultView;
-        return rect.top + win.pageYOffset;
-    }
-</script>
-        <div class="post-content"><p>有时候我们的代码中可能会存在多个 goroutine 同时操作一个资源（临界区）的情况，这种情况下就会发生竞态问题（数据竞态race condition）。</p>
-<p><strong>原则：对一个共享资源的读和写操作必须是原子化的——同一时刻只能有一个 goroutine 对共享资源进行读和写操作。</strong></p>
-<h3 id="互斥锁">互斥锁：<a hidden class="anchor" aria-hidden="true" href="#互斥锁">#</a></h3>
-<p>Go 语言中使用<code>sync</code>包中提供的<code>Mutex</code>类型来实现互斥锁。</p>
-<table>
-  <thead>
-      <tr>
-          <th style="text-align: center">func (m *Mutex) Lock()</th>
-          <th style="text-align: center">获取互斥锁</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: center">func (m *Mutex) Unlock()</td>
-          <td style="text-align: center">释放互斥锁</td>
-      </tr>
-  </tbody>
-</table>
-<p>使用互斥锁能够保证同一时间有且只有一个 goroutine 进入临界区，其他的 goroutine 则在等待锁；当互斥锁释放后，等待的 goroutine 才可以获取锁进入临界区，多个 goroutine 同时等待一个锁时，唤醒的策略是随机的。</p>
-<h4 id="锁的两种模式">锁的两种模式<a hidden class="anchor" aria-hidden="true" href="#锁的两种模式">#</a></h4>
-<p>互斥锁在设计上主要有两种模式： 正常模式和饥饿模式。</p>
-<p>之所以引入了饥饿模式，是为了保证goroutine获取互斥锁的公平性。所谓公平性，其实就是多个goroutine在获取锁时，goroutine获取锁的顺序，和请求锁的顺序一致，则为公平。</p>
-<p><strong>正常模式</strong>下，所有阻塞在等待队列中的goroutine会按顺序进行锁获取，当唤醒一个等待队列中的goroutine时，此goroutine并不会直接获取到锁，而是会和新请求锁的goroutine竞争。    通常新请求锁的goroutine更容易获取锁，这是因为新请求锁的goroutine正在占用cpu片执行，大概率可以直接执行到获取到锁的逻辑。</p>
-<p><strong>饥饿模式</strong>下， 新请求锁的goroutine不会进行锁获取，而是加入到队列尾部阻塞等待获取锁。</p>
-<h5 id="饥饿模式的触发条件">饥饿模式的触发条件：<a hidden class="anchor" aria-hidden="true" href="#饥饿模式的触发条件">#</a></h5>
-<ul>
-<li>当一个goroutine等待锁的时间超过1ms时，互斥锁会切换到饥饿模式</li>
-</ul>
-<h5 id="饥饿模式的取消条件">饥饿模式的取消条件：<a hidden class="anchor" aria-hidden="true" href="#饥饿模式的取消条件">#</a></h5>
-<ul>
-<li>当获取到锁的这个goroutine是等待锁队列中的最后一个goroutine，互斥锁会切换到正常模式</li>
-<li>当获取到锁的这个goroutine的等待时间在1ms之内，互斥锁会切换到正常模式</li>
-</ul>
-<h4 id="syncmutex的数据结构">sync.Mutex的数据结构<a hidden class="anchor" aria-hidden="true" href="#syncmutex的数据结构">#</a></h4>
-<p>Go中的sync.Mutex的结构体为：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Mutex</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">state</span> <span style="color:#66d9ef">int32</span>
-</span></span><span style="display:flex;"><span>	<span style="color:#a6e22e">sema</span>  <span style="color:#66d9ef">uint32</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><strong>Sync.Mutex由两个字段构成，state用来表示当前互斥锁处于的状态，sema用于控制锁状态的信号量</strong>。相信各位道友读完这两个字段的描述后，好像懂了，又好像没懂。下面我们详细理解下这两个字段到底都作了哪些事。</p>
-<p><strong>互斥锁state主要记录了如下四种状态：</strong></p>
-<p>![image-20240320224646795](C:\Users\GEORGE DING\AppData\Roaming\Typora\typora-user-images\image-20240320224646795.png)</p>
-<p><strong>waiter_num：</strong> 记录了当前等待抢这个锁的goroutine数量</p>
-<p><strong>starving：</strong> 当前锁是否处于<strong>饥饿状态</strong> (后文会详解锁的饥饿状态) 0: 正常状态 1: 饥饿状态</p>
-<p><strong>woken：</strong> 当前锁是否有goroutine已被唤醒。 0：没有goroutine被唤醒； 1: 有goroutine正在加锁过程</p>
-<p><strong>locked：</strong> 当前锁是否被goroutine持有。 0: 未被持有  1: 已被持有</p>
-<p><strong>sema信号量的作用：</strong></p>
-<p>当持有锁的gorouine释放锁后，会释放sema信号量，这个信号量会唤醒之前抢锁阻塞的gorouine来获取锁。</p>
-<p><a href="https://zhuanlan.zhihu.com/p/152214855">To know much more, here （Mutex底层结构）!</a></p>
-<hr>
-<h3 id="读写互斥锁">读写互斥锁：<a hidden class="anchor" aria-hidden="true" href="#读写互斥锁">#</a></h3>
-<p>互斥锁是完全互斥的，但是实际上有很多场景是读多写少的，当我们并发的去读取一个资源而不涉及资源修改的时候是没有必要加互斥锁的，这种场景下使用读写锁是更好的一种选择。读写锁在 Go 语言中使用<code>sync</code>包中的<code>RWMutex</code>类型。</p>
-<table>
-  <thead>
-      <tr>
-          <th style="text-align: center">方法名</th>
-          <th style="text-align: center">功能</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: center">func (rw *RWMutex) Lock()</td>
-          <td style="text-align: center">获取写锁</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (rw *RWMutex) Unlock()</td>
-          <td style="text-align: center">释放写锁</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (rw *RWMutex) RLock()</td>
-          <td style="text-align: center">获取读锁</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (rw *RWMutex) RUnlock()</td>
-          <td style="text-align: center">释放读锁</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (rw *RWMutex) RLocker() Locker</td>
-          <td style="text-align: center">返回一个实现Locker接口的读写锁</td>
-      </tr>
-  </tbody>
-</table>
-<p>当一个 goroutine 获取到读锁之后，其他的 goroutine 如果是获取读锁会继续获得锁，如果是获取写锁就会等待；而当一个 goroutine 获取写锁之后，其他的 goroutine 无论是获取读锁还是写锁都会等待。</p>
-<p>即：读锁可读不可写，写锁读写均不可。</p>
-<hr>
-<h3 id="syncwaitgroup">sync.WaitGroup<a hidden class="anchor" aria-hidden="true" href="#syncwaitgroup">#</a></h3>
-<table>
-  <thead>
-      <tr>
-          <th style="text-align: center">方法名</th>
-          <th style="text-align: center">功能</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: center">func (wg * WaitGroup) Add(delta int)</td>
-          <td style="text-align: center">计数器+delta</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">(wg *WaitGroup) Done()</td>
-          <td style="text-align: center">计数器-1</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">(wg *WaitGroup) Wait()</td>
-          <td style="text-align: center">阻塞直到计数器变为0</td>
-      </tr>
-  </tbody>
-</table>
-<p>sync.WaitGroup 内部维护着一个计数器，计数器的值可以增加和减少。例如当我们启动了 N 个并发任务时，就将计数器值增加N。每个任务完成时通过调用 Done 方法将计数器减1。通过调用 Wait 来等待并发任务执行完，当计数器值为 0 时，表示所有并发任务已经完成。</p>
-<hr>
-<h3 id="synconce">sync.Once<a hidden class="anchor" aria-hidden="true" href="#synconce">#</a></h3>
-<p>在某些场景下我们需要确保某些操作即使在高并发的场景下也只会被执行一次，例如只加载一次配置文件等。</p>
-<p>Go语言中的<code>sync</code>包中提供了一个针对只执行一次场景的解决方案——<code>sync.Once</code>，<code>sync.Once</code>只有一个<code>Do</code>方法，其签名如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">o</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Once</span>) <span style="color:#a6e22e">Do</span>(<span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>())
-</span></span></code></pre></div><p><code>sync.Once</code>其实内部包含一个互斥锁和一个布尔值，互斥锁保证布尔值和数据的安全，而布尔值用来记录初始化是否完成。这样设计就能保证初始化操作的时候是并发安全的并且初始化操作也不会被执行多次，源码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> (<span style="color:#a6e22e">o</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">Once</span>) <span style="color:#a6e22e">doSlow</span>(<span style="color:#a6e22e">f</span> <span style="color:#66d9ef">func</span>()) {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Lock</span>()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Unlock</span>()
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">done</span>.<span style="color:#a6e22e">Load</span>() <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> {
-</span></span><span style="display:flex;"><span>       <span style="color:#66d9ef">defer</span> <span style="color:#a6e22e">o</span>.<span style="color:#a6e22e">done</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#ae81ff">1</span>)
-</span></span><span style="display:flex;"><span>       <span style="color:#a6e22e">f</span>()
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><hr>
-<h3 id="syncmap">sync.Map<a hidden class="anchor" aria-hidden="true" href="#syncmap">#</a></h3>
-<p>先来看一下源码注释罢：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-fallback" data-lang="fallback"><span style="display:flex;"><span>// The Map type is optimized for two common use cases: (1) when the entry for a given
-</span></span><span style="display:flex;"><span>// key is only ever written once but read many times, as in caches that only grow,
-</span></span><span style="display:flex;"><span>// or (2) when multiple goroutines read, write, and overwrite entries for disjoint
-</span></span><span style="display:flex;"><span>// sets of keys. In these two cases, use of a Map may significantly reduce lock
-</span></span><span style="display:flex;"><span>// contention compared to a Go map paired with a separate Mutex or RWMutex.
-</span></span></code></pre></div><p>使用方法：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>()  {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">var</span> <span style="color:#a6e22e">m</span> <span style="color:#a6e22e">sync</span>.<span style="color:#a6e22e">Map</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 1. 写入</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>, <span style="color:#ae81ff">18</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Store</span>(<span style="color:#e6db74">&#34;asd&#34;</span>, <span style="color:#ae81ff">20</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 2. 读取</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">_</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">age</span>.(<span style="color:#66d9ef">int</span>))
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 3. 遍历</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Range</span>(<span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">key</span>, <span style="color:#a6e22e">value</span> <span style="color:#66d9ef">interface</span>{}) <span style="color:#66d9ef">bool</span> {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">name</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">key</span>.(<span style="color:#66d9ef">string</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">age</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">value</span>.(<span style="color:#66d9ef">int</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">name</span>, <span style="color:#a6e22e">age</span>)
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>
-</span></span><span style="display:flex;"><span>    })
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 4. 删除</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Delete</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;qwe&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">ok</span>)
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// 5. 读取或写入，这个 key 已经存在，因此写入不成功，并且读出原值。</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">LoadOrStore</span>(<span style="color:#e6db74">&#34;asd&#34;</span>, <span style="color:#ae81ff">100</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">age</span>, <span style="color:#a6e22e">_</span> = <span style="color:#a6e22e">m</span>.<span style="color:#a6e22e">Load</span>(<span style="color:#e6db74">&#34;asd&#34;</span>)
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">age</span>)
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><table>
-  <thead>
-      <tr>
-          <th style="text-align: center">方法名</th>
-          <th style="text-align: center">功能</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr>
-          <td style="text-align: center">func (m *Map) Store(key, value interface{})</td>
-          <td style="text-align: center">存储key-value数据</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (m *Map) Load(key interface{}) (value interface{}, ok bool)</td>
-          <td style="text-align: center">查询key对应的value</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (m *Map) LoadOrStore(key, value interface{}) (actual interface{}, loaded bool)</td>
-          <td style="text-align: center">查询或存储key对应的value</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (m *Map) LoadAndDelete(key interface{}) (value interface{}, loaded bool)</td>
-          <td style="text-align: center">查询并删除key</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (m *Map) Delete(key interface{})</td>
-          <td style="text-align: center">删除key</td>
-      </tr>
-      <tr>
-          <td style="text-align: center">func (m *Map) Range(f func(key, value interface{}) bool)</td>
-          <td style="text-align: center">对map中的每个key-value依次调用f</td>
-      </tr>
-  </tbody>
-</table>
-<p>浅浅看一下源码罢：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Map</span> <span style="color:#66d9ef">struct</span> {
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">mu</span> <span style="color:#a6e22e">Mutex</span>
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>     <span style="color:#75715e">// readOnly,`read` 是 atomic.Value 类型，可以并发地读。但如果需要更新 `read`，则需要加锁保护。对于 read 中存储的 entry 字段，可能会被并发地 CAS 更新。但是如果要更新一个之前已被删除的 entry，则需要先将其状态从 expunged 改为 nil，再拷贝到 dirty 中，然后再更新。</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">read</span> <span style="color:#a6e22e">atomic</span>.<span style="color:#a6e22e">Value</span>
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//`dirty` 是一个非线程安全的原始 map。包含新写入的 key，并且包含 `read` 中的所有未被删除的 key。这样，可以快速地将 `dirty` 提升为 `read` 对外提供服务。如果 `dirty` 为 nil，那么下一次写入时，会新建一个新的 `dirty`，这个初始的 `dirty` 是 `read` 的一个拷贝，但除掉了其中已被删除的 key。</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">dirty</span> <span style="color:#66d9ef">map</span>[<span style="color:#66d9ef">interface</span>{}]<span style="color:#f92672">*</span><span style="color:#a6e22e">entry</span> 
-</span></span><span style="display:flex;"><span>    
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//每当从 read 中读取失败，都会将 `misses` 的计数值加 1，当加到一定阈值以后，需要将 dirty 提升为 read，以期减少 miss 的情形。</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">misses</span> <span style="color:#66d9ef">int</span>
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><code>sync.map</code> 适用于读多写少的场景。对于写多的场景，会导致 read map 缓存失效，需要加锁，导致冲突变多；而且由于未命中 read map 次数过多，导致 dirty map 提升为 read map，这是一个 O(N) 的操作，会进一步降低性能。</p>
-<h4 id="总之">总之：<a hidden class="anchor" aria-hidden="true" href="#总之">#</a></h4>
-<ol>
-<li>sync.map 是线程安全的，读取，插入，删除也都保持着常数级的时间复杂度。</li>
-<li>通过读写分离，降低锁时间来提高效率，适用于读多写少的场景。</li>
-<li>Range 操作需要提供一个函数，参数是 <code>k,v</code>，返回值是一个布尔值：<code>f func(key, value interface{}) bool</code>。</li>
-<li>调用 Load 或 LoadOrStore 函数时，如果在 read 中没有找到 key，则会将 misses 值原子地增加 1，当 misses 增加到和 dirty 的长度相等时，会将 dirty 提升为 read。以期减少“读 miss”。</li>
-<li>新写入的 key 会保存到 dirty 中，如果这时 dirty 为 nil，就会先新创建一个 dirty，并将 read 中未被删除的元素拷贝到 dirty。</li>
-<li>当 dirty 为 nil 的时候，read 就代表 map 所有的数据；当 dirty 不为 nil 的时候，dirty 才代表 map 所有的数据。</li>
-</ol>
-
-
-        </div>
-
-        <footer class="post-footer">
-            
-<nav class="paginav">
-  <a class="prev" href="https://gopherding.github.io/posts/read/%E9%A1%B9%E8%84%8A%E8%BD%A9%E5%BF%97/">
-    <span class="title">« 上一页</span>
-    <br>
-    <span>项脊轩志</span>
-  </a>
-  <a class="next" href="https://gopherding.github.io/posts/tech/postgresql%E5%92%8Cmysql%E5%8C%BA%E5%88%AB/">
-    <span class="title">下一页 »</span>
-    <br>
-    <span>PostgreSQL和MySQL区别</span>
-  </a>
-</nav>
-
-        </footer>
-    </div>
-
-<style>
-    .comments_details summary::marker {
-        font-size: 20px;
-        content: '👉展开评论';
-        color: var(--content);
-    }
-    .comments_details[open] summary::marker{
-        font-size: 20px;
-        content: '👇关闭评论';
-        color: var(--content);
-    }
-</style>
-
-
-<div>
-    <details class="comments_details">
-        <summary style="cursor: pointer; margin: 50px 0 20px 0;width: 130px;">
-            <span style="font-size: 20px;color: var(--content);">...</span>
-        </summary>
-        <div id="tcomment"></div>
-    </details>
-    <script src="https://cdn.staticfile.org/twikoo//twikoo.all.min.js">
-    </script>
-    <script>
-        twikoo.init({
-            envId:  null ,
-        el: "#tcomment",
-            lang: 'zh-CN',
-            region:  null ,
-        path: window.TWIKOO_MAGIC_PATH||window.location.pathname,
-        })
-    </script>
-</div>
-</article>
-</main>
-
-<footer class="footer">
-    <span>
-        Copyright
-        &copy;
-        2021-2026
-        <a href="https://gopherding.github.io/" style="color:#939393; text-decoration:none;">GopherDing&#39;s Blog</a>
-        All Rights Reserved. Generated with 
-        <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank" style="text-decoration:none;">Hugo</a>
-        .Version 0.147.9.
-    </span>
-    
-    
-    <br>
-    <span id="busuanzi_container">
-        <span class="fa fa-user"></span> <span id="busuanzi_value_site_uv"></span>
-        <span class="fa fa-eye"></span> <span id="busuanzi_value_site_pv"></span>
-    </span>
-</footer>
-
-
-
-
-  <script src="/js/typewriter.js"></script>
-
-<a href="#top" aria-label="go to top" title="Go to Top (Alt + G)" class="top-link" id="top-link" accesskey="g">
-    <span class="topInner">
-        <svg class="topSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 6" fill="currentColor">
-            <path d="M12 6H0l6-6z"/>
-        </svg>
-        <span id="read_progress"></span>
-    </span>
-</a>
-
-<script>
-    document.addEventListener('scroll', function (e) {
-        const readProgress = document.getElementById("read_progress");
-        const scrollHeight = document.documentElement.scrollHeight;
-        const clientHeight = document.documentElement.clientHeight;
-        const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        readProgress.innerText = ((scrollTop / (scrollHeight - clientHeight)).toFixed(2) * 100).toFixed(0);
-    })
-</script>
-
-<script>
-    let menu = document.getElementById('menu')
-    if (menu) {
-        menu.scrollLeft = localStorage.getItem("menu-scroll-position");
-        menu.onscroll = function () {
-            localStorage.setItem("menu-scroll-position", menu.scrollLeft);
-        }
-    }
-
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener("click", function (e) {
-            e.preventDefault();
-            var id = this.getAttribute("href").substr(1);
-            if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView({
-                    behavior: "smooth"
-                });
-            } else {
-                document.querySelector(`[id='${decodeURIComponent(id)}']`).scrollIntoView();
-            }
-            if (id === "top") {
-                history.replaceState(null, null, " ");
-            } else {
-                history.pushState(null, null, `#${id}`);
-            }
-        });
-    });
-</script>
-<script>
-    let mybutton = document.getElementById("top-link");
-    window.onscroll = function () {
-        if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
-            mybutton.style.visibility = "visible";
-            mybutton.style.opacity = "1";
-        } else {
-            mybutton.style.visibility = "hidden";
-            mybutton.style.opacity = "0";
-        }
-    };
-</script>
-<script>
-    document.getElementById("theme-toggle").addEventListener("click", () => {
-        (function() {
-            document.cookie = "change-themes" + "="+ escape ("false");
-        })()
-
-        if (document.body.className.includes("dark")) {
-            document.body.classList.remove('dark');
-            localStorage.setItem("pref-theme", 'light');
-        } else {
-            document.body.classList.add('dark');
-            localStorage.setItem("pref-theme", 'dark');
-        }
-    });
-</script>
-
-<script>
-    document.body.addEventListener('copy', function (e) {
-        if (window.getSelection().toString() && window.getSelection().toString().length > 100) {
-            let clipboardData = e.clipboardData || window.clipboardData;
-            if (clipboardData) {
-                e.preventDefault();
-                let htmlData = window.getSelection().toString() +
-                    '\r\n\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                let textData = window.getSelection().toString() +
-                    '\r\n\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                clipboardData.setData('text/html', htmlData);
-                clipboardData.setData('text/plain', textData);
-            }
-        }
-    });
-</script>
-<script>
-    document.querySelectorAll('pre > code').forEach((codeblock) => {
-        const container = codeblock.parentNode.parentNode;
-        const copybutton = document.createElement('button');
-        copybutton.classList.add('copy-code');
-        copybutton.innerText = '复制';
-
-        function copyingDone() {
-            copybutton.innerText = '已复制！';
-            setTimeout(() => {
-                copybutton.innerText = '复制';
-            }, 2000);
-        }
-
-        copybutton.addEventListener('click', (cb) => {
-            if ('clipboard' in navigator) {
-                let text = codeblock.textContent +
-                    '\r\n————————————————\r\n' +
-                    '版权声明：本文为「'+"GopherDing's Blog"+'」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。' +
-                '\r\n原文链接：' + location.href;
-                navigator.clipboard.writeText(text);
-                copyingDone();
-                return;
-            }
-
-            const range = document.createRange();
-            range.selectNodeContents(codeblock);
-            const selection = window.getSelection();
-            selection.removeAllRanges();
-            selection.addRange(range);
-            try {
-                document.execCommand('copy');
-                copyingDone();
-            } catch (e) {}
-            selection.removeRange(range);
-        });
-
-        if (container.classList.contains("highlight")) {
-            container.appendChild(copybutton);
-        } else if (container.parentNode.firstChild == container) {
-            
-        } else if (codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName == "TABLE") {
-            
-            codeblock.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(copybutton);
-        } else {
-            
-            codeblock.parentNode.appendChild(copybutton);
-        }
-    });
-</script>
-</body>
-
-</html>
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;t.setData("text/html",n),t.setData("text/plain",s)}}})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerText="复制";function s(){t.innerText="已复制！",setTimeout(()=>{t.innerText="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){let t=e.textContent+`\r
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;navigator.clipboard.writeText(t),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
