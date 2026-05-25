@@ -1,0 +1,698 @@
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>编程与人工智能数学基础 | GopherDing's Blog</title><meta name=keywords content><meta name=description content="速通AI第一阶段。"><meta name=author content="GopherDing"><link rel=canonical href=https://gopherding.github.io/posts/tech/%E7%BC%96%E7%A8%8B%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/><link crossorigin=anonymous href=/assets/css/stylesheet.css rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.js onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=16x16 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=32x32 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=apple-touch-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=mask-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><meta name=google-site-verification content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg"><link rel=alternate hreflang=zh href=https://gopherding.github.io/posts/tech/%E7%BC%96%E7%A8%8B%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script src=/js/busuanzi.pure.mini.js></script><link rel=stylesheet href=/css/font-awesome.min.css><script src=/js/jquery-3.7.1.min.js></script><meta property="og:title" content="编程与人工智能数学基础"><meta property="og:description" content="速通AI第一阶段。"><meta property="og:type" content="article"><meta property="og:url" content="https://gopherding.github.io/posts/tech/%E7%BC%96%E7%A8%8B%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-03-25T15:55:23+08:00"><meta property="article:modified_time" content="2026-03-25T15:55:23+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="编程与人工智能数学基础"><meta name=twitter:description content="速通AI第一阶段。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"文章","item":"https://gopherding.github.io/posts/"},{"@type":"ListItem","position":2,"name":"技术","item":"https://gopherding.github.io/posts/tech/"},{"@type":"ListItem","position":3,"name":"编程与人工智能数学基础","item":"https://gopherding.github.io/posts/tech/%E7%BC%96%E7%A8%8B%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"编程与人工智能数学基础","name":"编程与人工智能数学基础","description":"速通AI第一阶段。","keywords":[""],"articleBody":" 🎯 目标：建立Python编程能力和数学理论基础，为后续深度学习和大模型学习打下根基。 📋 前置要求：无，零基础可开始\n本阶段知识依赖图 Python基础 ──→ 数学基础 ──→ 机器学习入门 │ │ │ │ │ ├── 线性回归 │ │ ├── 逻辑回归 │ │ └── 正则化 │ │ │ ├── 微积分 ──→ 梯度下降 │ ├── 线性代数 ──→ 矩阵运算 │ └── 概率论 ──→ 最大似然估计 │ └── Jupyter Notebook（贯穿始终的工具） 模块一：Python编程基础 为什么Python是AI工程师的第一语言？ Python之所以成为AI/ML领域的首选语言，核心原因有三：\n语法简洁：接近伪代码，让你专注于算法逻辑而非语法细节 生态丰富：NumPy、Pandas、PyTorch、HuggingFace等核心库全部基于Python 社区庞大：遇到问题几乎都能找到解答 1.1 环境搭建 核心任务 安装Anaconda + VS Code，配置好开发环境。\n什么是Anaconda？ Anaconda是一个Python发行版，它不仅仅是Python解释器，还包含：\nconda：包管理器（类似pip，但能管理Python版本和虚拟环境） 预装库：NumPy、Pandas、Matplotlib等常用科学计算库 Jupyter Notebook：交互式编程环境 什么是虚拟环境？为什么需要它？ 虚拟环境是Python的\"沙盒\"，每个项目可以有独立的依赖包版本：\n生活类比：想象你有两间厨房。A厨房需要烤箱，B厨房需要空气炸锅。如果只有一间厨房，两个设备可能冲突（插座不够、位置不够）。虚拟环境就像给每个项目分配一间独立的厨房，互不干扰。\n# 创建虚拟环境（创建一间新\"厨房\"） conda create -n llm_study python=3.11 # 激活虚拟环境（进入这间厨房） conda activate llm_study # 安装常用包（放入你需要的\"厨具\"） pip install numpy pandas matplotlib jupyter 为什么需要虚拟环境？ 假设项目A需要PyTorch 2.0，项目B需要PyTorch 1.13，没有虚拟环境就会冲突——就像两个人同时要往一个水杯里倒不同品牌的果汁。\nVS Code配置 安装Python扩展（让VS Code\"看得懂\"Python代码） 安装Jupyter扩展（在VS Code中直接运行Jupyter Notebook） 配置conda环境作为解释器（告诉VS Code\"用哪个虚拟环境\"） 1.2 Python基础语法 数据类型——AI中最常用的5种 类比理解：把AI模型想象成一个工厂，数据类型就是不同形状的原材料：\n# 1. 整数和浮点数——模型参数、损失值、学习率都是数值 # 类比：工厂里的\"数量\"和\"尺寸\"——最基本的数据 learning_rate = 0.001 # 浮点数（小数） epoch = 100 # 整数 # 2. 字符串——文本数据的基本单位 # 类比：工厂里的\"标签\"和\"说明书\" text = \"大模型改变了世界\" # NLP中处理的就是字符串 # 3. 列表——最常用的数据结构，对应向量/张量的概念 # 类比：工厂里的\"传送带\"——有序排列的一组数据 weights = [0.1, 0.2, 0.3, 0.4] # 类似一个一维张量（向量） batch_data = [[1, 2], [3, 4], [5, 6]] # 类似一个二维张量（矩阵） # ↑ 这就是深度学习中\"一个batch的数据\"的雏形 # 4. 字典——存储模型配置、JSON数据 # 类比：工厂里的\"配置表\"——用名字查找对应的值 model_config = { \"hidden_size\": 768, # 隐藏层维度 \"num_layers\": 12, # Transformer层数 \"vocab_size\": 30522 # 词表大小 } # 5. 布尔值——控制流程 # 类比：工厂里的\"开关\"——控制程序走哪条路 is_training = True if is_training: print(\"训练模式：启用Dropout\") # 训练时随机丢弃一些神经元 else: print(\"推理模式：关闭Dropout\") # 推理时所有神经元都要工作 控制流——程序的\"大脑\" # for循环——遍历数据集的核心方式 # 类比：工厂的\"流水线\"——一个一个地处理数据 for batch in dataloader: # 这就是训练循环的基本形式 loss = model(batch) # 模型处理这个batch loss.backward() # 计算梯度（后面会详细讲） # if-else——条件判断 # 类比：工厂的\"分拣机\"——根据条件走不同的分支 if loss \u003c 0.01: print(\"模型已收敛\") # 损失足够小，可以停止训练了 elif loss \u003c 0.1: print(\"继续训练\") # 还需要继续优化 else: print(\"模型可能有问题\") # 损失太大，可能需要检查数据或模型 # 列表推导式——Python特有的简洁写法，AI代码中非常常见 squares = [x**2 for x in range(10)] # [0, 1, 4, 9, 16, 25, 36, 49, 64, 81] # 一行代码 = 一个for循环 + 一个操作，是Python优雅的体现 1.3 函数与面向对象 函数——代码复用的基本单位 类比：函数就像一台\"机器\"——你给它输入，它给你输出。\n# 函数在AI中的典型应用：定义损失函数 def cross_entropy_loss(predictions, targets): \"\"\" 交叉熵损失函数——分类任务中最常用的损失函数 类比：这是一个\"评分器\" - predictions：模型的预测结果（模型认为答案是什么） - targets：真实标签（正确答案是什么） - 返回值：预测和正确答案之间的\"差距\"（越小越好） \"\"\" loss = -sum(t * np.log(p) for t, p in zip(targets, predictions)) return loss / len(targets) # 参数默认值——配置超参数的常用方式 # 超参数 = 人为设定的参数（不是模型自己学到的） def train_model(model, lr=0.001, epochs=10, batch_size=32): \"\"\" lr: 学习率——每次更新参数的\"步子大小\" epochs: 训练轮数——把整个数据集看几遍 batch_size: 批次大小——每次处理多少个样本 \"\"\" for epoch in range(epochs): # 训练逻辑 pass 面向对象——理解PyTorch模型的基础 类比：如果函数是一台\"机器\"，那类就是\"工厂\"——它包含多台机器（方法）和原材料（属性）。\n# PyTorch中的模型就是一个类！ # 理解类是理解nn.Module的基础 class SimpleModel: def __init__(self, input_size, output_size): # __init__ 方法：初始化模型参数（类似工厂的\"建厂\"过程） # 这里定义工厂里有哪些\"机器\"和\"原材料\" self.weights = [0.1] * input_size # 权重（模型要学习的参数） self.bias = 0 # 偏置（另一个要学习的参数） def forward(self, x): # forward 方法：定义前向传播（数据如何流过工厂） # 这就是工厂的\"生产流程\" result = sum(w * xi for w, xi in zip(self.weights, x)) + self.bias return result # 使用 model = SimpleModel(input_size=3, output_size=1) output = model.forward([1.0, 2.0, 3.0]) 关键理解：PyTorch中的nn.Module就是基于这个原理。你定义的每个神经网络都是一个类：\n__init__中定义网络有哪些层（“工厂里有哪些机器”） forward中定义数据如何流过这些层（“原材料如何经过每台机器”） # PyTorch中的写法（对比上面的SimpleModel） import torch.nn as nn class SimpleModel(nn.Module): def __init__(self, input_size, output_size): super().__init__() # 调用父类的初始化 self.linear = nn.Linear(input_size, output_size) # 定义一个线性层 def forward(self, x): return self.linear(x) # 数据流过线性层 1.4 Jupyter Notebook 为什么AI工程师离不开Jupyter？ 类比：如果普通的Python脚本是\"写一封信然后寄出去\"，那Jupyter Notebook就是\"面对面聊天\"——你可以看到对方（代码）的即时反应。\n交互式编程：可以逐个cell运行代码，实时看到结果（不用等整个程序跑完） 可视化集成：图表直接嵌入在代码旁边（就像在笔记本上画图一样自然） 文档化：Markdown和代码混排，方便记录实验过程（“实验笔记\"和\"实验数据\"放在一起） 快速原型：不需要创建完整项目文件，快速测试想法（“先试试这个想法行不行”） 核心操作 Shift+Enter：运行当前cell（执行当前这段代码） Esc+A：在上方插入新cell（在上面加一段新代码或笔记） Esc+B：在下方插入新cell Esc+M：转为Markdown cell（写文字笔记） Esc+DD：删除当前cell 1.5 文件操作与常用库 NumPy基础——一切数值计算的基石 为什么需要NumPy？ Python原生的列表运算很慢。NumPy用C语言实现了底层运算，速度比纯Python快10-100倍。在深度学习中，我们每秒要进行数百万次矩阵运算，没有NumPy根本不可能。\nimport numpy as np # 创建数组（张量的前身） # 类比：向量 = 一条线上的点，矩阵 = 一个表格，3D张量 = 一摞表格 arr = np.array([1, 2, 3, 4, 5]) # 一维数组 ≈ 向量（1×5） matrix = np.array([[1, 2], [3, 4]]) # 二维数组 ≈ 矩阵（2×2） tensor_3d = np.ones((2, 3, 4)) # 三维数组 ≈ 3D张量（2×3×4） # 矩阵运算——神经网络前向传播的核心 # 这是整个深度学习最基础的运算，务必理解！ A = np.array([[1, 2], [3, 4]]) # 2×2 矩阵 B = np.array([[5, 6], [7, 8]]) # 2×2 矩阵 C = A @ B # 矩阵乘法，等价于np.dot(A, B) # C[0][0] = 1*5 + 2*7 = 19 # C[0][1] = 1*6 + 2*8 = 22 # C[1][0] = 3*5 + 4*7 = 43 # C[1][1] = 3*6 + 4*8 = 50 # 结果：[[19, 22], [43, 50]] # 这就是神经网络中 \"output = input @ weight + bias\" 的基本操作 # 每一层神经网络的本质就是：输入 × 权重矩阵 + 偏置 # 广播机制——理解这个，就理解了PyTorch张量运算的一大半 # 类比：你有3个苹果，你朋友也有3个苹果，你们把苹果合在一起 # 不需要写循环，NumPy自动帮你\"一对一对\"地加 x = np.array([[1, 2, 3]]) # shape: (1, 3) bias = np.array([[10, 20, 30]]) # shape: (1, 3) result = x + bias # 自动广播，shape: (1, 3) # result = [[11, 22, 33]] # 广播规则：如果两个数组的shape不同，NumPy会自动\"扩展\"较小的数组 Pandas基础——数据处理的瑞士军刀 类比：如果NumPy是\"计算器”，那Pandas就是\"Excel\"——它擅长处理表格数据（有列名、有索引的数据）。\nimport pandas as pd # 读取CSV数据（数据集通常就是CSV格式，就像Excel表格） df = pd.read_csv(\"data.csv\") # 基本操作 df.head() # 查看前5行（\"先看一眼数据长什么样\"） df.describe() # 统计描述（\"数据的平均值、最大值、最小值是多少\"） df['column'] # 选择列（\"只看这一列\"） df[df['age'] \u003e 18] # 筛选（\"只要年龄大于18的\"） 模块二：微积分基础 为什么AI需要微积分？ 一句话回答：神经网络的训练过程就是\"求导+更新\"的循环。\n更详细的解释：想象你在一座山上，想要找到山谷的最低点（最优解）。你需要知道两件事：\n哪个方向是下坡？（导数告诉你方向） 应该走多远？（学习率决定步幅） 当你听到\"反向传播算法\"时，本质就是链式法则求导——计算每个参数对最终误差的\"贡献度\"。当你听到\"梯度下降\"时，本质就是沿着导数方向更新参数——让模型的预测越来越准。\n2.1 导数与求导法则 导数的直觉理解 核心类比：速度计\n想象你开车：\n你的位置随时间变化（比如从0公里开到了100公里） 速度就是位置对时间的导数——它告诉你\"位置变化有多快\" 同理，在神经网络中：\n损失函数随参数变化（参数调整后，误差会变大或变小） 导数就是损失对参数的\"变化率\"——它告诉你\"参数应该往哪个方向调，调多少\" 导数 \u003e 0：函数在递增 → 参数应该减小（往左走，减少误差） 导数 \u003c 0：函数在递减 → 参数应该增大（往右走，减少误差） 导数 = 0：到达极值点 → 可能是最优解（误差最小的地方） 更形象的类比：山谷寻宝\n想象损失函数是一座山的地形图： - 山的高度 = 当前误差（越高误差越大） - 你的位置 = 当前参数值 - 你的目标 = 找到山谷最低点（最小误差） 导数就像一个\"坡度指示器\"： - 它告诉你脚下哪个方向最陡（梯度方向） - 它告诉你坡有多陡（梯度大小） 你每走一步都看一眼指示器，然后往最陡的下坡方向走——这就是梯度下降！ 核心求导公式（必须记住） 1. 常数求导：(c)' = 0 ——常数不变化，导数为0 2. 幂函数：(x^n)' = n·x^(n-1) ——x²的导数是2x，x³的导数是3x² 3. 指数函数：(e^x)' = e^x ——e^x是唯一\"导数等于自身\"的函数！ 4. 对数函数：(ln x)' = 1/x ——对数函数的导数是倒数 5. 三角函数：(sin x)' = cos x ——正弦的导数是余弦 为什么要记住这些？ 因为神经网络的激活函数（Sigmoid、ReLU、Tanh）都是由这些基本函数组合而成的。记住基本公式，就能用链式法则推导出任何复杂函数的导数。\n链式法则——反向传播的数学基础 核心公式：如果 y = f(g(x))，则 dy/dx = f'(g(x)) · g'(x)\n类比：工厂流水线的责任追溯\n想象一个工厂流水线：\n原材料x → 工序1(加工成半成品) → 工序2(加工成成品) → 最终产品y g(x) = z f(z) = y 现在最终产品有缺陷（损失L很大），你想知道是谁的责任：\n工序2的责任：∂L/∂z（成品的问题有多少是工序2造成的） 工序1的责任：∂L/∂x = ∂L/∂z × ∂z/∂x（把工序2的责任\"传回\"工序1） 这就是链式法则——把最终的误差责任一层一层往回追溯！\nAI中的例子——单个神经元：\n网络结构：输入x → 线性变换z = wx + b → 激活a = sigmoid(z) → 损失L 求L对w的导数（用于更新w）： 步骤1：L对a的导数（损失对激活值的敏感度） ∂L/∂a = 2(a - y) （如果L是均方误差） 步骤2：a对z的导数（激活函数的导数） ∂a/∂z = sigmoid'(z) = a(1-a) 步骤3：z对w的导数（线性变换的导数） ∂z/∂w = x 链式法则组合： ∂L/∂w = ∂L/∂a · ∂a/∂z · ∂z/∂w = 2(a-y) · a(1-a) · x 这就是反向传播的核心！每一步都很简单，但组合起来就能计算复杂网络的梯度。 扩展到多变量：当网络有多个参数时，每个参数都有自己的\"责任链\"：\n∂L/∂w₁ = ∂L/∂z · ∂z/∂w₁ （w₁的梯度） ∂L/∂w₂ = ∂L/∂z · ∂z/∂w₂ （w₂的梯度） ∂L/∂b = ∂L/∂z · ∂z/∂b （b的梯度） 所有参数同时更新，这就是梯度下降的并行性。 2.2 激活函数求导 Sigmoid函数及其导数——完整推导 什么是Sigmoid？ 它把任意实数\"压缩\"到0和1之间，就像一个\"开关\"——输入很大时输出接近1（开），输入很小时输出接近0（关）。\nSigmoid: σ(x) = 1 / (1 + e^(-x)) Sigmoid导数的完整推导（这是面试常考题）：\n已知：σ(x) = 1 / (1 + e^(-x)) 设 u = 1 + e^(-x)，则 σ(x) = 1/u = u^(-1) 根据链式法则： σ'(x) = d/dx [u^(-1)] = -u^(-2) · du/dx = -1/u² · d/dx[1 + e^(-x)] = -1/u² · (-e^(-x)) = e^(-x) / (1 + e^(-x))² 现在我们把它写成用σ(x)表示的形式： σ'(x) = e^(-x) / (1 + e^(-x))² = [1 + e^(-x) - 1] / (1 + e^(-x))² ← 把分子拆开 = (1 + e^(-x))/(1 + e^(-x))² - 1/(1 + e^(-x))² = 1/(1 + e^(-x)) - 1/(1 + e^(-x))² = σ(x) - σ(x)² = σ(x) · (1 - σ(x)) 最终结果：σ'(x) = σ(x) · (1 - σ(x)) 这个结果为什么重要？\n导数可以直接用函数值计算——不需要重新算指数函数！ 只要知道σ(x)的值，就能直接得到导数 这在反向传播中节省了大量计算 Sigmoid的问题——梯度消失：\n当x很大时：σ(x) ≈ 1，σ'(x) = 1·(1-1) = 0 → 梯度几乎为0 当x很小时：σ(x) ≈ 0，σ'(x) = 0·(1-0) = 0 → 梯度几乎为0 这意味着：当输入值太大或太小时，Sigmoid的梯度接近0 → 参数几乎不更新 → 网络\"学不动了\" → 这就是\"梯度消失\"问题，是深度学习早期的一大难题 → 后来ReLU激活函数的出现解决了这个问题 Softmax函数 什么是Softmax？ 它把一组任意实数转换为概率分布（所有值\u003e0，且和为1）。\n类比：想象一个班级的考试成绩是[85, 90, 75]，Softmax把它们转换为\"每个学生成绩的相对概率\"——成绩越高的学生，概率越大。\nSoftmax: softmax(x_i) = e^(x_i) / Σe^(x_j) 示例： 输入：[2.0, 1.0, 0.1] e^2.0 = 7.39, e^1.0 = 2.72, e^0.1 = 1.11 总和 = 7.39 + 2.72 + 1.11 = 11.22 Softmax = [7.39/11.22, 2.72/11.22, 1.11/11.22] = [0.659, 0.242, 0.099] ≈ [65.9%, 24.2%, 9.9%] ← 三个概率之和 = 100% 为什么要用e^x而不是直接用x？\ne^x \u003e 0 保证所有输出都是正数（概率不能为负） e^x 是单调递增的（输入越大，输出越大——保持大小关系） e^x 的导数是它自己（计算方便） 数值稳定性问题：\n如果输入值很大，比如 [1000, 1001, 1002] e^1000 = 一个巨大的数 → 溢出！ 解决方案：减去最大值 softmax([1000, 1001, 1002]) = softmax([1000-1002, 1001-1002, 1002-1002]) = softmax([-2, -1, 0]) = [e^(-2), e^(-1), e^0] / (e^(-2) + e^(-1) + e^0) = [0.135, 0.368, 1.0] / 1.503 = [0.090, 0.245, 0.665] 结果完全一样！但不会溢出。 PyTorch和所有深度学习框架都自动做了这个优化。 应用场景：分类任务的最后一层，输出每个类别的概率 2.3 线性代数 向量——数据的基本表示 类比：向量就像一个\"坐标\"——它用一组数字来描述一个点的位置。\n在AI中，一个数据样本通常表示为一个向量：\n一张28×28的灰度图片 → 展平为784维向量（每个像素是一个维度） 一个句子的词嵌入 → 每个词是一个300维向量（用300个数字描述一个词的\"含义\"） 为什么用向量？因为计算机只能处理数字。 把现实世界的东西（图片、文字、声音）转换为向量，就是\"表示学习\"的核心任务。 矩阵乘法——神经网络的核心运算 矩阵乘法到底在做什么？\n直觉1：矩阵是一组\"变换规则\"\n想象你有一个2D图形（比如一个三角形）。 矩阵乘法就是对这个图形做\"变换\"——旋转、缩放、剪切。 不同的矩阵 = 不同的变换 神经网络的权重矩阵 = 一种\"语义变换\"——把输入空间映射到输出空间 直觉2：矩阵乘法是\"批量线性组合\"\n[output₁] [w₁₁ w₁₂ w₁₃] [input₁] [w₁₁·input₁ + w₁₂·input₂ + w₁₃·input₃] [output₂] = [w₂₁ w₂₂ w₂₃] [input₂] = [w₂₁·input₁ + w₂₂·input₂ + w₂₃·input₃] [input₃] 每个输出 = 所有输入的加权求和 权重矩阵中的每个元素 w_ij 表示\"第j个输入对第i个输出的影响程度\" 这就是神经网络前向传播的本质！ 实际例子：\n神经网络的前向传播本质上就是一连串的矩阵乘法： 输入 x (1×784) × 权重 W (784×512) + 偏置 b (1×512) = 隐藏层 h (1×512) 隐藏层 h (1×512) × 权重 W (512×10) + 偏置 b (1×10) = 输出 y (1×10) 784维输入 → 512维隐藏层 → 10维输出（10个类别的概率） 每一层都在做：output = input @ weight + bias 为什么GPU擅长深度学习？\n矩阵乘法的本质是\"大量独立的乘加运算\"： C[i][j] = Σ A[i][k] * B[k][j] 这些乘加运算是完全独立的——C[0][0]和C[1][1]的计算互不影响。 CPU：少量核心（比如8个），每个核心很强，但只能同时算8个 GPU：大量核心（比如几千个），每个核心较弱，但能同时算几千个 矩阵乘法正好适合GPU的\"人海战术\"！ 这就是为什么深度学习离不开GPU。 特征值与特征向量——理解PCA降维 什么是特征值和特征向量？\n类比：镜子的方向\n想象你拿着一面镜子（矩阵A），向它照一束光（向量v）：\n大多数方向的光：照进去后方向会改变 特殊方向的光：照进去后方向不变，只是被拉伸或压缩 这个\"特殊方向\"就是特征向量 拉伸/压缩的比例就是特征值 数学定义：对于矩阵A，如果 Av = λv，则： - v 是特征向量（方向不变的\"特殊方向\"） - λ 是特征值（拉伸/压缩的比例） 示例： A = [[2, 1], [1, 2]] v = [1, 1] 是一个特征向量，因为 A·v = [3, 3] = 3·[1, 1]，特征值 λ = 3 v = [1, -1] 是另一个特征向量，因为 A·v = [1, -1] = 1·[1, -1]，特征值 λ = 1 为什么特征值/特征向量在AI中重要？\nPCA降维的原理： 1. 计算数据的协方差矩阵 2. 求协方差矩阵的特征值和特征向量 3. 特征值大的特征向量 = 数据变化最大的方向（\"最重要的方向\"） 4. 只保留前k个最重要的方向，丢弃其他方向 → 数据从高维降到k维，同时保留了最多的信息 类比：你有一张3D的照片，PCA告诉你\"最有信息量的拍摄角度\"是什么 只从这个角度拍一张2D照片，虽然维度降低了，但信息损失最少 SVD奇异值分解——矩阵的\"DNA\" 任意矩阵 A 可以分解为三个矩阵的乘积： A = U · Σ · V^T 其中： - U：左奇异矩阵（\"行空间的特征方向\"） - Σ：奇异值矩阵（对角矩阵，每个对角元素是一个奇异值） - V：右奇异矩阵（\"列空间的特征方向\"） SVD的直觉——信息压缩\n类比：一张高清照片有1000×1000像素（100万个数字） SVD告诉你：这100万个数字中，真正\"重要\"的信息可能只需要100个奇异值就能表达 保留最大的k个奇异值，丢弃其他的： → 用更少的数据表示原始信息（压缩） → 保留了最重要的\"模式\"（去噪） 这就是为什么SVD被称为矩阵的\"DNA\"——它揭示了矩阵中最本质的结构。 SVD在AI中的应用：\n数据压缩：保留最大的k个奇异值，用更少的数据表示原始信息 推荐系统：协同过滤的核心算法（Netflix推荐电影用的就是SVD） PCA实现：SVD是PCA的数值稳定实现方式 词嵌入：早期的LSA（潜在语义分析）就是用SVD做的 2.4 概率论基础 条件概率与贝叶斯定理 条件概率：在已知B发生的条件下，A发生的概率\nP(A|B) = P(A∩B) / P(B) 类比：在一个班里，P(及格) = 及格人数/总人数 P(及格|男同学) = 及格的男同学/所有男同学 条件概率就是\"缩小范围后的概率\" 贝叶斯定理——从结果推原因\nP(A|B) = P(B|A) · P(A) / P(B) 类比：你看到地上有水（结果B），想判断是\"下雨了\"还是\"洒水车经过\"（原因A） - P(下雨|有水) = P(有水|下雨)·P(下雨) / P(有水) - 如果今天是晴天，P(下雨)很小，所以\"下雨\"的可能性不大 - 如果洒水车经常经过，P(洒水车)很大，所以\"洒水车\"的可能性更大 贝叶斯定理 = 用\"先验知识\"（P(A)）+ \"新证据\"（P(B|A)）更新你的判断（P(A|B)） 最大似然估计（MLE）——损失函数的理论基础 核心思想：选择让观测数据出现概率最大的参数。\n类比：侦探推理\n场景：一个硬币被抛了10次，结果是7次正面、3次反面。 问题：这枚硬币正面朝上的概率p是多少？ 最大似然估计的回答：选择让\"7正3反\"这个结果最可能出现的p值。 似然函数：L(p) = C(10,7) · p^7 · (1-p)^3 我们要求让L(p)最大的p。 取对数（方便计算）：log L = 7·log(p) + 3·log(1-p) + 常数 对p求导并令其为0：7/p - 3/(1-p) = 0 解得：p = 7/10 = 0.7 结论：最大似然估计认为p=0.7，也就是正面概率是70% 这很直觉——10次中7次正面，所以概率大概是70%。 MLE的完整数学推导（一维高斯分布）：\n假设数据服从正态分布 N(μ, σ²) 观测到n个数据点：x₁, x₂, ..., xₙ 似然函数（所有数据点概率的乘积）： L(μ,σ²) = ∏ᵢ P(xᵢ | μ, σ²) = ∏ᵢ [1/√(2πσ²)] · exp(-(xᵢ-μ)²/(2σ²)) 取对数（把乘法变加法，方便求导）： log L = Σᵢ [-½log(2πσ²) - (xᵢ-μ)²/(2σ²)] 对μ求导并令其为0： ∂(log L)/∂μ = Σᵢ (xᵢ-μ)/σ² = 0 → Σᵢ xᵢ - nμ = 0 → μ* = (1/n)Σᵢ xᵢ = 样本均值！ 结论：高斯分布的MLE估计 = 样本均值 这很直觉——\"最可能的中心位置\"就是所有数据点的平均值。 关键联系——为什么交叉熵损失函数是合理的：\n交叉熵损失 = 负对数似然 当你最小化交叉熵时，你实际上在最大化似然—— 让模型的参数使得观测到的训练数据出现的概率最大。 这就是为什么交叉熵是分类任务的标准损失函数——它有坚实的概率论基础。 模块三：概率论与最优化 3.1 概率论进阶 期望与方差 期望——数据的\"重心\"\n期望 E[X] = Σ x·P(x) 类比：期望就像一根尺子上挂了一堆不同重量的砝码 砝码的位置 = x（取值），砝码的重量 = P(x)（概率） 期望 = 这根尺子平衡时的支点位置（重心） 示例：骰子的期望 = 1×(1/6) + 2×(1/6) + ... + 6×(1/6) = 3.5 虽然骰子不会掷出3.5，但这是\"平均值\"的理论位置 方差——数据的\"分散程度\"\n方差 Var(X) = E[(X-μ)²] = E[X²] - (E[X])² 类比：两组学生的平均分都是80分 A组：[79, 80, 81] → 方差很小（成绩很集中） B组：[50, 80, 110] → 方差很大（成绩很分散） 虽然平均分一样，但方差告诉我们\"波动有多大\" 在AI中的应用：\nBatchNorm：对每个mini-batch计算均值和方差，然后标准化数据 为什么？因为如果每层的输入分布都在变化（“内部协变量偏移”），网络很难学习 BatchNorm让每层的输入分布稳定下来，加速训练 权重初始化：初始化权重时需要控制方差 方差太大 → 信号爆炸（输出值越来越大） 方差太小 → 信号消失（输出值越来越小） 合适的方差 → 信号稳定传播 协方差——两个变量的\"关系\" Cov(X,Y) = E[(X-μ_x)(Y-μ_y)] 协方差衡量两个变量的变化趋势： - 正值：X增大时Y也增大（正相关，比如身高和体重） - 负值：X增大时Y减小（负相关，比如温度和羽绒服销量） - 零：X和Y没有线性关系（不一定独立！） 3.2 梯度下降——最重要的优化算法 梯度的直觉 类比：蒙眼下山\n想象你被蒙上眼睛，站在一座山上，想要找到山谷的最低点：\n你唯一能做的就是用脚感受脚下的坡度 每一步都往最陡的下坡方向走 走的步幅由学习率控制 梯度就是那个\"最陡的方向\"：\n在一维中：梯度 = 导数（一个数字） 在多维中：梯度 = 所有偏导数组成的向量（指向最陡上升方向） 梯度方向：函数值增长最快的方向（上坡方向） 梯度下降：沿着梯度的反方向走（下坡方向） 数学公式：θ_new = θ_old - η · ∇L(θ) 其中： - θ：模型参数（你所在的位置） - η：学习率（步幅大小） - ∇L(θ)：损失函数对参数的梯度（坡度指示器） - 减号：因为我们想减少损失，所以往梯度的反方向走 学习率——步幅的艺术 学习率太大 → 步子太大，可能跨过最低点，来回震荡 就像下山时跑得太快，冲过了山谷，跑到对面山上去了 学习率太小 → 步子太小，收敛极慢 就像下山时每次只挪一厘米，要走到天黑 学习率刚好 → 稳定收敛到最优解 就像以合适的速度下山，稳步到达谷底 常见策略： - 从0.001开始（一个比较安全的起点） - 观察loss曲线：如果震荡就减小，如果下降太慢就增大 - 高级策略：学习率调度（先大后小，就像下山时先大步走，接近谷底时小步挪） 三种梯度下降方法——详细对比 1. 批量梯度下降（BGD）： 每次用全部数据计算梯度 类比：你有一亿个数据点，每走一步都要看一亿个\"坡度指示器\"取平均 优点：梯度方向最准确，一定能收敛到局部最优 缺点：数据量大时极慢（每步都要遍历全部数据） 2. 随机梯度下降（SGD）： 每次只用1个样本计算梯度 类比：你只看一个\"坡度指示器\"就决定方向 优点：快（每步只需要看一个样本） 缺点：方向不稳定（就像只听一个人的建议，可能被误导） 3. 小批量梯度下降（MBGD）： 每次用一小批数据（如32/64/128个样本）计算梯度 类比：你听32个人的建议取平均，既不太慢也不太偏 优点：兼顾速度和稳定性 实际训练中最常用！（batch_size通常为32/64/128/256） 对线性回归应用梯度下降——完整推导 线性回归模型：ŷ = wx + b 损失函数（均方误差）：L = (1/n) Σᵢ (yᵢ - ŷᵢ)² = (1/n) Σᵢ (yᵢ - wxᵢ - b)² 目标：找到w和b，使L最小。 对w求偏导： ∂L/∂w = (1/n) Σᵢ 2(yᵢ - wxᵢ - b)·(-xᵢ) = -(2/n) Σᵢ xᵢ(yᵢ - wxᵢ - b) 对b求偏导： ∂L/∂b = (1/n) Σᵢ 2(yᵢ - wxᵢ - b)·(-1) = -(2/n) Σᵢ (yᵢ - wxᵢ - b) 更新规则： w_new = w_old - η · ∂L/∂w b_new = b_old - η · ∂L/∂b 重复这个过程直到收敛（损失不再明显下降）。 3.3 凸优化 什么是凸函数？ 类比：碗和碗碎片\n凸函数像一个碗——你把弹珠放进去，它总会滚到最低点。 不管弹珠从哪个位置开始，最终都会到达同一个最低点（全局最优）。 非凸函数像一堆碗碎片——弹珠可能卡在某个凹陷处（局部最优）， 而不是到达真正的最低点（全局最优）。 凸优化重要因为：凸函数的局部最小值 = 全局最小值 → 梯度下降一定能找到最优解 → 不用担心\"卡在局部最优\" 凸函数的数学定义： 对于任意两点 x₁, x₂ 和任意 t ∈ [0,1]： f(t·x₁ + (1-t)·x₂) ≤ t·f(x₁) + (1-t)·f(x₂) 直觉：函数图像上任意两点的连线，都在函数图像上方（或重合） 判断方法： - 一维：二阶导数 f''(x) ≥ 0（开口向上） - 多维：Hessian矩阵半正定 为什么凸优化在AI中重要？\n线性回归的损失函数（均方误差）是凸的 → 有唯一最优解 逻辑回归的损失函数（交叉熵）是凸的 → 有唯一最优解 神经网络的损失函数是非凸的 → 只能找到局部最优 好消息：实践中，深度学习的非凸损失函数的局部最优通常也足够好 坏消息：理论上不能保证找到全局最优 实际做法：用SGD + 各种优化技巧（动量、Adam等），通常能找到好的解 拉格朗日乘子法与KKT条件 问题：如何在有约束的情况下求最优解？\n类比：在围栏内找最低点\n无约束优化：在整个山上找最低点（随便走） 有约束优化：只能在围栏内找最低点（不能走出围栏） 拉格朗日乘子法的核心思想： 把\"有约束\"问题转换为\"无约束\"问题 在目标函数上加一个\"惩罚项\"——如果你违反约束，惩罚项就会变大 数学形式： 原始问题：minimize f(x)，subject to g(x) = 0 构造拉格朗日函数：L(x,λ) = f(x) + λ·g(x) - f(x)：我们要最小化的目标 - λ·g(x)：约束的\"惩罚\" - λ（拉格朗日乘子）：惩罚的\"力度\" 分别对x和λ求导并令其为0： ∂L/∂x = 0 → 最优解的条件 ∂L/∂λ = 0 → 约束条件（g(x)=0） 在AI中的应用：SVM的对偶问题就是用拉格朗日乘子法推导的 模块四：机器学习基础 4.1 线性回归 线性回归的直觉 类比：在散点图上画一条\"最好\"的线\n给你一堆数据点（比如房屋面积和房价），你想找到一条直线来描述它们的关系：\ny = wx + b 目标：找到w（斜率）和b（截距），使得这条线\"最贴近\"所有数据点 \"最贴近\" = 预测值和真实值的差距最小 正规方程——直接求解 思路：既然我们想要\"最小化误差\"，那就直接对误差函数求导，令导数为0，解方程。\n矩阵形式：y = Xw + e（e是误差） 损失函数：L = ||e||² = ||y - Xw||² 展开：L = (y - Xw)^T (y - Xw) = y^Ty - y^TXw - w^TX^Ty + w^TX^TXw = y^Ty - 2w^TX^Ty + w^TX^TXw 对w求导并令其为0： ∂L/∂w = -2X^Ty + 2X^TXw = 0 → X^TXw = X^Ty → w = (X^TX)^(-1) · X^Ty 这就是正规方程！直接一步算出最优解。 优点：一步到位，不需要迭代 缺点：\n需要计算矩阵逆(X^TX)^(-1)，当特征维度很高时（如10000+），计算量巨大（O(n³)） 当X^TX不可逆时（比如特征之间有线性关系），无法求解 什么时候用正规方程，什么时候用梯度下降？\n特征数 \u003c 10000：正规方程通常更快 特征数 \u003e 10000：梯度下降通常更合适 数据量极大：梯度下降（可以每次只用一小批数据） 最小二乘法 损失函数：L(w,b) = (1/n) Σ(yᵢ - wxᵢ - b)² \"最小二乘\"的名字来源：最小化\"误差的平方和\" - \"二乘\" = 平方（误差的平方） - \"最小\" = 让这个平方和最小 对L求导令其为0，就是正规方程。 几何意义：找到一条线，使所有数据点到这条线的\"垂直距离的平方和\"最小。 4.2 正则化 为什么需要正则化？ 类比：考试作弊 vs 真正学会\n过拟合就像\"死记硬背\"： - 训练数据（练习题）上表现很好——因为把答案都背下来了 - 测试数据（考试题）上表现很差——因为没见过的题就不会了 正则化就像\"惩罚死记硬背\"： - 不仅要求模型在训练数据上表现好 - 还要求模型\"尽量简单\"（不要死记硬背） - 简单的模型泛化能力更好（理解了原理就能做新题） L1正则化（Lasso） L_total = L_original + λ · Σ|wᵢ| L1的效果：使部分权重变为**恰好0**，实现特征选择 为什么L1能使权重变为0？——几何直觉\n想象一个2D空间（w₁, w₂）： - 损失函数的等高线是椭圆形的 - L1的约束区域是菱形（|w₁| + |w₂| ≤ c） 椭圆和菱形最容易在\"角点\"相交 角点恰好在坐标轴上（w₁=0 或 w₂=0） → 最优解中某些权重恰好为0 → 特征选择 类比：L1像一把\"剪刀\"，会直接把不重要的特征\"剪掉\"（权重变为0） L2正则化（Ridge） L_total = L_original + λ · Σ(wᵢ²) L2的效果：使所有权重趋近于0但**不等于0**，防止某个特征权重过大 为什么L2不会使权重变为0？——几何直觉\n想象一个2D空间（w₁, w₂）： - 损失函数的等高线是椭圆形的 - L2的约束区域是圆形（w₁² + w₂² ≤ c） 椭圆和圆形的交点通常不在坐标轴上 → 权重趋近于0但不会恰好为0 类比：L2像一个\"压缩弹簧\"，把所有权重往小的方向压，但不会压到0 L1 vs L2 对比 特性 L1 (Lasso) L2 (Ridge) ──────────────────────────────────────────────── 效果 特征选择（稀疏解） 权重衰减（平滑解） 权重会变为0？ 会（部分权重=0） 不会（权重趋近0但≠0） 适用场景 特征很多，需要筛选 特征都有用，防止过拟合 几何形状 菱形约束 圆形约束 导数 |w|' = sign(w) (w²)' = 2w （在0处不可导） （处处可导，优化更方便） 正则化的本质——奥卡姆剃刀 不加正则化：模型只追求\"拟合训练数据\"（最小化训练误差） 加正则化：模型同时追求\"拟合训练数据\" + \"保持简单\"（最小化训练误差 + 惩罚复杂度） 这就是奥卡姆剃刀原则：在同样能解释数据的模型中，选择最简单的那个 为什么简单更好？ - 简单的模型更不容易\"死记硬背\"训练数据 - 简单的模型对新数据的泛化能力更强 - 简单的模型更容易理解和调试 4.3 逻辑回归 逻辑回归不是回归，是分类！ 名字的由来：逻辑回归使用了\"逻辑函数\"（即Sigmoid函数），所以叫\"逻辑回归\"。但它实际上是一个分类算法，不是回归算法。\n线性回归：输出连续值（如房价=150万） 逻辑回归：输出概率（如垃圾邮件概率=0.95） 核心区别：在输出层加了一个Sigmoid函数 - 线性回归：y = wx + b → 输出范围是(-∞, +∞) - 逻辑回归：y = σ(wx + b) → 输出范围是(0, 1)，表示概率 Sigmoid函数——将实数映射为概率 σ(z) = 1 / (1 + e^(-z)) σ(0) = 0.5 → \"不确定\" σ(5) ≈ 0.993 → \"非常可能是\" σ(-5) ≈ 0.007 → \"非常可能不是\" 分类规则： - σ(z) ≥ 0.5 → 预测为正类（类别1） - σ(z) \u003c 0.5 → 预测为负类（类别0） 交叉熵损失函数——完整推导 为什么用交叉熵而不是均方误差？\n这个问题在面试中经常被问到，让我们从头推导。\n推导起点：最大似然估计\n假设： - 样本i的真实标签：yᵢ ∈ {0, 1} - 模型预测样本i为正类的概率：pᵢ = σ(w·xᵢ + b) 对于单个样本i： 如果 yᵢ = 1：P(yᵢ|xᵢ) = pᵢ （预测为正类的概率） 如果 yᵢ = 0：P(yᵢ|xᵢ) = 1 - pᵢ （预测为负类的概率） 合并为一个公式： P(yᵢ|xᵢ) = pᵢ^yᵢ · (1-pᵢ)^(1-yᵢ) （当yᵢ=1时就是pᵢ，当yᵢ=0时就是1-pᵢ） 整个数据集的似然： L = ∏ᵢ P(yᵢ|xᵢ) = ∏ᵢ [pᵢ^yᵢ · (1-pᵢ)^(1-yᵢ)] 取对数（连乘变连加，方便计算）： log L = Σᵢ [yᵢ·log(pᵢ) + (1-yᵢ)·log(1-pᵢ)] 最大似然 = 最大化log L 最小化负对数似然 = 最小化 -log L 交叉熵损失： L_CE = -(1/n) Σᵢ [yᵢ·log(pᵢ) + (1-yᵢ)·log(1-pᵢ)] 这就是交叉熵损失函数的由来——它不是凭空设计的， 而是从最大似然估计自然推导出来的！ 为什么不用均方误差（MSE）？\nMSE损失：L_MSE = (1/n) Σᵢ (yᵢ - pᵢ)² 问题：当Sigmoid的输入z很大或很小时，Sigmoid的梯度接近0 MSE的梯度中包含σ'(z)，所以MSE的梯度也会接近0 → 参数更新极慢 → 训练不动！ 交叉熵的梯度：∂L_CE/∂w = (1/n) Σᵢ (pᵢ - yᵢ) · xᵢ 这个梯度中**不包含σ'(z)**！ → 梯度大小只和预测误差(pᵢ - yᵢ)成正比 → 预测越差，梯度越大，更新越快 → 训练更高效！ 这就是为什么分类任务用交叉熵而不是MSE—— 交叉熵的梯度形式更简洁，避免了Sigmoid梯度消失的问题。 Softmax回归（多分类） 二分类：Sigmoid → 输出1个概率 p，另一个类别的概率是 1-p 多分类：Softmax → 输出k个概率（k为类别数），且概率之和为1 softmax(zᵢ) = e^(zᵢ) / Σⱼ e^(zⱼ) 示例：3个类别（猫、狗、鸟），模型输出 [2.0, 1.0, 0.1] softmax = [0.659, 0.242, 0.099] → 65.9%概率是猫，24.2%概率是狗，9.9%概率是鸟 Softmax回归的损失函数也是交叉熵，只是推广到多分类： L = -(1/n) Σᵢ Σₖ yᵢₖ · log(pᵢₖ) 其中yᵢₖ是one-hot编码（只有正确类别的位置是1，其余是0） 4.4 阶段总结 本阶段核心公式速查表 1. 梯度下降：θ = θ - η·∇L 2. 线性回归：y = Xw + b 3. 正规方程：w = (X^TX)^(-1)·X^Ty 4. Sigmoid：σ(z) = 1/(1+e^(-z)) 5. Sigmoid导数：σ'(z) = σ(z)·(1-σ(z)) 6. 交叉熵：L = -[y·log(p) + (1-y)·log(1-p)] 7. Softmax：softmax(zᵢ) = e^(zᵢ)/Σe^(zⱼ) 8. L2正则化：L_total = L + λ·Σw² 9. 贝叶斯：P(A|B) = P(B|A)·P(A)/P(B) 10. 最大似然：θ* = argmax Σlog P(xᵢ|θ) 11. 链式法则：dy/dx = dy/du · du/dx 12. SVD：A = U·Σ·V^T 📝 自测题 Python：写一个函数，输入一个列表，返回其中所有偶数的平方和 微积分：求 f(x) = x³·eˣ 的导数 线性代数：计算两个2×2矩阵的乘积，并解释每一步在做什么 概率论：解释什么是最大似然估计，给出一维高斯分布的MLE推导 梯度下降：解释学习率过大和过小分别会带来什么问题，画出loss曲线示意图 线性回归：正规方程和梯度下降各有什么优缺点？什么时候用哪个？ 逻辑回归：从最大似然估计推导出交叉熵损失函数 正则化：L1和L2正则化分别有什么效果？为什么L1能产生稀疏解？ Sigmoid：推导Sigmoid的导数公式σ’(x) = σ(x)·(1-σ(x)) 综合：解释神经网络的训练过程涉及哪些数学知识，它们各自起什么作用 📚 推荐补充资源 知识点 推荐资源 说明 Python 《Python编程：从入门到实践》 零基础友好 NumPy NumPy官方Quickstart 快速上手 微积分 3Blue1Brown《微积分的本质》 可视化理解，B站有中文字幕 线性代数 3Blue1Brown《线性代数的本质》 神级教程，必看 概率论 可汗学院概率论课程 零基础友好 机器学习 吴恩达《机器学习》课程 经典入门课程 ","wordCount":"15856","inLanguage":"zh","datePublished":"2026-03-25T15:55:23+08:00","dateModified":"2026-03-25T15:55:23+08:00","author":[{"@type":"Person","name":"GopherDing"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://gopherding.github.io/posts/tech/%E7%BC%96%E7%A8%8B%E4%B8%8E%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E6%95%B0%E5%AD%A6%E5%9F%BA%E7%A1%80/"},"publisher":{"@type":"Organization","name":"GopherDing's Blog","logo":{"@type":"ImageObject","url":"https://gopherding.github.io/img/GopherSpaceCommunity.png"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://gopherding.github.io/ accesskey=h title="GopherDing's Blog (Alt + H)"><img src=https://gopherding.github.io/img/GopherSpaceCommunity.png alt=logo aria-label=logo height=50>GopherDing's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)">
+<svg id="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button><ul class=lang-switch><li>|</li></ul></div></div><ul id=menu><li><a href=https://gopherding.github.io/ title=主页><span>主页</span></a></li><li><a href=https://gopherding.github.io/search title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li><li><a href=https://gopherding.github.io/tags title=标签><span>标签</span></a></li><li><a href=https://gopherding.github.io/archives/ title=时间轴><span>时间轴</span></a></li><li><a href=https://gopherding.github.io/about title=关于><span>关于</span></a></li><li><a href=https://gopherding.github.io/links title=友链><span>友链</span></a></li><li><a href=https://www.travellings.cn/go.html title=开往><span>开往</span></a></li></ul></nav></header><main class="main page"><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}</style><article class=post-single><div id=single-content><header class=post-header><div class=breadcrumbs><a href=https://gopherding.github.io/>主页</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/>文章</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/tech/>技术</a></div><h1 class=post-title>编程与人工智能数学基础</h1><div class=post-description>速通AI第一阶段。</div><div class=post-meta><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2026-03-25
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>15856字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>32分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/artificial-intelligence/ style="color:var(--secondary) !important">Artificial Intelligence</a>
+&nbsp;<a href=https://gopherding.github.io/tags/python/ style="color:var(--secondary) !important">Python</a>
+&nbsp;<a href=https://gopherding.github.io/tags/math/ style="color:var(--secondary) !important">Math</a>
+</span></span></span></span><span style=opacity:.8><span id=post_meta_style_7>&nbsp;&nbsp;
+<span class="fa fa-eye"></span>
+<span><span id=busuanzi_container_page_pv><span id=busuanzi_value_page_pv></span></span>
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_8><span class="fa fa-commenting-o"></span>
+<span><script>window.addEventListener("load",function(){let t=document.documentURI,n="https://gopherding.github.io/",s=t.split(n),e=s[1];e[0]!=="/"&&(e="/"+e),twikoo.getCommentsCount({envId:null,region:null,urls:[e],includeReply:!1}).then(function(e){let t=e[0].count;const n=document.getElementById("comment_count");n.innerText=t}).catch(function(e){console.error(e)})})</script><span id=comment_count></span></span></span></span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e6%9c%ac%e9%98%b6%e6%ae%b5%e7%9f%a5%e8%af%86%e4%be%9d%e8%b5%96%e5%9b%be aria-label=本阶段知识依赖图>本阶段知识依赖图</a></li><li><a href=#%e6%a8%a1%e5%9d%97%e4%b8%80python%e7%bc%96%e7%a8%8b%e5%9f%ba%e7%a1%80 aria-label=模块一：Python编程基础>模块一：Python编程基础</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88python%e6%98%afai%e5%b7%a5%e7%a8%8b%e5%b8%88%e7%9a%84%e7%ac%ac%e4%b8%80%e8%af%ad%e8%a8%80 aria-label=为什么Python是AI工程师的第一语言？>为什么Python是AI工程师的第一语言？</a></li><li><a href=#11-%e7%8e%af%e5%a2%83%e6%90%ad%e5%bb%ba aria-label="1.1 环境搭建">1.1 环境搭建</a><ul><li><a href=#%e6%a0%b8%e5%bf%83%e4%bb%bb%e5%8a%a1 aria-label=核心任务>核心任务</a></li><li><a href=#%e4%bb%80%e4%b9%88%e6%98%afanaconda aria-label=什么是Anaconda？>什么是Anaconda？</a></li><li><a href=#%e4%bb%80%e4%b9%88%e6%98%af%e8%99%9a%e6%8b%9f%e7%8e%af%e5%a2%83%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e5%ae%83 aria-label=什么是虚拟环境？为什么需要它？>什么是虚拟环境？为什么需要它？</a></li><li><a href=#vs-code%e9%85%8d%e7%bd%ae aria-label="VS Code配置">VS Code配置</a></li></ul></li><li><a href=#12-python%e5%9f%ba%e7%a1%80%e8%af%ad%e6%b3%95 aria-label="1.2 Python基础语法">1.2 Python基础语法</a><ul><li><a href=#%e6%95%b0%e6%8d%ae%e7%b1%bb%e5%9e%8bai%e4%b8%ad%e6%9c%80%e5%b8%b8%e7%94%a8%e7%9a%845%e7%a7%8d aria-label=数据类型——AI中最常用的5种>数据类型——AI中最常用的5种</a></li><li><a href=#%e6%8e%a7%e5%88%b6%e6%b5%81%e7%a8%8b%e5%ba%8f%e7%9a%84%e5%a4%a7%e8%84%91 aria-label='控制流——程序的"大脑"'>控制流——程序的"大脑"</a></li></ul></li><li><a href=#13-%e5%87%bd%e6%95%b0%e4%b8%8e%e9%9d%a2%e5%90%91%e5%af%b9%e8%b1%a1 aria-label="1.3 函数与面向对象">1.3 函数与面向对象</a><ul><li><a href=#%e5%87%bd%e6%95%b0%e4%bb%a3%e7%a0%81%e5%a4%8d%e7%94%a8%e7%9a%84%e5%9f%ba%e6%9c%ac%e5%8d%95%e4%bd%8d aria-label=函数——代码复用的基本单位>函数——代码复用的基本单位</a></li><li><a href=#%e9%9d%a2%e5%90%91%e5%af%b9%e8%b1%a1%e7%90%86%e8%a7%a3pytorch%e6%a8%a1%e5%9e%8b%e7%9a%84%e5%9f%ba%e7%a1%80 aria-label=面向对象——理解PyTorch模型的基础>面向对象——理解PyTorch模型的基础</a></li></ul></li><li><a href=#14-jupyter-notebook aria-label="1.4 Jupyter Notebook">1.4 Jupyter Notebook</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88ai%e5%b7%a5%e7%a8%8b%e5%b8%88%e7%a6%bb%e4%b8%8d%e5%bc%80jupyter aria-label=为什么AI工程师离不开Jupyter？>为什么AI工程师离不开Jupyter？</a></li><li><a href=#%e6%a0%b8%e5%bf%83%e6%93%8d%e4%bd%9c aria-label=核心操作>核心操作</a></li></ul></li><li><a href=#15-%e6%96%87%e4%bb%b6%e6%93%8d%e4%bd%9c%e4%b8%8e%e5%b8%b8%e7%94%a8%e5%ba%93 aria-label="1.5 文件操作与常用库">1.5 文件操作与常用库</a><ul><li><a href=#numpy%e5%9f%ba%e7%a1%80%e4%b8%80%e5%88%87%e6%95%b0%e5%80%bc%e8%ae%a1%e7%ae%97%e7%9a%84%e5%9f%ba%e7%9f%b3 aria-label=NumPy基础——一切数值计算的基石>NumPy基础——一切数值计算的基石</a></li><li><a href=#pandas%e5%9f%ba%e7%a1%80%e6%95%b0%e6%8d%ae%e5%a4%84%e7%90%86%e7%9a%84%e7%91%9e%e5%a3%ab%e5%86%9b%e5%88%80 aria-label=Pandas基础——数据处理的瑞士军刀>Pandas基础——数据处理的瑞士军刀</a></li></ul></li></ul></li><li><a href=#%e6%a8%a1%e5%9d%97%e4%ba%8c%e5%be%ae%e7%a7%af%e5%88%86%e5%9f%ba%e7%a1%80 aria-label=模块二：微积分基础>模块二：微积分基础</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88ai%e9%9c%80%e8%a6%81%e5%be%ae%e7%a7%af%e5%88%86 aria-label=为什么AI需要微积分？>为什么AI需要微积分？</a></li><li><a href=#21-%e5%af%bc%e6%95%b0%e4%b8%8e%e6%b1%82%e5%af%bc%e6%b3%95%e5%88%99 aria-label="2.1 导数与求导法则">2.1 导数与求导法则</a><ul><li><a href=#%e5%af%bc%e6%95%b0%e7%9a%84%e7%9b%b4%e8%a7%89%e7%90%86%e8%a7%a3 aria-label=导数的直觉理解>导数的直觉理解</a></li><li><a href=#%e6%a0%b8%e5%bf%83%e6%b1%82%e5%af%bc%e5%85%ac%e5%bc%8f%e5%bf%85%e9%a1%bb%e8%ae%b0%e4%bd%8f aria-label=核心求导公式（必须记住）>核心求导公式（必须记住）</a></li><li><a href=#%e9%93%be%e5%bc%8f%e6%b3%95%e5%88%99%e5%8f%8d%e5%90%91%e4%bc%a0%e6%92%ad%e7%9a%84%e6%95%b0%e5%ad%a6%e5%9f%ba%e7%a1%80 aria-label=链式法则——反向传播的数学基础>链式法则——反向传播的数学基础</a></li></ul></li><li><a href=#22-%e6%bf%80%e6%b4%bb%e5%87%bd%e6%95%b0%e6%b1%82%e5%af%bc aria-label="2.2 激活函数求导">2.2 激活函数求导</a><ul><li><a href=#sigmoid%e5%87%bd%e6%95%b0%e5%8f%8a%e5%85%b6%e5%af%bc%e6%95%b0%e5%ae%8c%e6%95%b4%e6%8e%a8%e5%af%bc aria-label=Sigmoid函数及其导数——完整推导>Sigmoid函数及其导数——完整推导</a></li><li><a href=#softmax%e5%87%bd%e6%95%b0 aria-label=Softmax函数>Softmax函数</a></li></ul></li><li><a href=#23-%e7%ba%bf%e6%80%a7%e4%bb%a3%e6%95%b0 aria-label="2.3 线性代数">2.3 线性代数</a><ul><li><a href=#%e5%90%91%e9%87%8f%e6%95%b0%e6%8d%ae%e7%9a%84%e5%9f%ba%e6%9c%ac%e8%a1%a8%e7%a4%ba aria-label=向量——数据的基本表示>向量——数据的基本表示</a></li><li><a href=#%e7%9f%a9%e9%98%b5%e4%b9%98%e6%b3%95%e7%a5%9e%e7%bb%8f%e7%bd%91%e7%bb%9c%e7%9a%84%e6%a0%b8%e5%bf%83%e8%bf%90%e7%ae%97 aria-label=矩阵乘法——神经网络的核心运算>矩阵乘法——神经网络的核心运算</a></li><li><a href=#%e7%89%b9%e5%be%81%e5%80%bc%e4%b8%8e%e7%89%b9%e5%be%81%e5%90%91%e9%87%8f%e7%90%86%e8%a7%a3pca%e9%99%8d%e7%bb%b4 aria-label=特征值与特征向量——理解PCA降维>特征值与特征向量——理解PCA降维</a></li><li><a href=#svd%e5%a5%87%e5%bc%82%e5%80%bc%e5%88%86%e8%a7%a3%e7%9f%a9%e9%98%b5%e7%9a%84dna aria-label='SVD奇异值分解——矩阵的"DNA"'>SVD奇异值分解——矩阵的"DNA"</a></li></ul></li><li><a href=#24-%e6%a6%82%e7%8e%87%e8%ae%ba%e5%9f%ba%e7%a1%80 aria-label="2.4 概率论基础">2.4 概率论基础</a><ul><li><a href=#%e6%9d%a1%e4%bb%b6%e6%a6%82%e7%8e%87%e4%b8%8e%e8%b4%9d%e5%8f%b6%e6%96%af%e5%ae%9a%e7%90%86 aria-label=条件概率与贝叶斯定理>条件概率与贝叶斯定理</a></li><li><a href=#%e6%9c%80%e5%a4%a7%e4%bc%bc%e7%84%b6%e4%bc%b0%e8%ae%a1mle%e6%8d%9f%e5%a4%b1%e5%87%bd%e6%95%b0%e7%9a%84%e7%90%86%e8%ae%ba%e5%9f%ba%e7%a1%80 aria-label=最大似然估计（MLE）——损失函数的理论基础>最大似然估计（MLE）——损失函数的理论基础</a></li></ul></li></ul></li><li><a href=#%e6%a8%a1%e5%9d%97%e4%b8%89%e6%a6%82%e7%8e%87%e8%ae%ba%e4%b8%8e%e6%9c%80%e4%bc%98%e5%8c%96 aria-label=模块三：概率论与最优化>模块三：概率论与最优化</a><ul><li><a href=#31-%e6%a6%82%e7%8e%87%e8%ae%ba%e8%bf%9b%e9%98%b6 aria-label="3.1 概率论进阶">3.1 概率论进阶</a><ul><li><a href=#%e6%9c%9f%e6%9c%9b%e4%b8%8e%e6%96%b9%e5%b7%ae aria-label=期望与方差>期望与方差</a></li><li><a href=#%e5%8d%8f%e6%96%b9%e5%b7%ae%e4%b8%a4%e4%b8%aa%e5%8f%98%e9%87%8f%e7%9a%84%e5%85%b3%e7%b3%bb aria-label='协方差——两个变量的"关系"'>协方差——两个变量的"关系"</a></li></ul></li><li><a href=#32-%e6%a2%af%e5%ba%a6%e4%b8%8b%e9%99%8d%e6%9c%80%e9%87%8d%e8%a6%81%e7%9a%84%e4%bc%98%e5%8c%96%e7%ae%97%e6%b3%95 aria-label="3.2 梯度下降——最重要的优化算法">3.2 梯度下降——最重要的优化算法</a><ul><li><a href=#%e6%a2%af%e5%ba%a6%e7%9a%84%e7%9b%b4%e8%a7%89 aria-label=梯度的直觉>梯度的直觉</a></li><li><a href=#%e5%ad%a6%e4%b9%a0%e7%8e%87%e6%ad%a5%e5%b9%85%e7%9a%84%e8%89%ba%e6%9c%af aria-label=学习率——步幅的艺术>学习率——步幅的艺术</a></li><li><a href=#%e4%b8%89%e7%a7%8d%e6%a2%af%e5%ba%a6%e4%b8%8b%e9%99%8d%e6%96%b9%e6%b3%95%e8%af%a6%e7%bb%86%e5%af%b9%e6%af%94 aria-label=三种梯度下降方法——详细对比>三种梯度下降方法——详细对比</a></li><li><a href=#%e5%af%b9%e7%ba%bf%e6%80%a7%e5%9b%9e%e5%bd%92%e5%ba%94%e7%94%a8%e6%a2%af%e5%ba%a6%e4%b8%8b%e9%99%8d%e5%ae%8c%e6%95%b4%e6%8e%a8%e5%af%bc aria-label=对线性回归应用梯度下降——完整推导>对线性回归应用梯度下降——完整推导</a></li></ul></li><li><a href=#33-%e5%87%b8%e4%bc%98%e5%8c%96 aria-label="3.3 凸优化">3.3 凸优化</a><ul><li><a href=#%e4%bb%80%e4%b9%88%e6%98%af%e5%87%b8%e5%87%bd%e6%95%b0 aria-label=什么是凸函数？>什么是凸函数？</a></li><li><a href=#%e6%8b%89%e6%a0%bc%e6%9c%97%e6%97%a5%e4%b9%98%e5%ad%90%e6%b3%95%e4%b8%8ekkt%e6%9d%a1%e4%bb%b6 aria-label=拉格朗日乘子法与KKT条件>拉格朗日乘子法与KKT条件</a></li></ul></li></ul></li><li><a href=#%e6%a8%a1%e5%9d%97%e5%9b%9b%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e5%9f%ba%e7%a1%80 aria-label=模块四：机器学习基础>模块四：机器学习基础</a><ul><li><a href=#41-%e7%ba%bf%e6%80%a7%e5%9b%9e%e5%bd%92 aria-label="4.1 线性回归">4.1 线性回归</a><ul><li><a href=#%e7%ba%bf%e6%80%a7%e5%9b%9e%e5%bd%92%e7%9a%84%e7%9b%b4%e8%a7%89 aria-label=线性回归的直觉>线性回归的直觉</a></li><li><a href=#%e6%ad%a3%e8%a7%84%e6%96%b9%e7%a8%8b%e7%9b%b4%e6%8e%a5%e6%b1%82%e8%a7%a3 aria-label=正规方程——直接求解>正规方程——直接求解</a></li><li><a href=#%e6%9c%80%e5%b0%8f%e4%ba%8c%e4%b9%98%e6%b3%95 aria-label=最小二乘法>最小二乘法</a></li></ul></li><li><a href=#42-%e6%ad%a3%e5%88%99%e5%8c%96 aria-label="4.2 正则化">4.2 正则化</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e6%ad%a3%e5%88%99%e5%8c%96 aria-label=为什么需要正则化？>为什么需要正则化？</a></li><li><a href=#l1%e6%ad%a3%e5%88%99%e5%8c%96lasso aria-label=L1正则化（Lasso）>L1正则化（Lasso）</a></li><li><a href=#l2%e6%ad%a3%e5%88%99%e5%8c%96ridge aria-label=L2正则化（Ridge）>L2正则化（Ridge）</a></li><li><a href=#l1-vs-l2-%e5%af%b9%e6%af%94 aria-label="L1 vs L2 对比">L1 vs L2 对比</a></li><li><a href=#%e6%ad%a3%e5%88%99%e5%8c%96%e7%9a%84%e6%9c%ac%e8%b4%a8%e5%a5%a5%e5%8d%a1%e5%a7%86%e5%89%83%e5%88%80 aria-label=正则化的本质——奥卡姆剃刀>正则化的本质——奥卡姆剃刀</a></li></ul></li><li><a href=#43-%e9%80%bb%e8%be%91%e5%9b%9e%e5%bd%92 aria-label="4.3 逻辑回归">4.3 逻辑回归</a><ul><li><a href=#%e9%80%bb%e8%be%91%e5%9b%9e%e5%bd%92%e4%b8%8d%e6%98%af%e5%9b%9e%e5%bd%92%e6%98%af%e5%88%86%e7%b1%bb aria-label=逻辑回归不是回归，是分类！>逻辑回归不是回归，是分类！</a></li><li><a href=#sigmoid%e5%87%bd%e6%95%b0%e5%b0%86%e5%ae%9e%e6%95%b0%e6%98%a0%e5%b0%84%e4%b8%ba%e6%a6%82%e7%8e%87 aria-label=Sigmoid函数——将实数映射为概率>Sigmoid函数——将实数映射为概率</a></li><li><a href=#%e4%ba%a4%e5%8f%89%e7%86%b5%e6%8d%9f%e5%a4%b1%e5%87%bd%e6%95%b0%e5%ae%8c%e6%95%b4%e6%8e%a8%e5%af%bc aria-label=交叉熵损失函数——完整推导>交叉熵损失函数——完整推导</a></li><li><a href=#softmax%e5%9b%9e%e5%bd%92%e5%a4%9a%e5%88%86%e7%b1%bb aria-label=Softmax回归（多分类）>Softmax回归（多分类）</a></li></ul></li><li><a href=#44-%e9%98%b6%e6%ae%b5%e6%80%bb%e7%bb%93 aria-label="4.4 阶段总结">4.4 阶段总结</a><ul><li><a href=#%e6%9c%ac%e9%98%b6%e6%ae%b5%e6%a0%b8%e5%bf%83%e5%85%ac%e5%bc%8f%e9%80%9f%e6%9f%a5%e8%a1%a8 aria-label=本阶段核心公式速查表>本阶段核心公式速查表</a></li></ul></li></ul></li><li><a href=#-%e8%87%aa%e6%b5%8b%e9%a2%98 aria-label="📝 自测题">📝 自测题</a></li><li><a href=#-%e6%8e%a8%e8%8d%90%e8%a1%a5%e5%85%85%e8%b5%84%e6%ba%90 aria-label="📚 推荐补充资源">📚 推荐补充资源</a></li></ul></div></details></div></aside><script>let activeElement,elements;window.addEventListener("DOMContentLoaded",function(){checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),activeElement=elements[0];const t=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active")},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{elements&&(activeElement=Array.from(elements).find(e=>{if(getOffsetTop(e)-window.pageYOffset>0&&getOffsetTop(e)-window.pageYOffset<window.innerHeight/2)return e})||activeElement,elements.forEach(e=>{const t=encodeURI(e.getAttribute("id")).toLowerCase();e===activeElement?document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active"):document.querySelector(`.inner ul li a[href="#${t}"]`).classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><blockquote><p>🎯 <strong>目标</strong>：建立Python编程能力和数学理论基础，为后续深度学习和大模型学习打下根基。
+📋 <strong>前置要求</strong>：无，零基础可开始</p></blockquote><hr><h2 id=本阶段知识依赖图>本阶段知识依赖图<a hidden class=anchor aria-hidden=true href=#本阶段知识依赖图>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Python基础 ──→ 数学基础 ──→ 机器学习入门
+</span></span><span style=display:flex><span>    │              │              │
+</span></span><span style=display:flex><span>    │              │              ├── 线性回归
+</span></span><span style=display:flex><span>    │              │              ├── 逻辑回归
+</span></span><span style=display:flex><span>    │              │              └── 正则化
+</span></span><span style=display:flex><span>    │              │
+</span></span><span style=display:flex><span>    │              ├── 微积分 ──→ 梯度下降
+</span></span><span style=display:flex><span>    │              ├── 线性代数 ──→ 矩阵运算
+</span></span><span style=display:flex><span>    │              └── 概率论 ──→ 最大似然估计
+</span></span><span style=display:flex><span>    │
+</span></span><span style=display:flex><span>    └── Jupyter Notebook（贯穿始终的工具）
+</span></span></code></pre></div><hr><h2 id=模块一python编程基础>模块一：Python编程基础<a hidden class=anchor aria-hidden=true href=#模块一python编程基础>#</a></h2><h3 id=为什么python是ai工程师的第一语言>为什么Python是AI工程师的第一语言？<a hidden class=anchor aria-hidden=true href=#为什么python是ai工程师的第一语言>#</a></h3><p>Python之所以成为AI/ML领域的首选语言，核心原因有三：</p><ol><li><strong>语法简洁</strong>：接近伪代码，让你专注于算法逻辑而非语法细节</li><li><strong>生态丰富</strong>：NumPy、Pandas、PyTorch、HuggingFace等核心库全部基于Python</li><li><strong>社区庞大</strong>：遇到问题几乎都能找到解答</li></ol><h3 id=11-环境搭建>1.1 环境搭建<a hidden class=anchor aria-hidden=true href=#11-环境搭建>#</a></h3><h4 id=核心任务>核心任务<a hidden class=anchor aria-hidden=true href=#核心任务>#</a></h4><p>安装Anaconda + VS Code，配置好开发环境。</p><h4 id=什么是anaconda>什么是Anaconda？<a hidden class=anchor aria-hidden=true href=#什么是anaconda>#</a></h4><p>Anaconda是一个Python发行版，它不仅仅是Python解释器，还包含：</p><ul><li><strong>conda</strong>：包管理器（类似pip，但能管理Python版本和虚拟环境）</li><li><strong>预装库</strong>：NumPy、Pandas、Matplotlib等常用科学计算库</li><li><strong>Jupyter Notebook</strong>：交互式编程环境</li></ul><h4 id=什么是虚拟环境为什么需要它>什么是虚拟环境？为什么需要它？<a hidden class=anchor aria-hidden=true href=#什么是虚拟环境为什么需要它>#</a></h4><p>虚拟环境是Python的"沙盒"，每个项目可以有独立的依赖包版本：</p><p><strong>生活类比</strong>：想象你有两间厨房。A厨房需要烤箱，B厨房需要空气炸锅。如果只有一间厨房，两个设备可能冲突（插座不够、位置不够）。虚拟环境就像给每个项目分配一间独立的厨房，互不干扰。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 创建虚拟环境（创建一间新&#34;厨房&#34;）</span>
+</span></span><span style=display:flex><span>conda create -n llm_study python<span style=color:#f92672>=</span>3.11
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 激活虚拟环境（进入这间厨房）</span>
+</span></span><span style=display:flex><span>conda activate llm_study
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 安装常用包（放入你需要的&#34;厨具&#34;）</span>
+</span></span><span style=display:flex><span>pip install numpy pandas matplotlib jupyter
+</span></span></code></pre></div><p><strong>为什么需要虚拟环境？</strong> 假设项目A需要PyTorch 2.0，项目B需要PyTorch 1.13，没有虚拟环境就会冲突——就像两个人同时要往一个水杯里倒不同品牌的果汁。</p><h4 id=vs-code配置>VS Code配置<a hidden class=anchor aria-hidden=true href=#vs-code配置>#</a></h4><ul><li>安装Python扩展（让VS Code"看得懂"Python代码）</li><li>安装Jupyter扩展（在VS Code中直接运行Jupyter Notebook）</li><li>配置conda环境作为解释器（告诉VS Code"用哪个虚拟环境"）</li></ul><hr><h3 id=12-python基础语法>1.2 Python基础语法<a hidden class=anchor aria-hidden=true href=#12-python基础语法>#</a></h3><h4 id=数据类型ai中最常用的5种>数据类型——AI中最常用的5种<a hidden class=anchor aria-hidden=true href=#数据类型ai中最常用的5种>#</a></h4><p><strong>类比理解</strong>：把AI模型想象成一个工厂，数据类型就是不同形状的原材料：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 1. 整数和浮点数——模型参数、损失值、学习率都是数值</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#    类比：工厂里的&#34;数量&#34;和&#34;尺寸&#34;——最基本的数据</span>
+</span></span><span style=display:flex><span>learning_rate <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.001</span>        <span style=color:#75715e># 浮点数（小数）</span>
+</span></span><span style=display:flex><span>epoch <span style=color:#f92672>=</span> <span style=color:#ae81ff>100</span>                   <span style=color:#75715e># 整数</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 字符串——文本数据的基本单位</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#    类比：工厂里的&#34;标签&#34;和&#34;说明书&#34;</span>
+</span></span><span style=display:flex><span>text <span style=color:#f92672>=</span> <span style=color:#e6db74>&#34;大模型改变了世界&#34;</span>     <span style=color:#75715e># NLP中处理的就是字符串</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 列表——最常用的数据结构，对应向量/张量的概念</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#    类比：工厂里的&#34;传送带&#34;——有序排列的一组数据</span>
+</span></span><span style=display:flex><span>weights <span style=color:#f92672>=</span> [<span style=color:#ae81ff>0.1</span>, <span style=color:#ae81ff>0.2</span>, <span style=color:#ae81ff>0.3</span>, <span style=color:#ae81ff>0.4</span>]  <span style=color:#75715e># 类似一个一维张量（向量）</span>
+</span></span><span style=display:flex><span>batch_data <span style=color:#f92672>=</span> [[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>], [<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>], [<span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>6</span>]]  <span style=color:#75715e># 类似一个二维张量（矩阵）</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#    ↑ 这就是深度学习中&#34;一个batch的数据&#34;的雏形</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 字典——存储模型配置、JSON数据</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#    类比：工厂里的&#34;配置表&#34;——用名字查找对应的值</span>
+</span></span><span style=display:flex><span>model_config <span style=color:#f92672>=</span> {
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;hidden_size&#34;</span>: <span style=color:#ae81ff>768</span>,       <span style=color:#75715e># 隐藏层维度</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;num_layers&#34;</span>: <span style=color:#ae81ff>12</span>,         <span style=color:#75715e># Transformer层数</span>
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;vocab_size&#34;</span>: <span style=color:#ae81ff>30522</span>       <span style=color:#75715e># 词表大小</span>
+</span></span><span style=display:flex><span>}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5. 布尔值——控制流程</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#    类比：工厂里的&#34;开关&#34;——控制程序走哪条路</span>
+</span></span><span style=display:flex><span>is_training <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> is_training:
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;训练模式：启用Dropout&#34;</span>)  <span style=color:#75715e># 训练时随机丢弃一些神经元</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;推理模式：关闭Dropout&#34;</span>)  <span style=color:#75715e># 推理时所有神经元都要工作</span>
+</span></span></code></pre></div><h4 id=控制流程序的大脑>控制流——程序的"大脑"<a hidden class=anchor aria-hidden=true href=#控制流程序的大脑>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># for循环——遍历数据集的核心方式</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 类比：工厂的&#34;流水线&#34;——一个一个地处理数据</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> batch <span style=color:#f92672>in</span> dataloader:       <span style=color:#75715e># 这就是训练循环的基本形式</span>
+</span></span><span style=display:flex><span>    loss <span style=color:#f92672>=</span> model(batch)        <span style=color:#75715e># 模型处理这个batch</span>
+</span></span><span style=display:flex><span>    loss<span style=color:#f92672>.</span>backward()            <span style=color:#75715e># 计算梯度（后面会详细讲）</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># if-else——条件判断</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 类比：工厂的&#34;分拣机&#34;——根据条件走不同的分支</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>if</span> loss <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0.01</span>:
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;模型已收敛&#34;</span>)        <span style=color:#75715e># 损失足够小，可以停止训练了</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>elif</span> loss <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0.1</span>:
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;继续训练&#34;</span>)          <span style=color:#75715e># 还需要继续优化</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>else</span>:
+</span></span><span style=display:flex><span>    print(<span style=color:#e6db74>&#34;模型可能有问题&#34;</span>)    <span style=color:#75715e># 损失太大，可能需要检查数据或模型</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 列表推导式——Python特有的简洁写法，AI代码中非常常见</span>
+</span></span><span style=display:flex><span>squares <span style=color:#f92672>=</span> [x<span style=color:#f92672>**</span><span style=color:#ae81ff>2</span> <span style=color:#66d9ef>for</span> x <span style=color:#f92672>in</span> range(<span style=color:#ae81ff>10</span>)]  <span style=color:#75715e># [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 一行代码 = 一个for循环 + 一个操作，是Python优雅的体现</span>
+</span></span></code></pre></div><hr><h3 id=13-函数与面向对象>1.3 函数与面向对象<a hidden class=anchor aria-hidden=true href=#13-函数与面向对象>#</a></h3><h4 id=函数代码复用的基本单位>函数——代码复用的基本单位<a hidden class=anchor aria-hidden=true href=#函数代码复用的基本单位>#</a></h4><p><strong>类比</strong>：函数就像一台"机器"——你给它输入，它给你输出。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 函数在AI中的典型应用：定义损失函数</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>cross_entropy_loss</span>(predictions, targets):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    交叉熵损失函数——分类任务中最常用的损失函数
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    类比：这是一个&#34;评分器&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    - predictions：模型的预测结果（模型认为答案是什么）
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    - targets：真实标签（正确答案是什么）
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    - 返回值：预测和正确答案之间的&#34;差距&#34;（越小越好）
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    loss <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>sum(t <span style=color:#f92672>*</span> np<span style=color:#f92672>.</span>log(p) <span style=color:#66d9ef>for</span> t, p <span style=color:#f92672>in</span> zip(targets, predictions))
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> loss <span style=color:#f92672>/</span> len(targets)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 参数默认值——配置超参数的常用方式</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 超参数 = 人为设定的参数（不是模型自己学到的）</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>def</span> <span style=color:#a6e22e>train_model</span>(model, lr<span style=color:#f92672>=</span><span style=color:#ae81ff>0.001</span>, epochs<span style=color:#f92672>=</span><span style=color:#ae81ff>10</span>, batch_size<span style=color:#f92672>=</span><span style=color:#ae81ff>32</span>):
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;&#34;&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    lr: 学习率——每次更新参数的&#34;步子大小&#34;
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    epochs: 训练轮数——把整个数据集看几遍
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    batch_size: 批次大小——每次处理多少个样本
+</span></span></span><span style=display:flex><span><span style=color:#e6db74>    &#34;&#34;&#34;</span>
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>for</span> epoch <span style=color:#f92672>in</span> range(epochs):
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 训练逻辑</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>pass</span>
+</span></span></code></pre></div><h4 id=面向对象理解pytorch模型的基础>面向对象——理解PyTorch模型的基础<a hidden class=anchor aria-hidden=true href=#面向对象理解pytorch模型的基础>#</a></h4><p><strong>类比</strong>：如果函数是一台"机器"，那类就是"工厂"——它包含多台机器（方法）和原材料（属性）。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># PyTorch中的模型就是一个类！</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 理解类是理解nn.Module的基础</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SimpleModel</span>:
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(self, input_size, output_size):
+</span></span><span style=display:flex><span>        <span style=color:#75715e># __init__ 方法：初始化模型参数（类似工厂的&#34;建厂&#34;过程）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 这里定义工厂里有哪些&#34;机器&#34;和&#34;原材料&#34;</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>weights <span style=color:#f92672>=</span> [<span style=color:#ae81ff>0.1</span>] <span style=color:#f92672>*</span> input_size  <span style=color:#75715e># 权重（模型要学习的参数）</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>bias <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>                       <span style=color:#75715e># 偏置（另一个要学习的参数）</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>forward</span>(self, x):
+</span></span><span style=display:flex><span>        <span style=color:#75715e># forward 方法：定义前向传播（数据如何流过工厂）</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 这就是工厂的&#34;生产流程&#34;</span>
+</span></span><span style=display:flex><span>        result <span style=color:#f92672>=</span> sum(w <span style=color:#f92672>*</span> xi <span style=color:#66d9ef>for</span> w, xi <span style=color:#f92672>in</span> zip(self<span style=color:#f92672>.</span>weights, x)) <span style=color:#f92672>+</span> self<span style=color:#f92672>.</span>bias
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> result
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 使用</span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> SimpleModel(input_size<span style=color:#f92672>=</span><span style=color:#ae81ff>3</span>, output_size<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span>)
+</span></span><span style=display:flex><span>output <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>forward([<span style=color:#ae81ff>1.0</span>, <span style=color:#ae81ff>2.0</span>, <span style=color:#ae81ff>3.0</span>])
+</span></span></code></pre></div><p><strong>关键理解</strong>：PyTorch中的<code>nn.Module</code>就是基于这个原理。你定义的每个神经网络都是一个类：</p><ul><li><code>__init__</code>中定义网络有哪些层（&ldquo;工厂里有哪些机器&rdquo;）</li><li><code>forward</code>中定义数据如何流过这些层（&ldquo;原材料如何经过每台机器&rdquo;）</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># PyTorch中的写法（对比上面的SimpleModel）</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> torch.nn <span style=color:#66d9ef>as</span> nn
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>class</span> <span style=color:#a6e22e>SimpleModel</span>(nn<span style=color:#f92672>.</span>Module):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>__init__</span>(self, input_size, output_size):
+</span></span><span style=display:flex><span>        super()<span style=color:#f92672>.</span><span style=color:#a6e22e>__init__</span>()  <span style=color:#75715e># 调用父类的初始化</span>
+</span></span><span style=display:flex><span>        self<span style=color:#f92672>.</span>linear <span style=color:#f92672>=</span> nn<span style=color:#f92672>.</span>Linear(input_size, output_size)  <span style=color:#75715e># 定义一个线性层</span>
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>forward</span>(self, x):
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>return</span> self<span style=color:#f92672>.</span>linear(x)  <span style=color:#75715e># 数据流过线性层</span>
+</span></span></code></pre></div><hr><h3 id=14-jupyter-notebook>1.4 Jupyter Notebook<a hidden class=anchor aria-hidden=true href=#14-jupyter-notebook>#</a></h3><h4 id=为什么ai工程师离不开jupyter>为什么AI工程师离不开Jupyter？<a hidden class=anchor aria-hidden=true href=#为什么ai工程师离不开jupyter>#</a></h4><p><strong>类比</strong>：如果普通的Python脚本是"写一封信然后寄出去"，那Jupyter Notebook就是"面对面聊天"——你可以看到对方（代码）的即时反应。</p><ol><li><strong>交互式编程</strong>：可以逐个cell运行代码，实时看到结果（不用等整个程序跑完）</li><li><strong>可视化集成</strong>：图表直接嵌入在代码旁边（就像在笔记本上画图一样自然）</li><li><strong>文档化</strong>：Markdown和代码混排，方便记录实验过程（&ldquo;实验笔记"和"实验数据"放在一起）</li><li><strong>快速原型</strong>：不需要创建完整项目文件，快速测试想法（&ldquo;先试试这个想法行不行&rdquo;）</li></ol><h4 id=核心操作>核心操作<a hidden class=anchor aria-hidden=true href=#核心操作>#</a></h4><ul><li><code>Shift+Enter</code>：运行当前cell（执行当前这段代码）</li><li><code>Esc+A</code>：在上方插入新cell（在上面加一段新代码或笔记）</li><li><code>Esc+B</code>：在下方插入新cell</li><li><code>Esc+M</code>：转为Markdown cell（写文字笔记）</li><li><code>Esc+DD</code>：删除当前cell</li></ul><hr><h3 id=15-文件操作与常用库>1.5 文件操作与常用库<a hidden class=anchor aria-hidden=true href=#15-文件操作与常用库>#</a></h3><h4 id=numpy基础一切数值计算的基石>NumPy基础——一切数值计算的基石<a hidden class=anchor aria-hidden=true href=#numpy基础一切数值计算的基石>#</a></h4><p><strong>为什么需要NumPy？</strong> Python原生的列表运算很慢。NumPy用C语言实现了底层运算，速度比纯Python快10-100倍。在深度学习中，我们每秒要进行数百万次矩阵运算，没有NumPy根本不可能。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> numpy <span style=color:#66d9ef>as</span> np
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 创建数组（张量的前身）</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 类比：向量 = 一条线上的点，矩阵 = 一个表格，3D张量 = 一摞表格</span>
+</span></span><span style=display:flex><span>arr <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>, <span style=color:#ae81ff>5</span>])          <span style=color:#75715e># 一维数组 ≈ 向量（1×5）</span>
+</span></span><span style=display:flex><span>matrix <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>], [<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>]])       <span style=color:#75715e># 二维数组 ≈ 矩阵（2×2）</span>
+</span></span><span style=display:flex><span>tensor_3d <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>ones((<span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>))           <span style=color:#75715e># 三维数组 ≈ 3D张量（2×3×4）</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 矩阵运算——神经网络前向传播的核心</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 这是整个深度学习最基础的运算，务必理解！</span>
+</span></span><span style=display:flex><span>A <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>], [<span style=color:#ae81ff>3</span>, <span style=color:#ae81ff>4</span>]])  <span style=color:#75715e># 2×2 矩阵</span>
+</span></span><span style=display:flex><span>B <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([[<span style=color:#ae81ff>5</span>, <span style=color:#ae81ff>6</span>], [<span style=color:#ae81ff>7</span>, <span style=color:#ae81ff>8</span>]])  <span style=color:#75715e># 2×2 矩阵</span>
+</span></span><span style=display:flex><span>C <span style=color:#f92672>=</span> A <span style=color:#f92672>@</span> B          <span style=color:#75715e># 矩阵乘法，等价于np.dot(A, B)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># C[0][0] = 1*5 + 2*7 = 19</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># C[0][1] = 1*6 + 2*8 = 22</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># C[1][0] = 3*5 + 4*7 = 43</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># C[1][1] = 3*6 + 4*8 = 50</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 结果：[[19, 22], [43, 50]]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 这就是神经网络中 &#34;output = input @ weight + bias&#34; 的基本操作</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 每一层神经网络的本质就是：输入 × 权重矩阵 + 偏置</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 广播机制——理解这个，就理解了PyTorch张量运算的一大半</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 类比：你有3个苹果，你朋友也有3个苹果，你们把苹果合在一起</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>#       不需要写循环，NumPy自动帮你&#34;一对一对&#34;地加</span>
+</span></span><span style=display:flex><span>x <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([[<span style=color:#ae81ff>1</span>, <span style=color:#ae81ff>2</span>, <span style=color:#ae81ff>3</span>]])       <span style=color:#75715e># shape: (1, 3)</span>
+</span></span><span style=display:flex><span>bias <span style=color:#f92672>=</span> np<span style=color:#f92672>.</span>array([[<span style=color:#ae81ff>10</span>, <span style=color:#ae81ff>20</span>, <span style=color:#ae81ff>30</span>]]) <span style=color:#75715e># shape: (1, 3)</span>
+</span></span><span style=display:flex><span>result <span style=color:#f92672>=</span> x <span style=color:#f92672>+</span> bias               <span style=color:#75715e># 自动广播，shape: (1, 3)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># result = [[11, 22, 33]]</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 广播规则：如果两个数组的shape不同，NumPy会自动&#34;扩展&#34;较小的数组</span>
+</span></span></code></pre></div><h4 id=pandas基础数据处理的瑞士军刀>Pandas基础——数据处理的瑞士军刀<a hidden class=anchor aria-hidden=true href=#pandas基础数据处理的瑞士军刀>#</a></h4><p><strong>类比</strong>：如果NumPy是"计算器&rdquo;，那Pandas就是"Excel"——它擅长处理表格数据（有列名、有索引的数据）。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> pandas <span style=color:#66d9ef>as</span> pd
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 读取CSV数据（数据集通常就是CSV格式，就像Excel表格）</span>
+</span></span><span style=display:flex><span>df <span style=color:#f92672>=</span> pd<span style=color:#f92672>.</span>read_csv(<span style=color:#e6db74>&#34;data.csv&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 基本操作</span>
+</span></span><span style=display:flex><span>df<span style=color:#f92672>.</span>head()           <span style=color:#75715e># 查看前5行（&#34;先看一眼数据长什么样&#34;）</span>
+</span></span><span style=display:flex><span>df<span style=color:#f92672>.</span>describe()       <span style=color:#75715e># 统计描述（&#34;数据的平均值、最大值、最小值是多少&#34;）</span>
+</span></span><span style=display:flex><span>df[<span style=color:#e6db74>&#39;column&#39;</span>]        <span style=color:#75715e># 选择列（&#34;只看这一列&#34;）</span>
+</span></span><span style=display:flex><span>df[df[<span style=color:#e6db74>&#39;age&#39;</span>] <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>18</span>]  <span style=color:#75715e># 筛选（&#34;只要年龄大于18的&#34;）</span>
+</span></span></code></pre></div><hr><h2 id=模块二微积分基础>模块二：微积分基础<a hidden class=anchor aria-hidden=true href=#模块二微积分基础>#</a></h2><h3 id=为什么ai需要微积分>为什么AI需要微积分？<a hidden class=anchor aria-hidden=true href=#为什么ai需要微积分>#</a></h3><p><strong>一句话回答</strong>：神经网络的训练过程就是"求导+更新"的循环。</p><p><strong>更详细的解释</strong>：想象你在一座山上，想要找到山谷的最低点（最优解）。你需要知道两件事：</p><ol><li><strong>哪个方向是下坡？</strong>（导数告诉你方向）</li><li><strong>应该走多远？</strong>（学习率决定步幅）</li></ol><p>当你听到"反向传播算法"时，本质就是<strong>链式法则求导</strong>——计算每个参数对最终误差的"贡献度"。当你听到"梯度下降"时，本质就是<strong>沿着导数方向更新参数</strong>——让模型的预测越来越准。</p><h3 id=21-导数与求导法则>2.1 导数与求导法则<a hidden class=anchor aria-hidden=true href=#21-导数与求导法则>#</a></h3><h4 id=导数的直觉理解>导数的直觉理解<a hidden class=anchor aria-hidden=true href=#导数的直觉理解>#</a></h4><p><strong>核心类比：速度计</strong></p><p>想象你开车：</p><ul><li>你的<strong>位置</strong>随时间变化（比如从0公里开到了100公里）</li><li><strong>速度</strong>就是位置对时间的导数——它告诉你"位置变化有多快"</li></ul><p>同理，在神经网络中：</p><ul><li><strong>损失函数</strong>随参数变化（参数调整后，误差会变大或变小）</li><li><strong>导数</strong>就是损失对参数的"变化率"——它告诉你"参数应该往哪个方向调，调多少"</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>导数 &gt; 0：函数在递增 → 参数应该减小（往左走，减少误差）
+</span></span><span style=display:flex><span>导数 &lt; 0：函数在递减 → 参数应该增大（往右走，减少误差）
+</span></span><span style=display:flex><span>导数 = 0：到达极值点 → 可能是最优解（误差最小的地方）
+</span></span></code></pre></div><p><strong>更形象的类比：山谷寻宝</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>想象损失函数是一座山的地形图：
+</span></span><span style=display:flex><span>- 山的高度 = 当前误差（越高误差越大）
+</span></span><span style=display:flex><span>- 你的位置 = 当前参数值
+</span></span><span style=display:flex><span>- 你的目标 = 找到山谷最低点（最小误差）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>导数就像一个&#34;坡度指示器&#34;：
+</span></span><span style=display:flex><span>- 它告诉你脚下哪个方向最陡（梯度方向）
+</span></span><span style=display:flex><span>- 它告诉你坡有多陡（梯度大小）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>你每走一步都看一眼指示器，然后往最陡的下坡方向走——这就是梯度下降！
+</span></span></code></pre></div><h4 id=核心求导公式必须记住>核心求导公式（必须记住）<a hidden class=anchor aria-hidden=true href=#核心求导公式必须记住>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1. 常数求导：(c)&#39; = 0           ——常数不变化，导数为0
+</span></span><span style=display:flex><span>2. 幂函数：(x^n)&#39; = n·x^(n-1)   ——x²的导数是2x，x³的导数是3x²
+</span></span><span style=display:flex><span>3. 指数函数：(e^x)&#39; = e^x       ——e^x是唯一&#34;导数等于自身&#34;的函数！
+</span></span><span style=display:flex><span>4. 对数函数：(ln x)&#39; = 1/x      ——对数函数的导数是倒数
+</span></span><span style=display:flex><span>5. 三角函数：(sin x)&#39; = cos x   ——正弦的导数是余弦
+</span></span></code></pre></div><p><strong>为什么要记住这些？</strong> 因为神经网络的激活函数（Sigmoid、ReLU、Tanh）都是由这些基本函数组合而成的。记住基本公式，就能用链式法则推导出任何复杂函数的导数。</p><h4 id=链式法则反向传播的数学基础>链式法则——反向传播的数学基础<a hidden class=anchor aria-hidden=true href=#链式法则反向传播的数学基础>#</a></h4><p><strong>核心公式</strong>：如果 <code>y = f(g(x))</code>，则 <code>dy/dx = f'(g(x)) · g'(x)</code></p><p><strong>类比：工厂流水线的责任追溯</strong></p><p>想象一个工厂流水线：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>原材料x → 工序1(加工成半成品) → 工序2(加工成成品) → 最终产品y
+</span></span><span style=display:flex><span>           g(x) = z               f(z) = y
+</span></span></code></pre></div><p>现在最终产品有缺陷（损失L很大），你想知道是谁的责任：</p><ul><li>工序2的责任：∂L/∂z（成品的问题有多少是工序2造成的）</li><li>工序1的责任：∂L/∂x = ∂L/∂z × ∂z/∂x（把工序2的责任"传回"工序1）</li></ul><p>这就是<strong>链式法则</strong>——把最终的误差责任一层一层往回追溯！</p><p><strong>AI中的例子——单个神经元</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>网络结构：输入x → 线性变换z = wx + b → 激活a = sigmoid(z) → 损失L
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>求L对w的导数（用于更新w）：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>步骤1：L对a的导数（损失对激活值的敏感度）
+</span></span><span style=display:flex><span>    ∂L/∂a = 2(a - y)  （如果L是均方误差）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>步骤2：a对z的导数（激活函数的导数）
+</span></span><span style=display:flex><span>    ∂a/∂z = sigmoid&#39;(z) = a(1-a)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>步骤3：z对w的导数（线性变换的导数）
+</span></span><span style=display:flex><span>    ∂z/∂w = x
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>链式法则组合：
+</span></span><span style=display:flex><span>    ∂L/∂w = ∂L/∂a · ∂a/∂z · ∂z/∂w
+</span></span><span style=display:flex><span>           = 2(a-y) · a(1-a) · x
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是反向传播的核心！每一步都很简单，但组合起来就能计算复杂网络的梯度。
+</span></span></code></pre></div><p><strong>扩展到多变量</strong>：当网络有多个参数时，每个参数都有自己的"责任链"：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>∂L/∂w₁ = ∂L/∂z · ∂z/∂w₁  （w₁的梯度）
+</span></span><span style=display:flex><span>∂L/∂w₂ = ∂L/∂z · ∂z/∂w₂  （w₂的梯度）
+</span></span><span style=display:flex><span>∂L/∂b  = ∂L/∂z · ∂z/∂b   （b的梯度）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>所有参数同时更新，这就是梯度下降的并行性。
+</span></span></code></pre></div><h3 id=22-激活函数求导>2.2 激活函数求导<a hidden class=anchor aria-hidden=true href=#22-激活函数求导>#</a></h3><h4 id=sigmoid函数及其导数完整推导>Sigmoid函数及其导数——完整推导<a hidden class=anchor aria-hidden=true href=#sigmoid函数及其导数完整推导>#</a></h4><p><strong>什么是Sigmoid？</strong> 它把任意实数"压缩"到0和1之间，就像一个"开关"——输入很大时输出接近1（开），输入很小时输出接近0（关）。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Sigmoid: σ(x) = 1 / (1 + e^(-x))
+</span></span></code></pre></div><p><strong>Sigmoid导数的完整推导</strong>（这是面试常考题）：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>已知：σ(x) = 1 / (1 + e^(-x))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>设 u = 1 + e^(-x)，则 σ(x) = 1/u = u^(-1)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>根据链式法则：
+</span></span><span style=display:flex><span>σ&#39;(x) = d/dx [u^(-1)]
+</span></span><span style=display:flex><span>       = -u^(-2) · du/dx
+</span></span><span style=display:flex><span>       = -1/u² · d/dx[1 + e^(-x)]
+</span></span><span style=display:flex><span>       = -1/u² · (-e^(-x))
+</span></span><span style=display:flex><span>       = e^(-x) / (1 + e^(-x))²
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>现在我们把它写成用σ(x)表示的形式：
+</span></span><span style=display:flex><span>σ&#39;(x) = e^(-x) / (1 + e^(-x))²
+</span></span><span style=display:flex><span>       = [1 + e^(-x) - 1] / (1 + e^(-x))²     ← 把分子拆开
+</span></span><span style=display:flex><span>       = (1 + e^(-x))/(1 + e^(-x))² - 1/(1 + e^(-x))²
+</span></span><span style=display:flex><span>       = 1/(1 + e^(-x)) - 1/(1 + e^(-x))²
+</span></span><span style=display:flex><span>       = σ(x) - σ(x)²
+</span></span><span style=display:flex><span>       = σ(x) · (1 - σ(x))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>最终结果：σ&#39;(x) = σ(x) · (1 - σ(x))
+</span></span></code></pre></div><p><strong>这个结果为什么重要？</strong></p><ul><li>导数可以直接用函数值计算——不需要重新算指数函数！</li><li>只要知道σ(x)的值，就能直接得到导数</li><li>这在反向传播中节省了大量计算</li></ul><p><strong>Sigmoid的问题——梯度消失</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>当x很大时：σ(x) ≈ 1，σ&#39;(x) = 1·(1-1) = 0  → 梯度几乎为0
+</span></span><span style=display:flex><span>当x很小时：σ(x) ≈ 0，σ&#39;(x) = 0·(1-0) = 0  → 梯度几乎为0
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这意味着：当输入值太大或太小时，Sigmoid的梯度接近0
+</span></span><span style=display:flex><span>→ 参数几乎不更新 → 网络&#34;学不动了&#34;
+</span></span><span style=display:flex><span>→ 这就是&#34;梯度消失&#34;问题，是深度学习早期的一大难题
+</span></span><span style=display:flex><span>→ 后来ReLU激活函数的出现解决了这个问题
+</span></span></code></pre></div><h4 id=softmax函数>Softmax函数<a hidden class=anchor aria-hidden=true href=#softmax函数>#</a></h4><p><strong>什么是Softmax？</strong> 它把一组任意实数转换为概率分布（所有值>0，且和为1）。</p><p><strong>类比</strong>：想象一个班级的考试成绩是[85, 90, 75]，Softmax把它们转换为"每个学生成绩的相对概率"——成绩越高的学生，概率越大。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Softmax: softmax(x_i) = e^(x_i) / Σe^(x_j)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>示例：
+</span></span><span style=display:flex><span>输入：[2.0, 1.0, 0.1]
+</span></span><span style=display:flex><span>e^2.0 = 7.39,  e^1.0 = 2.72,  e^0.1 = 1.11
+</span></span><span style=display:flex><span>总和 = 7.39 + 2.72 + 1.11 = 11.22
+</span></span><span style=display:flex><span>Softmax = [7.39/11.22, 2.72/11.22, 1.11/11.22]
+</span></span><span style=display:flex><span>        = [0.659, 0.242, 0.099]
+</span></span><span style=display:flex><span>        ≈ [65.9%, 24.2%, 9.9%]  ← 三个概率之和 = 100%
+</span></span></code></pre></div><p><strong>为什么要用e^x而不是直接用x？</strong></p><ol><li>e^x > 0 保证所有输出都是正数（概率不能为负）</li><li>e^x 是单调递增的（输入越大，输出越大——保持大小关系）</li><li>e^x 的导数是它自己（计算方便）</li></ol><p><strong>数值稳定性问题</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>如果输入值很大，比如 [1000, 1001, 1002]
+</span></span><span style=display:flex><span>e^1000 = 一个巨大的数 → 溢出！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>解决方案：减去最大值
+</span></span><span style=display:flex><span>softmax([1000, 1001, 1002])
+</span></span><span style=display:flex><span>= softmax([1000-1002, 1001-1002, 1002-1002])
+</span></span><span style=display:flex><span>= softmax([-2, -1, 0])
+</span></span><span style=display:flex><span>= [e^(-2), e^(-1), e^0] / (e^(-2) + e^(-1) + e^0)
+</span></span><span style=display:flex><span>= [0.135, 0.368, 1.0] / 1.503
+</span></span><span style=display:flex><span>= [0.090, 0.245, 0.665]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>结果完全一样！但不会溢出。
+</span></span><span style=display:flex><span>PyTorch和所有深度学习框架都自动做了这个优化。
+</span></span></code></pre></div><ul><li><strong>应用场景</strong>：分类任务的最后一层，输出每个类别的概率</li></ul><h3 id=23-线性代数>2.3 线性代数<a hidden class=anchor aria-hidden=true href=#23-线性代数>#</a></h3><h4 id=向量数据的基本表示>向量——数据的基本表示<a hidden class=anchor aria-hidden=true href=#向量数据的基本表示>#</a></h4><p><strong>类比</strong>：向量就像一个"坐标"——它用一组数字来描述一个点的位置。</p><p>在AI中，一个数据样本通常表示为一个向量：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>一张28×28的灰度图片 → 展平为784维向量（每个像素是一个维度）
+</span></span><span style=display:flex><span>一个句子的词嵌入 → 每个词是一个300维向量（用300个数字描述一个词的&#34;含义&#34;）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>为什么用向量？因为计算机只能处理数字。
+</span></span><span style=display:flex><span>把现实世界的东西（图片、文字、声音）转换为向量，就是&#34;表示学习&#34;的核心任务。
+</span></span></code></pre></div><h4 id=矩阵乘法神经网络的核心运算>矩阵乘法——神经网络的核心运算<a hidden class=anchor aria-hidden=true href=#矩阵乘法神经网络的核心运算>#</a></h4><p><strong>矩阵乘法到底在做什么？</strong></p><p><strong>直觉1：矩阵是一组"变换规则"</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>想象你有一个2D图形（比如一个三角形）。
+</span></span><span style=display:flex><span>矩阵乘法就是对这个图形做&#34;变换&#34;——旋转、缩放、剪切。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>不同的矩阵 = 不同的变换
+</span></span><span style=display:flex><span>神经网络的权重矩阵 = 一种&#34;语义变换&#34;——把输入空间映射到输出空间
+</span></span></code></pre></div><p><strong>直觉2：矩阵乘法是"批量线性组合"</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>[output₁]   [w₁₁ w₁₂ w₁₃] [input₁]   [w₁₁·input₁ + w₁₂·input₂ + w₁₃·input₃]
+</span></span><span style=display:flex><span>[output₂] = [w₂₁ w₂₂ w₂₃] [input₂] = [w₂₁·input₁ + w₂₂·input₂ + w₂₃·input₃]
+</span></span><span style=display:flex><span>                             [input₃]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>每个输出 = 所有输入的加权求和
+</span></span><span style=display:flex><span>权重矩阵中的每个元素 w_ij 表示&#34;第j个输入对第i个输出的影响程度&#34;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是神经网络前向传播的本质！
+</span></span></code></pre></div><p><strong>实际例子</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>神经网络的前向传播本质上就是一连串的矩阵乘法：
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>输入 x (1×784) × 权重 W (784×512) + 偏置 b (1×512) = 隐藏层 h (1×512)
+</span></span><span style=display:flex><span>隐藏层 h (1×512) × 权重 W (512×10) + 偏置 b (1×10) = 输出 y (1×10)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>784维输入 → 512维隐藏层 → 10维输出（10个类别的概率）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>每一层都在做：output = input @ weight + bias
+</span></span></code></pre></div><p><strong>为什么GPU擅长深度学习？</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>矩阵乘法的本质是&#34;大量独立的乘加运算&#34;：
+</span></span><span style=display:flex><span>C[i][j] = Σ A[i][k] * B[k][j]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这些乘加运算是完全独立的——C[0][0]和C[1][1]的计算互不影响。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>CPU：少量核心（比如8个），每个核心很强，但只能同时算8个
+</span></span><span style=display:flex><span>GPU：大量核心（比如几千个），每个核心较弱，但能同时算几千个
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>矩阵乘法正好适合GPU的&#34;人海战术&#34;！
+</span></span><span style=display:flex><span>这就是为什么深度学习离不开GPU。
+</span></span></code></pre></div><h4 id=特征值与特征向量理解pca降维>特征值与特征向量——理解PCA降维<a hidden class=anchor aria-hidden=true href=#特征值与特征向量理解pca降维>#</a></h4><p><strong>什么是特征值和特征向量？</strong></p><p><strong>类比：镜子的方向</strong></p><p>想象你拿着一面镜子（矩阵A），向它照一束光（向量v）：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>大多数方向的光：照进去后方向会改变
+</span></span><span style=display:flex><span>特殊方向的光：照进去后方向不变，只是被拉伸或压缩
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这个&#34;特殊方向&#34;就是特征向量
+</span></span><span style=display:flex><span>拉伸/压缩的比例就是特征值
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>数学定义：对于矩阵A，如果 Av = λv，则：
+</span></span><span style=display:flex><span>- v 是特征向量（方向不变的&#34;特殊方向&#34;）
+</span></span><span style=display:flex><span>- λ 是特征值（拉伸/压缩的比例）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>示例：
+</span></span><span style=display:flex><span>A = [[2, 1], [1, 2]]
+</span></span><span style=display:flex><span>v = [1, 1] 是一个特征向量，因为 A·v = [3, 3] = 3·[1, 1]，特征值 λ = 3
+</span></span><span style=display:flex><span>v = [1, -1] 是另一个特征向量，因为 A·v = [1, -1] = 1·[1, -1]，特征值 λ = 1
+</span></span></code></pre></div><p><strong>为什么特征值/特征向量在AI中重要？</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>PCA降维的原理：
+</span></span><span style=display:flex><span>1. 计算数据的协方差矩阵
+</span></span><span style=display:flex><span>2. 求协方差矩阵的特征值和特征向量
+</span></span><span style=display:flex><span>3. 特征值大的特征向量 = 数据变化最大的方向（&#34;最重要的方向&#34;）
+</span></span><span style=display:flex><span>4. 只保留前k个最重要的方向，丢弃其他方向
+</span></span><span style=display:flex><span>→ 数据从高维降到k维，同时保留了最多的信息
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：你有一张3D的照片，PCA告诉你&#34;最有信息量的拍摄角度&#34;是什么
+</span></span><span style=display:flex><span>     只从这个角度拍一张2D照片，虽然维度降低了，但信息损失最少
+</span></span></code></pre></div><h4 id=svd奇异值分解矩阵的dna>SVD奇异值分解——矩阵的"DNA"<a hidden class=anchor aria-hidden=true href=#svd奇异值分解矩阵的dna>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>任意矩阵 A 可以分解为三个矩阵的乘积：
+</span></span><span style=display:flex><span>A = U · Σ · V^T
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>其中：
+</span></span><span style=display:flex><span>- U：左奇异矩阵（&#34;行空间的特征方向&#34;）
+</span></span><span style=display:flex><span>- Σ：奇异值矩阵（对角矩阵，每个对角元素是一个奇异值）
+</span></span><span style=display:flex><span>- V：右奇异矩阵（&#34;列空间的特征方向&#34;）
+</span></span></code></pre></div><p><strong>SVD的直觉——信息压缩</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>类比：一张高清照片有1000×1000像素（100万个数字）
+</span></span><span style=display:flex><span>SVD告诉你：这100万个数字中，真正&#34;重要&#34;的信息可能只需要100个奇异值就能表达
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>保留最大的k个奇异值，丢弃其他的：
+</span></span><span style=display:flex><span>→ 用更少的数据表示原始信息（压缩）
+</span></span><span style=display:flex><span>→ 保留了最重要的&#34;模式&#34;（去噪）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是为什么SVD被称为矩阵的&#34;DNA&#34;——它揭示了矩阵中最本质的结构。
+</span></span></code></pre></div><p><strong>SVD在AI中的应用</strong>：</p><ul><li><strong>数据压缩</strong>：保留最大的k个奇异值，用更少的数据表示原始信息</li><li><strong>推荐系统</strong>：协同过滤的核心算法（Netflix推荐电影用的就是SVD）</li><li><strong>PCA实现</strong>：SVD是PCA的数值稳定实现方式</li><li><strong>词嵌入</strong>：早期的LSA（潜在语义分析）就是用SVD做的</li></ul><h3 id=24-概率论基础>2.4 概率论基础<a hidden class=anchor aria-hidden=true href=#24-概率论基础>#</a></h3><h4 id=条件概率与贝叶斯定理>条件概率与贝叶斯定理<a hidden class=anchor aria-hidden=true href=#条件概率与贝叶斯定理>#</a></h4><p><strong>条件概率</strong>：在已知B发生的条件下，A发生的概率</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>P(A|B) = P(A∩B) / P(B)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：在一个班里，P(及格) = 及格人数/总人数
+</span></span><span style=display:flex><span>     P(及格|男同学) = 及格的男同学/所有男同学
+</span></span><span style=display:flex><span>     条件概率就是&#34;缩小范围后的概率&#34;
+</span></span></code></pre></div><p><strong>贝叶斯定理——从结果推原因</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>P(A|B) = P(B|A) · P(A) / P(B)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：你看到地上有水（结果B），想判断是&#34;下雨了&#34;还是&#34;洒水车经过&#34;（原因A）
+</span></span><span style=display:flex><span>- P(下雨|有水) = P(有水|下雨)·P(下雨) / P(有水)
+</span></span><span style=display:flex><span>- 如果今天是晴天，P(下雨)很小，所以&#34;下雨&#34;的可能性不大
+</span></span><span style=display:flex><span>- 如果洒水车经常经过，P(洒水车)很大，所以&#34;洒水车&#34;的可能性更大
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>贝叶斯定理 = 用&#34;先验知识&#34;（P(A)）+ &#34;新证据&#34;（P(B|A)）更新你的判断（P(A|B)）
+</span></span></code></pre></div><h4 id=最大似然估计mle损失函数的理论基础>最大似然估计（MLE）——损失函数的理论基础<a hidden class=anchor aria-hidden=true href=#最大似然估计mle损失函数的理论基础>#</a></h4><p><strong>核心思想</strong>：选择让观测数据出现概率最大的参数。</p><p><strong>类比：侦探推理</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>场景：一个硬币被抛了10次，结果是7次正面、3次反面。
+</span></span><span style=display:flex><span>问题：这枚硬币正面朝上的概率p是多少？
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>最大似然估计的回答：选择让&#34;7正3反&#34;这个结果最可能出现的p值。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>似然函数：L(p) = C(10,7) · p^7 · (1-p)^3
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>我们要求让L(p)最大的p。
+</span></span><span style=display:flex><span>取对数（方便计算）：log L = 7·log(p) + 3·log(1-p) + 常数
+</span></span><span style=display:flex><span>对p求导并令其为0：7/p - 3/(1-p) = 0
+</span></span><span style=display:flex><span>解得：p = 7/10 = 0.7
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>结论：最大似然估计认为p=0.7，也就是正面概率是70%
+</span></span><span style=display:flex><span>这很直觉——10次中7次正面，所以概率大概是70%。
+</span></span></code></pre></div><p><strong>MLE的完整数学推导（一维高斯分布）</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>假设数据服从正态分布 N(μ, σ²)
+</span></span><span style=display:flex><span>观测到n个数据点：x₁, x₂, ..., xₙ
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>似然函数（所有数据点概率的乘积）：
+</span></span><span style=display:flex><span>L(μ,σ²) = ∏ᵢ P(xᵢ | μ, σ²)
+</span></span><span style=display:flex><span>         = ∏ᵢ [1/√(2πσ²)] · exp(-(xᵢ-μ)²/(2σ²))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>取对数（把乘法变加法，方便求导）：
+</span></span><span style=display:flex><span>log L = Σᵢ [-½log(2πσ²) - (xᵢ-μ)²/(2σ²)]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对μ求导并令其为0：
+</span></span><span style=display:flex><span>∂(log L)/∂μ = Σᵢ (xᵢ-μ)/σ² = 0
+</span></span><span style=display:flex><span>→ Σᵢ xᵢ - nμ = 0
+</span></span><span style=display:flex><span>→ μ* = (1/n)Σᵢ xᵢ = 样本均值！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>结论：高斯分布的MLE估计 = 样本均值
+</span></span><span style=display:flex><span>这很直觉——&#34;最可能的中心位置&#34;就是所有数据点的平均值。
+</span></span></code></pre></div><p><strong>关键联系——为什么交叉熵损失函数是合理的</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>交叉熵损失 = 负对数似然
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>当你最小化交叉熵时，你实际上在最大化似然——
+</span></span><span style=display:flex><span>让模型的参数使得观测到的训练数据出现的概率最大。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是为什么交叉熵是分类任务的标准损失函数——它有坚实的概率论基础。
+</span></span></code></pre></div><hr><h2 id=模块三概率论与最优化>模块三：概率论与最优化<a hidden class=anchor aria-hidden=true href=#模块三概率论与最优化>#</a></h2><h3 id=31-概率论进阶>3.1 概率论进阶<a hidden class=anchor aria-hidden=true href=#31-概率论进阶>#</a></h3><h4 id=期望与方差>期望与方差<a hidden class=anchor aria-hidden=true href=#期望与方差>#</a></h4><p><strong>期望——数据的"重心"</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>期望 E[X] = Σ x·P(x)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：期望就像一根尺子上挂了一堆不同重量的砝码
+</span></span><span style=display:flex><span>     砝码的位置 = x（取值），砝码的重量 = P(x)（概率）
+</span></span><span style=display:flex><span>     期望 = 这根尺子平衡时的支点位置（重心）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>示例：骰子的期望 = 1×(1/6) + 2×(1/6) + ... + 6×(1/6) = 3.5
+</span></span><span style=display:flex><span>     虽然骰子不会掷出3.5，但这是&#34;平均值&#34;的理论位置
+</span></span></code></pre></div><p><strong>方差——数据的"分散程度"</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>方差 Var(X) = E[(X-μ)²] = E[X²] - (E[X])²
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：两组学生的平均分都是80分
+</span></span><span style=display:flex><span>     A组：[79, 80, 81] → 方差很小（成绩很集中）
+</span></span><span style=display:flex><span>     B组：[50, 80, 110] → 方差很大（成绩很分散）
+</span></span><span style=display:flex><span>     虽然平均分一样，但方差告诉我们&#34;波动有多大&#34;
+</span></span></code></pre></div><p><strong>在AI中的应用</strong>：</p><ul><li><strong>BatchNorm</strong>：对每个mini-batch计算均值和方差，然后标准化数据<ul><li>为什么？因为如果每层的输入分布都在变化（&ldquo;内部协变量偏移&rdquo;），网络很难学习</li><li>BatchNorm让每层的输入分布稳定下来，加速训练</li></ul></li><li><strong>权重初始化</strong>：初始化权重时需要控制方差<ul><li>方差太大 → 信号爆炸（输出值越来越大）</li><li>方差太小 → 信号消失（输出值越来越小）</li><li>合适的方差 → 信号稳定传播</li></ul></li></ul><h4 id=协方差两个变量的关系>协方差——两个变量的"关系"<a hidden class=anchor aria-hidden=true href=#协方差两个变量的关系>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Cov(X,Y) = E[(X-μ_x)(Y-μ_y)]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>协方差衡量两个变量的变化趋势：
+</span></span><span style=display:flex><span>- 正值：X增大时Y也增大（正相关，比如身高和体重）
+</span></span><span style=display:flex><span>- 负值：X增大时Y减小（负相关，比如温度和羽绒服销量）
+</span></span><span style=display:flex><span>- 零：X和Y没有线性关系（不一定独立！）
+</span></span></code></pre></div><h3 id=32-梯度下降最重要的优化算法>3.2 梯度下降——最重要的优化算法<a hidden class=anchor aria-hidden=true href=#32-梯度下降最重要的优化算法>#</a></h3><h4 id=梯度的直觉>梯度的直觉<a hidden class=anchor aria-hidden=true href=#梯度的直觉>#</a></h4><p><strong>类比：蒙眼下山</strong></p><p>想象你被蒙上眼睛，站在一座山上，想要找到山谷的最低点：</p><ul><li>你唯一能做的就是<strong>用脚感受脚下的坡度</strong></li><li>每一步都往<strong>最陡的下坡方向</strong>走</li><li>走的<strong>步幅</strong>由学习率控制</li></ul><p><strong>梯度</strong>就是那个"最陡的方向"：</p><ul><li>在一维中：梯度 = 导数（一个数字）</li><li>在多维中：梯度 = 所有偏导数组成的向量（指向最陡上升方向）</li></ul><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>梯度方向：函数值增长最快的方向（上坡方向）
+</span></span><span style=display:flex><span>梯度下降：沿着梯度的反方向走（下坡方向）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>数学公式：θ_new = θ_old - η · ∇L(θ)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>其中：
+</span></span><span style=display:flex><span>- θ：模型参数（你所在的位置）
+</span></span><span style=display:flex><span>- η：学习率（步幅大小）
+</span></span><span style=display:flex><span>- ∇L(θ)：损失函数对参数的梯度（坡度指示器）
+</span></span><span style=display:flex><span>- 减号：因为我们想减少损失，所以往梯度的反方向走
+</span></span></code></pre></div><h4 id=学习率步幅的艺术>学习率——步幅的艺术<a hidden class=anchor aria-hidden=true href=#学习率步幅的艺术>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>学习率太大 → 步子太大，可能跨过最低点，来回震荡
+</span></span><span style=display:flex><span>             就像下山时跑得太快，冲过了山谷，跑到对面山上去了
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>学习率太小 → 步子太小，收敛极慢
+</span></span><span style=display:flex><span>             就像下山时每次只挪一厘米，要走到天黑
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>学习率刚好 → 稳定收敛到最优解
+</span></span><span style=display:flex><span>             就像以合适的速度下山，稳步到达谷底
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>常见策略：
+</span></span><span style=display:flex><span>- 从0.001开始（一个比较安全的起点）
+</span></span><span style=display:flex><span>- 观察loss曲线：如果震荡就减小，如果下降太慢就增大
+</span></span><span style=display:flex><span>- 高级策略：学习率调度（先大后小，就像下山时先大步走，接近谷底时小步挪）
+</span></span></code></pre></div><h4 id=三种梯度下降方法详细对比>三种梯度下降方法——详细对比<a hidden class=anchor aria-hidden=true href=#三种梯度下降方法详细对比>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1. 批量梯度下降（BGD）：
+</span></span><span style=display:flex><span>   每次用全部数据计算梯度
+</span></span><span style=display:flex><span>   类比：你有一亿个数据点，每走一步都要看一亿个&#34;坡度指示器&#34;取平均
+</span></span><span style=display:flex><span>   优点：梯度方向最准确，一定能收敛到局部最优
+</span></span><span style=display:flex><span>   缺点：数据量大时极慢（每步都要遍历全部数据）
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>2. 随机梯度下降（SGD）：
+</span></span><span style=display:flex><span>   每次只用1个样本计算梯度
+</span></span><span style=display:flex><span>   类比：你只看一个&#34;坡度指示器&#34;就决定方向
+</span></span><span style=display:flex><span>   优点：快（每步只需要看一个样本）
+</span></span><span style=display:flex><span>   缺点：方向不稳定（就像只听一个人的建议，可能被误导）
+</span></span><span style=display:flex><span>   
+</span></span><span style=display:flex><span>3. 小批量梯度下降（MBGD）：
+</span></span><span style=display:flex><span>   每次用一小批数据（如32/64/128个样本）计算梯度
+</span></span><span style=display:flex><span>   类比：你听32个人的建议取平均，既不太慢也不太偏
+</span></span><span style=display:flex><span>   优点：兼顾速度和稳定性
+</span></span><span style=display:flex><span>   实际训练中最常用！（batch_size通常为32/64/128/256）
+</span></span></code></pre></div><h4 id=对线性回归应用梯度下降完整推导>对线性回归应用梯度下降——完整推导<a hidden class=anchor aria-hidden=true href=#对线性回归应用梯度下降完整推导>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>线性回归模型：ŷ = wx + b
+</span></span><span style=display:flex><span>损失函数（均方误差）：L = (1/n) Σᵢ (yᵢ - ŷᵢ)² = (1/n) Σᵢ (yᵢ - wxᵢ - b)²
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>目标：找到w和b，使L最小。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对w求偏导：
+</span></span><span style=display:flex><span>∂L/∂w = (1/n) Σᵢ 2(yᵢ - wxᵢ - b)·(-xᵢ)
+</span></span><span style=display:flex><span>       = -(2/n) Σᵢ xᵢ(yᵢ - wxᵢ - b)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对b求偏导：
+</span></span><span style=display:flex><span>∂L/∂b = (1/n) Σᵢ 2(yᵢ - wxᵢ - b)·(-1)
+</span></span><span style=display:flex><span>       = -(2/n) Σᵢ (yᵢ - wxᵢ - b)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>更新规则：
+</span></span><span style=display:flex><span>w_new = w_old - η · ∂L/∂w
+</span></span><span style=display:flex><span>b_new = b_old - η · ∂L/∂b
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>重复这个过程直到收敛（损失不再明显下降）。
+</span></span></code></pre></div><h3 id=33-凸优化>3.3 凸优化<a hidden class=anchor aria-hidden=true href=#33-凸优化>#</a></h3><h4 id=什么是凸函数>什么是凸函数？<a hidden class=anchor aria-hidden=true href=#什么是凸函数>#</a></h4><p><strong>类比：碗和碗碎片</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>凸函数像一个碗——你把弹珠放进去，它总会滚到最低点。
+</span></span><span style=display:flex><span>不管弹珠从哪个位置开始，最终都会到达同一个最低点（全局最优）。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>非凸函数像一堆碗碎片——弹珠可能卡在某个凹陷处（局部最优），
+</span></span><span style=display:flex><span>而不是到达真正的最低点（全局最优）。
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>凸优化重要因为：凸函数的局部最小值 = 全局最小值
+</span></span><span style=display:flex><span>→ 梯度下降一定能找到最优解
+</span></span><span style=display:flex><span>→ 不用担心&#34;卡在局部最优&#34;
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>凸函数的数学定义：
+</span></span><span style=display:flex><span>对于任意两点 x₁, x₂ 和任意 t ∈ [0,1]：
+</span></span><span style=display:flex><span>f(t·x₁ + (1-t)·x₂) ≤ t·f(x₁) + (1-t)·f(x₂)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>直觉：函数图像上任意两点的连线，都在函数图像上方（或重合）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>判断方法：
+</span></span><span style=display:flex><span>- 一维：二阶导数 f&#39;&#39;(x) ≥ 0（开口向上）
+</span></span><span style=display:flex><span>- 多维：Hessian矩阵半正定
+</span></span></code></pre></div><p><strong>为什么凸优化在AI中重要？</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>线性回归的损失函数（均方误差）是凸的 → 有唯一最优解
+</span></span><span style=display:flex><span>逻辑回归的损失函数（交叉熵）是凸的 → 有唯一最优解
+</span></span><span style=display:flex><span>神经网络的损失函数是非凸的 → 只能找到局部最优
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>好消息：实践中，深度学习的非凸损失函数的局部最优通常也足够好
+</span></span><span style=display:flex><span>坏消息：理论上不能保证找到全局最优
+</span></span><span style=display:flex><span>实际做法：用SGD + 各种优化技巧（动量、Adam等），通常能找到好的解
+</span></span></code></pre></div><h4 id=拉格朗日乘子法与kkt条件>拉格朗日乘子法与KKT条件<a hidden class=anchor aria-hidden=true href=#拉格朗日乘子法与kkt条件>#</a></h4><p><strong>问题</strong>：如何在有约束的情况下求最优解？</p><p><strong>类比：在围栏内找最低点</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>无约束优化：在整个山上找最低点（随便走）
+</span></span><span style=display:flex><span>有约束优化：只能在围栏内找最低点（不能走出围栏）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>拉格朗日乘子法的核心思想：
+</span></span><span style=display:flex><span>把&#34;有约束&#34;问题转换为&#34;无约束&#34;问题
+</span></span><span style=display:flex><span>在目标函数上加一个&#34;惩罚项&#34;——如果你违反约束，惩罚项就会变大
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>数学形式：
+</span></span><span style=display:flex><span>原始问题：minimize f(x)，subject to g(x) = 0
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>构造拉格朗日函数：L(x,λ) = f(x) + λ·g(x)
+</span></span><span style=display:flex><span>- f(x)：我们要最小化的目标
+</span></span><span style=display:flex><span>- λ·g(x)：约束的&#34;惩罚&#34;
+</span></span><span style=display:flex><span>- λ（拉格朗日乘子）：惩罚的&#34;力度&#34;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>分别对x和λ求导并令其为0：
+</span></span><span style=display:flex><span>∂L/∂x = 0  → 最优解的条件
+</span></span><span style=display:flex><span>∂L/∂λ = 0  → 约束条件（g(x)=0）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>在AI中的应用：SVM的对偶问题就是用拉格朗日乘子法推导的
+</span></span></code></pre></div><hr><h2 id=模块四机器学习基础>模块四：机器学习基础<a hidden class=anchor aria-hidden=true href=#模块四机器学习基础>#</a></h2><h3 id=41-线性回归>4.1 线性回归<a hidden class=anchor aria-hidden=true href=#41-线性回归>#</a></h3><h4 id=线性回归的直觉>线性回归的直觉<a hidden class=anchor aria-hidden=true href=#线性回归的直觉>#</a></h4><p><strong>类比：在散点图上画一条"最好"的线</strong></p><p>给你一堆数据点（比如房屋面积和房价），你想找到一条直线来描述它们的关系：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>y = wx + b
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>目标：找到w（斜率）和b（截距），使得这条线&#34;最贴近&#34;所有数据点
+</span></span><span style=display:flex><span>&#34;最贴近&#34; = 预测值和真实值的差距最小
+</span></span></code></pre></div><h4 id=正规方程直接求解>正规方程——直接求解<a hidden class=anchor aria-hidden=true href=#正规方程直接求解>#</a></h4><p><strong>思路</strong>：既然我们想要"最小化误差"，那就直接对误差函数求导，令导数为0，解方程。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>矩阵形式：y = Xw + e（e是误差）
+</span></span><span style=display:flex><span>损失函数：L = ||e||² = ||y - Xw||²
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>展开：L = (y - Xw)^T (y - Xw)
+</span></span><span style=display:flex><span>       = y^Ty - y^TXw - w^TX^Ty + w^TX^TXw
+</span></span><span style=display:flex><span>       = y^Ty - 2w^TX^Ty + w^TX^TXw
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对w求导并令其为0：
+</span></span><span style=display:flex><span>∂L/∂w = -2X^Ty + 2X^TXw = 0
+</span></span><span style=display:flex><span>→ X^TXw = X^Ty
+</span></span><span style=display:flex><span>→ w = (X^TX)^(-1) · X^Ty
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是正规方程！直接一步算出最优解。
+</span></span></code></pre></div><p><strong>优点</strong>：一步到位，不需要迭代
+<strong>缺点</strong>：</p><ul><li>需要计算矩阵逆(X^TX)^(-1)，当特征维度很高时（如10000+），计算量巨大（O(n³)）</li><li>当X^TX不可逆时（比如特征之间有线性关系），无法求解</li></ul><p><strong>什么时候用正规方程，什么时候用梯度下降？</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>特征数 &lt; 10000：正规方程通常更快
+</span></span><span style=display:flex><span>特征数 &gt; 10000：梯度下降通常更合适
+</span></span><span style=display:flex><span>数据量极大：梯度下降（可以每次只用一小批数据）
+</span></span></code></pre></div><h4 id=最小二乘法>最小二乘法<a hidden class=anchor aria-hidden=true href=#最小二乘法>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>损失函数：L(w,b) = (1/n) Σ(yᵢ - wxᵢ - b)²
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>&#34;最小二乘&#34;的名字来源：最小化&#34;误差的平方和&#34;
+</span></span><span style=display:flex><span>- &#34;二乘&#34; = 平方（误差的平方）
+</span></span><span style=display:flex><span>- &#34;最小&#34; = 让这个平方和最小
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对L求导令其为0，就是正规方程。
+</span></span><span style=display:flex><span>几何意义：找到一条线，使所有数据点到这条线的&#34;垂直距离的平方和&#34;最小。
+</span></span></code></pre></div><h3 id=42-正则化>4.2 正则化<a hidden class=anchor aria-hidden=true href=#42-正则化>#</a></h3><h4 id=为什么需要正则化>为什么需要正则化？<a hidden class=anchor aria-hidden=true href=#为什么需要正则化>#</a></h4><p><strong>类比：考试作弊 vs 真正学会</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>过拟合就像&#34;死记硬背&#34;：
+</span></span><span style=display:flex><span>- 训练数据（练习题）上表现很好——因为把答案都背下来了
+</span></span><span style=display:flex><span>- 测试数据（考试题）上表现很差——因为没见过的题就不会了
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>正则化就像&#34;惩罚死记硬背&#34;：
+</span></span><span style=display:flex><span>- 不仅要求模型在训练数据上表现好
+</span></span><span style=display:flex><span>- 还要求模型&#34;尽量简单&#34;（不要死记硬背）
+</span></span><span style=display:flex><span>- 简单的模型泛化能力更好（理解了原理就能做新题）
+</span></span></code></pre></div><h4 id=l1正则化lasso>L1正则化（Lasso）<a hidden class=anchor aria-hidden=true href=#l1正则化lasso>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>L_total = L_original + λ · Σ|wᵢ|
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>L1的效果：使部分权重变为**恰好0**，实现特征选择
+</span></span></code></pre></div><p><strong>为什么L1能使权重变为0？——几何直觉</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>想象一个2D空间（w₁, w₂）：
+</span></span><span style=display:flex><span>- 损失函数的等高线是椭圆形的
+</span></span><span style=display:flex><span>- L1的约束区域是菱形（|w₁| + |w₂| ≤ c）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>椭圆和菱形最容易在&#34;角点&#34;相交
+</span></span><span style=display:flex><span>角点恰好在坐标轴上（w₁=0 或 w₂=0）
+</span></span><span style=display:flex><span>→ 最优解中某些权重恰好为0 → 特征选择
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：L1像一把&#34;剪刀&#34;，会直接把不重要的特征&#34;剪掉&#34;（权重变为0）
+</span></span></code></pre></div><h4 id=l2正则化ridge>L2正则化（Ridge）<a hidden class=anchor aria-hidden=true href=#l2正则化ridge>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>L_total = L_original + λ · Σ(wᵢ²)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>L2的效果：使所有权重趋近于0但**不等于0**，防止某个特征权重过大
+</span></span></code></pre></div><p><strong>为什么L2不会使权重变为0？——几何直觉</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>想象一个2D空间（w₁, w₂）：
+</span></span><span style=display:flex><span>- 损失函数的等高线是椭圆形的
+</span></span><span style=display:flex><span>- L2的约束区域是圆形（w₁² + w₂² ≤ c）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>椭圆和圆形的交点通常不在坐标轴上
+</span></span><span style=display:flex><span>→ 权重趋近于0但不会恰好为0
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：L2像一个&#34;压缩弹簧&#34;，把所有权重往小的方向压，但不会压到0
+</span></span></code></pre></div><h4 id=l1-vs-l2-对比>L1 vs L2 对比<a hidden class=anchor aria-hidden=true href=#l1-vs-l2-对比>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>特性              L1 (Lasso)          L2 (Ridge)
+</span></span><span style=display:flex><span>────────────────────────────────────────────────
+</span></span><span style=display:flex><span>效果              特征选择（稀疏解）    权重衰减（平滑解）
+</span></span><span style=display:flex><span>权重会变为0？      会（部分权重=0）     不会（权重趋近0但≠0）
+</span></span><span style=display:flex><span>适用场景          特征很多，需要筛选    特征都有用，防止过拟合
+</span></span><span style=display:flex><span>几何形状          菱形约束              圆形约束
+</span></span><span style=display:flex><span>导数              |w|&#39; = sign(w)       (w²)&#39; = 2w
+</span></span><span style=display:flex><span>                  （在0处不可导）       （处处可导，优化更方便）
+</span></span></code></pre></div><h4 id=正则化的本质奥卡姆剃刀>正则化的本质——奥卡姆剃刀<a hidden class=anchor aria-hidden=true href=#正则化的本质奥卡姆剃刀>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>不加正则化：模型只追求&#34;拟合训练数据&#34;（最小化训练误差）
+</span></span><span style=display:flex><span>加正则化：模型同时追求&#34;拟合训练数据&#34; + &#34;保持简单&#34;（最小化训练误差 + 惩罚复杂度）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是奥卡姆剃刀原则：在同样能解释数据的模型中，选择最简单的那个
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>为什么简单更好？
+</span></span><span style=display:flex><span>- 简单的模型更不容易&#34;死记硬背&#34;训练数据
+</span></span><span style=display:flex><span>- 简单的模型对新数据的泛化能力更强
+</span></span><span style=display:flex><span>- 简单的模型更容易理解和调试
+</span></span></code></pre></div><h3 id=43-逻辑回归>4.3 逻辑回归<a hidden class=anchor aria-hidden=true href=#43-逻辑回归>#</a></h3><h4 id=逻辑回归不是回归是分类>逻辑回归不是回归，是分类！<a hidden class=anchor aria-hidden=true href=#逻辑回归不是回归是分类>#</a></h4><p><strong>名字的由来</strong>：逻辑回归使用了"逻辑函数"（即Sigmoid函数），所以叫"逻辑回归"。但它实际上是一个<strong>分类算法</strong>，不是回归算法。</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>线性回归：输出连续值（如房价=150万）
+</span></span><span style=display:flex><span>逻辑回归：输出概率（如垃圾邮件概率=0.95）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>核心区别：在输出层加了一个Sigmoid函数
+</span></span><span style=display:flex><span>- 线性回归：y = wx + b → 输出范围是(-∞, +∞)
+</span></span><span style=display:flex><span>- 逻辑回归：y = σ(wx + b) → 输出范围是(0, 1)，表示概率
+</span></span></code></pre></div><h4 id=sigmoid函数将实数映射为概率>Sigmoid函数——将实数映射为概率<a hidden class=anchor aria-hidden=true href=#sigmoid函数将实数映射为概率>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>σ(z) = 1 / (1 + e^(-z))
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>σ(0) = 0.5    → &#34;不确定&#34;
+</span></span><span style=display:flex><span>σ(5) ≈ 0.993  → &#34;非常可能是&#34;
+</span></span><span style=display:flex><span>σ(-5) ≈ 0.007 → &#34;非常可能不是&#34;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>分类规则：
+</span></span><span style=display:flex><span>- σ(z) ≥ 0.5 → 预测为正类（类别1）
+</span></span><span style=display:flex><span>- σ(z) &lt; 0.5 → 预测为负类（类别0）
+</span></span></code></pre></div><h4 id=交叉熵损失函数完整推导>交叉熵损失函数——完整推导<a hidden class=anchor aria-hidden=true href=#交叉熵损失函数完整推导>#</a></h4><p><strong>为什么用交叉熵而不是均方误差？</strong></p><p>这个问题在面试中经常被问到，让我们从头推导。</p><p><strong>推导起点：最大似然估计</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>假设：
+</span></span><span style=display:flex><span>- 样本i的真实标签：yᵢ ∈ {0, 1}
+</span></span><span style=display:flex><span>- 模型预测样本i为正类的概率：pᵢ = σ(w·xᵢ + b)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对于单个样本i：
+</span></span><span style=display:flex><span>如果 yᵢ = 1：P(yᵢ|xᵢ) = pᵢ        （预测为正类的概率）
+</span></span><span style=display:flex><span>如果 yᵢ = 0：P(yᵢ|xᵢ) = 1 - pᵢ    （预测为负类的概率）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>合并为一个公式：
+</span></span><span style=display:flex><span>P(yᵢ|xᵢ) = pᵢ^yᵢ · (1-pᵢ)^(1-yᵢ)
+</span></span><span style=display:flex><span>（当yᵢ=1时就是pᵢ，当yᵢ=0时就是1-pᵢ）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>整个数据集的似然：
+</span></span><span style=display:flex><span>L = ∏ᵢ P(yᵢ|xᵢ) = ∏ᵢ [pᵢ^yᵢ · (1-pᵢ)^(1-yᵢ)]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>取对数（连乘变连加，方便计算）：
+</span></span><span style=display:flex><span>log L = Σᵢ [yᵢ·log(pᵢ) + (1-yᵢ)·log(1-pᵢ)]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>最大似然 = 最大化log L
+</span></span><span style=display:flex><span>最小化负对数似然 = 最小化 -log L
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>交叉熵损失：
+</span></span><span style=display:flex><span>L_CE = -(1/n) Σᵢ [yᵢ·log(pᵢ) + (1-yᵢ)·log(1-pᵢ)]
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是交叉熵损失函数的由来——它不是凭空设计的，
+</span></span><span style=display:flex><span>而是从最大似然估计自然推导出来的！
+</span></span></code></pre></div><p><strong>为什么不用均方误差（MSE）？</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>MSE损失：L_MSE = (1/n) Σᵢ (yᵢ - pᵢ)²
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>问题：当Sigmoid的输入z很大或很小时，Sigmoid的梯度接近0
+</span></span><span style=display:flex><span>     MSE的梯度中包含σ&#39;(z)，所以MSE的梯度也会接近0
+</span></span><span style=display:flex><span>     → 参数更新极慢 → 训练不动！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>交叉熵的梯度：∂L_CE/∂w = (1/n) Σᵢ (pᵢ - yᵢ) · xᵢ
+</span></span><span style=display:flex><span>     这个梯度中**不包含σ&#39;(z)**！
+</span></span><span style=display:flex><span>     → 梯度大小只和预测误差(pᵢ - yᵢ)成正比
+</span></span><span style=display:flex><span>     → 预测越差，梯度越大，更新越快
+</span></span><span style=display:flex><span>     → 训练更高效！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>这就是为什么分类任务用交叉熵而不是MSE——
+</span></span><span style=display:flex><span>交叉熵的梯度形式更简洁，避免了Sigmoid梯度消失的问题。
+</span></span></code></pre></div><h4 id=softmax回归多分类>Softmax回归（多分类）<a hidden class=anchor aria-hidden=true href=#softmax回归多分类>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>二分类：Sigmoid → 输出1个概率 p，另一个类别的概率是 1-p
+</span></span><span style=display:flex><span>多分类：Softmax → 输出k个概率（k为类别数），且概率之和为1
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>softmax(zᵢ) = e^(zᵢ) / Σⱼ e^(zⱼ)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>示例：3个类别（猫、狗、鸟），模型输出 [2.0, 1.0, 0.1]
+</span></span><span style=display:flex><span>softmax = [0.659, 0.242, 0.099]
+</span></span><span style=display:flex><span>→ 65.9%概率是猫，24.2%概率是狗，9.9%概率是鸟
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Softmax回归的损失函数也是交叉熵，只是推广到多分类：
+</span></span><span style=display:flex><span>L = -(1/n) Σᵢ Σₖ yᵢₖ · log(pᵢₖ)
+</span></span><span style=display:flex><span>其中yᵢₖ是one-hot编码（只有正确类别的位置是1，其余是0）
+</span></span></code></pre></div><h3 id=44-阶段总结>4.4 阶段总结<a hidden class=anchor aria-hidden=true href=#44-阶段总结>#</a></h3><h4 id=本阶段核心公式速查表>本阶段核心公式速查表<a hidden class=anchor aria-hidden=true href=#本阶段核心公式速查表>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1. 梯度下降：θ = θ - η·∇L
+</span></span><span style=display:flex><span>2. 线性回归：y = Xw + b
+</span></span><span style=display:flex><span>3. 正规方程：w = (X^TX)^(-1)·X^Ty
+</span></span><span style=display:flex><span>4. Sigmoid：σ(z) = 1/(1+e^(-z))
+</span></span><span style=display:flex><span>5. Sigmoid导数：σ&#39;(z) = σ(z)·(1-σ(z))
+</span></span><span style=display:flex><span>6. 交叉熵：L = -[y·log(p) + (1-y)·log(1-p)]
+</span></span><span style=display:flex><span>7. Softmax：softmax(zᵢ) = e^(zᵢ)/Σe^(zⱼ)
+</span></span><span style=display:flex><span>8. L2正则化：L_total = L + λ·Σw²
+</span></span><span style=display:flex><span>9. 贝叶斯：P(A|B) = P(B|A)·P(A)/P(B)
+</span></span><span style=display:flex><span>10. 最大似然：θ* = argmax Σlog P(xᵢ|θ)
+</span></span><span style=display:flex><span>11. 链式法则：dy/dx = dy/du · du/dx
+</span></span><span style=display:flex><span>12. SVD：A = U·Σ·V^T
+</span></span></code></pre></div><hr><h2 id=-自测题>📝 自测题<a hidden class=anchor aria-hidden=true href=#-自测题>#</a></h2><ol><li><strong>Python</strong>：写一个函数，输入一个列表，返回其中所有偶数的平方和</li><li><strong>微积分</strong>：求 f(x) = x³·eˣ 的导数</li><li><strong>线性代数</strong>：计算两个2×2矩阵的乘积，并解释每一步在做什么</li><li><strong>概率论</strong>：解释什么是最大似然估计，给出一维高斯分布的MLE推导</li><li><strong>梯度下降</strong>：解释学习率过大和过小分别会带来什么问题，画出loss曲线示意图</li><li><strong>线性回归</strong>：正规方程和梯度下降各有什么优缺点？什么时候用哪个？</li><li><strong>逻辑回归</strong>：从最大似然估计推导出交叉熵损失函数</li><li><strong>正则化</strong>：L1和L2正则化分别有什么效果？为什么L1能产生稀疏解？</li><li><strong>Sigmoid</strong>：推导Sigmoid的导数公式σ&rsquo;(x) = σ(x)·(1-σ(x))</li><li><strong>综合</strong>：解释神经网络的训练过程涉及哪些数学知识，它们各自起什么作用</li></ol><hr><h2 id=-推荐补充资源>📚 推荐补充资源<a hidden class=anchor aria-hidden=true href=#-推荐补充资源>#</a></h2><table><thead><tr><th>知识点</th><th>推荐资源</th><th>说明</th></tr></thead><tbody><tr><td>Python</td><td>《Python编程：从入门到实践》</td><td>零基础友好</td></tr><tr><td>NumPy</td><td>NumPy官方Quickstart</td><td>快速上手</td></tr><tr><td>微积分</td><td>3Blue1Brown《微积分的本质》</td><td>可视化理解，B站有中文字幕</td></tr><tr><td>线性代数</td><td>3Blue1Brown《线性代数的本质》</td><td>神级教程，必看</td></tr><tr><td>概率论</td><td>可汗学院概率论课程</td><td>零基础友好</td></tr><tr><td>机器学习</td><td>吴恩达《机器学习》课程</td><td>经典入门课程</td></tr></tbody></table></div><footer class=post-footer><nav class=paginav><a class=prev href=https://gopherding.github.io/posts/tech/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%8Epytorch/><span class=title>« 上一页</span><br><span>深度学习与PyTorch</span>
+</a><a class=next href=https://gopherding.github.io/posts/read/%E4%B8%BA%E4%BA%86%E5%BF%98%E5%8D%B4%E7%9A%84%E8%AE%B0%E5%BF%B5/><span class=title>下一页 »</span><br><span>为了忘却的记念</span></a></nav></footer></div><style>.comments_details summary::marker{font-size:20px;content:'👉展开评论';color:var(--content)}.comments_details[open] summary::marker{font-size:20px;content:'👇关闭评论';color:var(--content)}</style><div><details class=comments_details><summary style="cursor:pointer;margin:50px 0 20px;width:130px"><span style=font-size:20px;color:var(--content)>...</span></summary><div id=tcomment></div></details><script>window.addEventListener("load",function(){twikoo.init({envId:null,el:"#tcomment",lang:"zh-CN",region:null,path:window.TWIKOO_MAGIC_PATH||window.location.pathname})})</script></div></article></main><footer class=footer><span>Copyright
+&copy;
+2021-2026
+<a href=https://gopherding.github.io/ style=color:#939393;text-decoration:none;border-bottom:none;box-shadow:none>GopherDing's Blog</a>
+All Rights Reserved. Generated with
+<a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none;border-bottom:none;box-shadow:none>Hugo</a>
+.Version 0.147.9.</span><br><span id=busuanzi_container><span class="fa fa-user"></span> <span id=busuanzi_value_site_uv></span>
+<span class="fa fa-eye"></span> <span id=busuanzi_value_site_pv></span></span></footer><script src=/js/typewriter.js></script><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.body.addEventListener("copy",function(e){if(window.getSelection().toString()&&window.getSelection().toString().length>100){let t=e.clipboardData||window.clipboardData;if(t){e.preventDefault();let n=window.getSelection().toString()+`\r
+
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href,s=window.getSelection().toString()+`\r
+
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;t.setData("text/html",n),t.setData("text/plain",s)}}})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerText="复制";function s(){t.innerText="已复制！",setTimeout(()=>{t.innerText="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){let t=e.textContent+`\r
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;navigator.clipboard.writeText(t),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
