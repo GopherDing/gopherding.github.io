@@ -1,0 +1,500 @@
+<!doctype html><html lang=zh dir=auto><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge"><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=robots content="index, follow"><title>LLM微调与部署 | GopherDing's Blog</title><meta name=keywords content><meta name=description content="速通AI第五阶段。"><meta name=author content="GopherDing"><link rel=canonical href=https://gopherding.github.io/posts/tech/llm%E5%BE%AE%E8%B0%83%E4%B8%8E%E9%83%A8%E7%BD%B2/><link crossorigin=anonymous href=/assets/css/stylesheet.css rel="preload stylesheet" as=style><script defer crossorigin=anonymous src=/assets/js/highlight.js onload=hljs.initHighlightingOnLoad()></script><link rel=icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=16x16 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=icon type=image/png sizes=32x32 href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=apple-touch-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><link rel=mask-icon href=https://gopherding.github.io/img/GopherSpaceCommunity.png><meta name=theme-color content="#2e2e33"><meta name=msapplication-TileColor content="#2e2e33"><meta name=google-site-verification content="7XaJy5jt6ZoEXT-jlbI3sDg79M-BnIkGtU7WZLCQkzg"><link rel=alternate hreflang=zh href=https://gopherding.github.io/posts/tech/llm%E5%BE%AE%E8%B0%83%E4%B8%8E%E9%83%A8%E7%BD%B2/><noscript><style>#theme-toggle,.top-link{display:none}</style><style>@media(prefers-color-scheme:dark){:root{--theme:rgb(29, 30, 32);--entry:rgb(46, 46, 51);--primary:rgb(218, 218, 219);--secondary:rgb(155, 156, 157);--tertiary:rgb(65, 66, 68);--content:rgb(196, 196, 197);--hljs-bg:rgb(46, 46, 51);--code-bg:rgb(55, 56, 62);--border:rgb(51, 51, 51)}.list{background:var(--theme)}.list:not(.dark)::-webkit-scrollbar-track{background:0 0}.list:not(.dark)::-webkit-scrollbar-thumb{border-color:var(--theme)}}</style></noscript><script src=/js/busuanzi.pure.mini.js></script><link rel=stylesheet href=/css/font-awesome.min.css><script src=/js/jquery-3.7.1.min.js></script><meta property="og:title" content="LLM微调与部署"><meta property="og:description" content="速通AI第五阶段。"><meta property="og:type" content="article"><meta property="og:url" content="https://gopherding.github.io/posts/tech/llm%E5%BE%AE%E8%B0%83%E4%B8%8E%E9%83%A8%E7%BD%B2/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2026-04-15T15:55:23+08:00"><meta property="article:modified_time" content="2026-04-15T15:55:23+08:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="LLM微调与部署"><meta name=twitter:description content="速通AI第五阶段。"><script type=application/ld+json>{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"文章","item":"https://gopherding.github.io/posts/"},{"@type":"ListItem","position":2,"name":"技术","item":"https://gopherding.github.io/posts/tech/"},{"@type":"ListItem","position":3,"name":"LLM微调与部署","item":"https://gopherding.github.io/posts/tech/llm%E5%BE%AE%E8%B0%83%E4%B8%8E%E9%83%A8%E7%BD%B2/"}]}</script><script type=application/ld+json>{"@context":"https://schema.org","@type":"BlogPosting","headline":"LLM微调与部署","name":"LLM微调与部署","description":"速通AI第五阶段。","keywords":[""],"articleBody":" 🎯 目标：掌握大模型微调技术（PEFT全系列）、模型量化（8-bit/4-bit/QLoRA）、私有化部署，能够独立完成大模型的微调和上线。 📋 前置要求：阶段四（LLaMA架构理解、LangChain/RAG基础、PyTorch训练经验）\n本阶段知识依赖图 阶段四基础（大模型架构理解 + 应用开发经验） │ ├──→ 微调概述 ──→ 为什么需要微调？微调 vs RAG │ ├──→ PEFT参数高效微调（⭐核心） │ ├── BitFit ──→ 最简单：只调偏置 │ ├── Prompt Tuning ──→ 软提示学习 │ ├── P-Tuning ──→ 提示编码器 │ ├── Prefix Tuning ──→ 前缀调优 │ ├── LoRA ⭐ ──→ 低秩分解（最常用） │ ├── IA3 ──→ 缩放激活值 │ └── PEFT进阶 ──→ 多适配器/融合 │ ├──→ 模型量化 │ ├── 8-bit量化 ──→ LLM.int8() │ ├── 4-bit量化 ──→ NF4/FP4 │ └── QLoRA ⭐ ──→ 量化+LoRA │ └──→ 私有化部署 ├── 硬件选型 ──→ GPU/显存计算 ├── 云端部署 ──→ AutoDL/云服务器 └── 接口开发 ──→ FastAPI/vLLM 模块一：PEFT参数高效微调 为什么需要微调？——三种适配大模型的方法 类比：让一个大学生帮你做事\n方法1：提示词工程 = 直接告诉他怎么做 \"你是一位律师，请帮我审查这份合同\" → 不需要培训，直接上手 → 但他对你的公司业务不了解，可能遗漏细节 方法2：RAG = 给他参考资料 \"先看这份合同模板和公司政策，然后帮我审查\" → 不需要培训，有资料就能做 → 但他理解资料的方式还是通用的，不是专业化的 方法3：微调 = 给他做专业培训 用公司1000份历史合同和审查报告来训练他 → 需要时间和资源 → 但他真正\"学会\"了公司的审查标准和风格 → 推理时不需要额外资料，直接给出专业判断 三种方法的详细对比 方法 原理 数据需求 计算需求 效果 适用场景 ────────────────────────────────────────────────────────────────────────────── 提示词工程 设计好的输入格式 无需训练 极低 一般 快速原型、简单任务 RAG 检索相关知识辅助生成 无需训练 低 好 知识问答、文档查询 微调 用领域数据训练模型参数 需要数据 高 最好 专业领域、格式要求 什么时候用微调？ 1. 需要模型\"学会\"特定领域的知识（如医疗、法律、金融） 2. 需要模型输出固定格式（如始终输出JSON） 3. 需要模型遵循特定行为准则（如客服话术） 4. RAG效果不够好（需要更深层的理解） 5. 推理时不能有额外延迟（RAG需要检索时间） 全量微调的问题——为什么需要PEFT？ 全量微调 = 更新模型的所有参数 LLaMA-7B 的参数量：70亿 全量微调的显存需求： 模型参数：7B × 4 bytes (float32) = 28 GB 梯度： 7B × 4 bytes = 28 GB 优化器状态（Adam）：7B × 8 bytes = 56 GB ───────────────────────────────────── 总计：约 112 GB → 需要 2张 A100 80GB 显卡！成本极高！ PEFT的解决方案： 只训练 0.1%-1% 的参数，冻结其余 99% LLaMA-7B + LoRA：只需训练约 400万参数 → 显存需求降到 14-18 GB → 一张 RTX 3090 就够了！ BitFit——最简单的微调方法 核心思想：只调偏置，不调权重\n一个Transformer层的参数： 权重参数（占99.5%）：W_Q, W_K, W_V, W_O, W₁, W₂ 偏置参数（占0.5%）：b_Q, b_K, b_V, b_O, b₁, b₂ BitFit：冻结所有权重，只训练偏置 → 只有 0.5% 的参数参与训练 → 效果在某些任务上能达到全量微调的 90%！ 为什么只调偏置也有效？ 偏置虽然少，但它控制了每个神经元的\"激活阈值\" 调整偏置 = 调整\"什么时候激活，什么时候不激活\" → 对于分类等任务，调整激活阈值就足够了 from transformers import AutoModelForSequenceClassification model = AutoModelForSequenceClassification.from_pretrained(\"bert-base-chinese\", num_labels=2) # 冻结所有参数 for param in model.parameters(): param.requires_grad = False # 只解冻偏置参数 for name, param in model.named_parameters(): if \"bias\" in name: param.requires_grad = True # 查看可训练参数量 trainable = sum(p.numel() for p in model.parameters() if p.requires_grad) total = sum(p.numel() for p in model.parameters()) print(f\"可训练参数：{trainable:,} / {total:,} = {trainable/total:.2%}\") # 可训练参数：约89,000 / 102,000,000 = 0.09% Prompt Tuning——软提示学习 核心思想：不改模型，只加\"前缀\"\n类比：在演员上台前，给他一个\"提词器\" 原始输入：[CLS] 今天 天气 真 好 [SEP] Prompt Tuning：[p₁ p₂ p₃ p₄] + [CLS] 今天 天气 真 好 [SEP] ↑ 这4个向量是可学习的（不是真实的词！） 它们的作用是\"引导\"模型的注意力和行为 训练时：只更新 p₁, p₂, p₃, p₄ 这4个向量 推理时：不同任务用不同的前缀 → 同一个模型可以做不同任务！ Prompt Tuning的优势：\n1. 存储效率极高：每个任务只需保存4-20个向量（几KB！） 2. 多任务服务：一个基础模型 + 多个Prompt = 多个任务 3. 不改变模型结构：可以随时切换任务 4. 效果在大模型上很好（10B+参数时接近全量微调） 局限： - 在小模型上效果一般 - 对初始化敏感（不同的初始值效果差异大） - 不如LoRA在大多数任务上的效果 P-Tuning——可学习的提示编码器 Prompt Tuning的问题：p₁, p₂, p₃ 是独立的可学习向量 → 它们之间没有\"联系\"，初始化敏感 P-Tuning的改进：用一个小的LSTM或MLP来生成这些向量 → p₁, p₂, p₃ 由编码器生成，有相互依赖关系 → 初始化更稳定，效果更好 P-Tuning v2：在每一层都添加可训练的前缀（而不只是输入层） → 效果更接近全量微调 Prefix Tuning——前缀调优 核心思想：在每一层的K和V前面都加\"前缀\"\n原始Self-Attention： Q = X·W_Q, K = X·W_K, V = X·W_V Prefix Tuning： Q = X·W_Q K = [P_K; X·W_K] ← P_K是可学习的前缀Key V = [P_V; X·W_V] ← P_V是可学习的前缀Value 类比： 原始Attention = 学生看黑板上的内容 Prefix Tuning = 学生同时看黑板和老师举的提示牌 → 提示牌影响了学生\"关注什么\" Prefix Tuning vs Prompt Tuning：\nPrompt Tuning：只在输入层添加前缀 → 影响力有限 Prefix Tuning：在每一层的K和V都添加前缀 → 影响力更大 类比： Prompt Tuning = 只在教室门口放一块提示牌 Prefix Tuning = 在教室的每一面墙都放提示牌 → 学生处处受影响 LoRA——低秩适配 ⭐⭐⭐ 最重要的微调方法 核心思想——学习权重的\"变化量\" 类比：学画画\n全量微调 = 从零开始画一幅新画 需要重新学所有技法，工作量巨大 LoRA = 在原画上做小幅修改 原画已经很好了，只需要\"微调\"一些细节 比如把天空的颜色调蓝一点，把树叶加几笔 LoRA的关键洞察： 微调前的权重 W（768×768）已经学到了大量通用知识 微调后的权重 W' = W + ΔW ΔW 是\"需要改的部分\"，它远比 W 小（低秩） → 可以用两个小矩阵 A 和 B 来近似：ΔW ≈ A × B 数学推导 原始权重 W：(768, 768) — 589,824 个参数 LoRA分解： ΔW = A × B A：(768, r) — r通常为8或16 B：(r, 768) 当 r=8 时： A：(768, 8) = 6,144 个参数 B：(8, 768) = 6,144 个参数 总计：12,288 个参数 参数减少比例：12,288 / 589,824 = 2.1% → 减少了98%！ 推理时： W' = W + A × B 可以把A×B合并回W → 推理时没有额外开销！ 为什么低秩假设成立？\n研究发现：大模型微调时，权重的变化量ΔW确实具有低秩特性 直觉理解： 预训练模型已经学到了\"语言的通用知识\"（语法、语义、世界知识） 微调只是教它\"新的任务特定知识\"（如医疗诊断、法律审查） 通用知识的信息量 \u003e\u003e 任务特定知识的信息量 → ΔW 的\"信息量\"远小于 W → 低秩假设成立 实验证据： Aghajanyan et al. (2021) 发现： 预训练模型的内在维度（intrinsic dimensionality）远小于参数量 一个768维的模型，内在维度可能只有几维 → 用几维的低秩矩阵就能有效微调 LoRA的实现 from peft import LoraConfig, get_peft_model, TaskType from transformers import AutoModelForCausalLM # 1. 加载预训练模型 model = AutoModelForCausalLM.from_pretrained(\"meta-llama/Llama-2-7b\") # 2. 配置LoRA lora_config = LoraConfig( task_type=TaskType.CAUSAL_LM, # 任务类型 r=8, # 秩（rank）：越小参数越少 lora_alpha=32, # 缩放因子：通常设为r的2-4倍 lora_dropout=0.1, # Dropout：防止过拟合 target_modules=[\"q_proj\", \"v_proj\", \"k_proj\", \"o_proj\"], # 对哪些层应用LoRA ) # 3. 创建LoRA模型 model = get_peft_model(model, lora_config) # 4. 查看参数量 model.print_trainable_parameters() # trainable params: 4,194,304 || all params: 6,742,609,920 || trainable%: 0.06% # → 只有0.06%的参数需要训练！ # 5. 正常训练（和普通模型一样） from transformers import Trainer, TrainingArguments trainer = Trainer(model=model, args=training_args, ...) trainer.train() # 6. 保存LoRA权重（只有几MB！） model.save_pretrained(\"./my-lora\") LoRA的关键参数——如何选择？ r（秩）——控制\"容量\"： r=4：参数最少，适合简单任务（如情感分类） r=8：默认值，大多数任务够用 r=16-64：复杂任务（如代码生成、长文本摘要） r=128+：接近全量微调效果 类比：r就像\"修改画作时用的画笔粗细\" r=4 = 细画笔，只能做精细的小改动 r=64 = 粗画笔，可以做大面积的修改 lora_alpha（缩放因子）——控制\"影响力\"： alpha/r = LoRA对原始权重的影响程度 alpha=32, r=8 → 影响系数 = 32/8 = 4 alpha=16, r=8 → 影响系数 = 16/8 = 2 通常设为 r 的2-4倍 target_modules——应用到哪些层： 最常见：[\"q_proj\", \"v_proj\"]（只改Q和V） 更强：[\"q_proj\", \"v_proj\", \"k_proj\", \"o_proj\"]（改所有Attention层） 最强：加上FFN层 [\"gate_proj\", \"up_proj\", \"down_proj\"] 层越多 → 参数越多 → 效果越好 → 但显存需求也越大 LoRA模型融合（Merge） # 训练完成后，可以把LoRA权重合并回原始模型 merged_model = model.merge_and_unload() # 合并后的模型和原始模型结构完全一样 # 不需要额外的LoRA组件 → 可以像普通模型一样部署 merged_model.save_pretrained(\"./merged-model\") # 合并的数学原理： # W' = W + A × B # 把A×B的结果直接加到W上，得到新的W' # 推理时只需要W'，不需要单独存A和B IA3——Infused Adapter by Inhibiting and Amplifying Inner Activations IA3的核心思想：不添加新参数，只用可学习的向量来\"缩放\"现有激活值 对K、V和FFN的激活值分别乘以一个可学习的向量： K' = l_k ⊙ K （l_k是可学习的缩放向量） V' = l_v ⊙ V FFN' = l_ff ⊙ FFN(x) 参数量：只需要3个向量（比LoRA还少！） 如果d_model=4096，IA3只需要 3 × 4096 = 12,288 个参数 效果：在某些任务上接近LoRA 局限：表达能力不如LoRA（只能\"缩放\"，不能\"变换\"） PEFT进阶操作——多适配器管理 from peft import PeftModel # 加载基础模型 + LoRA适配器 base_model = AutoModelForCausalLM.from_pretrained(\"base-model\") model = PeftModel.from_pretrained(base_model, \"./my-lora-task-a\") # 切换不同适配器 model.set_adapter(\"lora-task-a\") # 使用任务A的LoRA model.set_adapter(\"lora-task-b\") # 切换到任务B的LoRA # 禁用适配器（获取原始模型输出） with model.disable_adapter(): output = model(input) # 使用原始模型 # 合并多个适配器 model.add_weighted_adapter( adapters=[\"lora-a\", \"lora-b\"], weights=[0.7, 0.3], # 70%任务A + 30%任务B adapter_name=\"merged\" ) PEFT方法总结对比：\n方法 可训练参数占比 原理 效果排名 ────────────────────────────────────────────────────────────── BitFit 0.1% 只调偏置 低 Prompt Tuning \u003c0.01% 输入层加可学习向量 中低 P-Tuning v2 0.1-1% 每层加可学习前缀 中 Prefix Tuning 0.1-1% 每层K/V加前缀 中 LoRA 0.1-1% 低秩分解权重变化量 高 ⭐ IA3 \u003c0.01% 缩放激活值 中 QLoRA 0.1-1% 量化+LoRA 高 ⭐ 实际选择： - 大多数任务 → LoRA - 显存非常有限 → QLoRA - 需要快速验证 → BitFit - 需要多任务服务 → Prompt Tuning 模块二：模型量化——让大模型在消费级GPU上运行 为什么需要量化？ 类比：图片压缩\n原始图片：10MB的高清照片（float32模型参数） 压缩后：1MB的JPEG照片（int8量化参数） 虽然JPEG有轻微失真，但肉眼几乎看不出来。 同样，int8量化的模型精度损失很小（通常\u003c1%），但体积减小4倍！ LLaMA-7B 的存储需求： float32：7B × 4 bytes = 28 GB → 需要 A100 float16：7B × 2 bytes = 14 GB → 需要 RTX 4090 int8： 7B × 1 byte = 7 GB → RTX 3070 就能跑 int4： 7B × 0.5 byte = 3.5 GB → RTX 3060 就能跑 量化 = 降低精度 → 减少显存 → 能用更便宜的GPU → 更多人能用大模型！ 8-bit量化——LLM.int8() 核心挑战：离群值问题 问题：直接把float32转为int8会导致精度严重下降 原因：大模型的激活值中存在\"离群值\"（outlier） 正常激活值：[-0.5, 0.3, -0.2, 0.1, 0.4] → 范围小，量化误差小 存在离群值：[-0.5, 0.3, -0.2, 100.0, 0.4] → 为了容纳100.0，其他值的精度严重损失 类比： 正常情况：一个班的成绩在60-100分之间 存在离群值：一个班的成绩在60-100之间，但有一个学生考了10000分 → 如果用同一个评分标准，其他学生的成绩差异就看不出来了 LLM.int8()的解决方案——混合精度分解 步骤： 1. 找出激活值中的离群值（绝对值 \u003e 6 的通道） 2. 离群值用 float16 计算（保持精度） 3. 非离群值用 int8 计算（节省显存） 4. 合并两部分结果 效果：几乎无损！模型性能下降 \u003c 1% 显存：减半（float16 → 混合 int8/float16） 类比： 把那个考10000分的学生单独处理（用float16） 其他学生用正常标准评分（用int8） → 所有学生的成绩都能准确表示 from transformers import BitsAndBytesConfig, AutoModelForCausalLM # 8-bit量化配置 bnb_config = BitsAndBytesConfig(load_in_8bit=True) # 加载8-bit模型 model = AutoModelForCausalLM.from_pretrained( \"meta-llama/Llama-2-7b\", quantization_config=bnb_config, device_map=\"auto\" ) 4-bit量化——更激进的压缩 两种4-bit格式： - FP4：标准的4-bit浮点数 - NF4（Normal Float 4）：专为正态分布设计 为什么NF4更好？ 大模型的权重分布近似正态分布（大部分值在0附近，极少数值很大） NF4的量化区间是根据正态分布设计的 → 在正态分布数据上，NF4的量化误差最小 类比： FP4 = 均匀划分的尺子（每个刻度间距相同） NF4 = 根据数据分布调整的尺子（中间刻度密，两边刻度疏） → 对正态分布数据，NF4的测量精度更高 bnb_config = BitsAndBytesConfig( load_in_4bit=True, # 启用4-bit量化 bnb_4bit_quant_type=\"nf4\", # 使用NF4格式 bnb_4bit_compute_dtype=torch.bfloat16, # 计算时用bf16 bnb_4bit_use_double_quant=True, # 二次量化（进一步压缩） ) model = AutoModelForCausalLM.from_pretrained( \"meta-llama/Llama-2-7b\", quantization_config=bnb_config, device_map=\"auto\" ) QLoRA——量化 + LoRA = 最高效的微调方案 ⭐ QLoRA的核心思想：先压缩，再微调\n类比：在一个压缩过的画布上做小幅修改 步骤： 1. 用4-bit量化加载大模型（压缩画布 → 节省空间） 2. 在量化模型上添加LoRA适配器（准备小幅修改的工具） 3. 只训练LoRA参数（在压缩画布上做精细修改） 显存对比（LLaMA-7B微调）： 全量微调 float32：~112 GB → 需要 2张 A100 80GB 全量微调 float16：~56 GB → 需要 1张 A100 80GB LoRA float16： ~18 GB → 需要 1张 RTX 4090 QLoRA (4-bit)： ~6 GB → 1张 RTX 3060 就够了！ from peft import prepare_model_for_kbit_training, LoraConfig, get_peft_model from transformers import BitsAndBytesConfig, AutoModelForCausalLM # 1. 4-bit量化加载 bnb_config = BitsAndBytesConfig( load_in_4bit=True, bnb_4bit_quant_type=\"nf4\", bnb_4bit_compute_dtype=torch.bfloat16, ) model = AutoModelForCausalLM.from_pretrained( \"meta-llama/Llama-2-7b\", quantization_config=bnb_config, ) # 2. 准备量化模型用于训练 model = prepare_model_for_kbit_training(model) # 3. 添加LoRA lora_config = LoraConfig(r=16, lora_alpha=32, target_modules=[\"q_proj\",\"v_proj\"]) model = get_peft_model(model, lora_config) # 4. 正常训练 trainer = Trainer(model=model, args=training_args, train_dataset=dataset) trainer.train() 模块三：大模型私有化部署 GPU显存需求计算——必须掌握的公式 推理显存（模型加载）： 显存 ≈ 参数量 × 每参数字节数 LLaMA-7B (float16)：7B × 2 bytes = 14 GB LLaMA-13B (float16)：13B × 2 bytes = 26 GB LLaMA-70B (4-bit)： 70B × 0.5 bytes = 35 GB 训练显存（远大于推理）： 显存 ≈ 参数量 × (模型精度 + 梯度 + 优化器状态) ≈ 参数量 × (2 + 2 + 4 + 4) bytes ← Adam优化器 ≈ 参数量 × 12 bytes (float16混合精度) LLaMA-7B：7B × 12 bytes ≈ 84 GB LLaMA-7B + LoRA：7B × 2 + 4M × 4 ≈ 14 GB LLaMA-7B + QLoRA：~6 GB 选择GPU的快速参考： RTX 3060 (12GB)：可以运行7B-4bit推理，QLoRA微调7B RTX 3090 (24GB)：可以运行7B-fp16推理，LoRA微调7B RTX 4090 (24GB)：同3090但更快 A100 (40GB)：可以运行13B-fp16推理，LoRA微调13B A100 (80GB)：可以运行70B-4bit推理 云端部署实践 # 使用ModelScope下载模型（国内镜像，速度快） from modelscope import snapshot_download model_dir = snapshot_download('LLM-Research/Meta-Llama-3-8B-Instruct') # 或使用HuggingFace from huggingface_hub import snapshot_download model_dir = snapshot_download('meta-llama/Llama-2-7b-chat-hf') 对外接口开发——FastAPI from fastapi import FastAPI from fastapi.responses import StreamingResponse from transformers import AutoModelForCausalLM, AutoTokenizer import torch app = FastAPI() # 加载模型 model = AutoModelForCausalLM.from_pretrained(\"./model\", device_map=\"auto\") tokenizer = AutoTokenizer.from_pretrained(\"./model\") @app.post(\"/chat\") async def chat(prompt: str, max_tokens: int = 512): inputs = tokenizer(prompt, return_tensors=\"pt\").to(model.device) with torch.no_grad(): outputs = model.generate(**inputs, max_new_tokens=max_tokens) response = tokenizer.decode(outputs[0], skip_special_tokens=True) return {\"response\": response} @app.post(\"/chat/stream\") async def chat_stream(prompt: str): async def generate(): inputs = tokenizer(prompt, return_tensors=\"pt\").to(model.device) # 流式生成逻辑... yield token return StreamingResponse(generate(), media_type=\"text/event-stream\") 📝 自测题 微调对比：用\"让大学生做事\"的类比，解释提示词工程、RAG、微调的区别 LoRA：用\"画画修改\"的类比解释LoRA的低秩假设，为什么ΔW可以用A×B来近似？ LoRA参数：r、alpha、target_modules分别如何影响微调效果？ QLoRA：解释QLoRA的工作流程，为什么4-bit量化后仍能微调？ 量化：解释LLM.int8()的混合精度分解原理，为什么需要处理离群值？ NF4：为什么NF4比FP4更适合量化大模型？ 显存计算：计算LLaMA-13B使用QLoRA微调需要多少显存 PEFT对比：BitFit、Prompt Tuning、Prefix Tuning、LoRA、IA3各自的优缺点 部署：设计一个大模型API服务的架构方案 综合：给定一张RTX 3090(24GB)，能微调多大的模型？用什么方法？ ","wordCount":"6649","inLanguage":"zh","datePublished":"2026-04-15T15:55:23+08:00","dateModified":"2026-04-15T15:55:23+08:00","author":[{"@type":"Person","name":"GopherDing"}],"mainEntityOfPage":{"@type":"WebPage","@id":"https://gopherding.github.io/posts/tech/llm%E5%BE%AE%E8%B0%83%E4%B8%8E%E9%83%A8%E7%BD%B2/"},"publisher":{"@type":"Organization","name":"GopherDing's Blog","logo":{"@type":"ImageObject","url":"https://gopherding.github.io/img/GopherSpaceCommunity.png"}}}</script></head><body id=top><script>localStorage.getItem("pref-theme")==="dark"?document.body.classList.add("dark"):localStorage.getItem("pref-theme")==="light"?document.body.classList.remove("dark"):window.matchMedia("(prefers-color-scheme: dark)").matches&&document.body.classList.add("dark")</script><header class=header><nav class=nav><div class=logo><a href=https://gopherding.github.io/ accesskey=h title="GopherDing's Blog (Alt + H)"><img src=https://gopherding.github.io/img/GopherSpaceCommunity.png alt=logo aria-label=logo height=50>GopherDing's Blog</a><div class=logo-switches><button id=theme-toggle accesskey=t title="(Alt + T)">
+<svg id="moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+<svg id="sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button><ul class=lang-switch><li>|</li></ul></div></div><ul id=menu><li><a href=https://gopherding.github.io/ title=主页><span>主页</span></a></li><li><a href=https://gopherding.github.io/search title="搜索 (Alt + /)" accesskey=/><span>搜索</span></a></li><li><a href=https://gopherding.github.io/tags title=标签><span>标签</span></a></li><li><a href=https://gopherding.github.io/archives/ title=时间轴><span>时间轴</span></a></li><li><a href=https://gopherding.github.io/about title=关于><span>关于</span></a></li><li><a href=https://gopherding.github.io/links title=友链><span>友链</span></a></li><li><a href=https://www.travellings.cn/go.html title=开往><span>开往</span></a></li></ul></nav></header><main class="main page"><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}</style><article class=post-single><div id=single-content><header class=post-header><div class=breadcrumbs><a href=https://gopherding.github.io/>主页</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/>文章</a>&nbsp;»&nbsp;<a href=https://gopherding.github.io/posts/tech/>技术</a></div><h1 class=post-title>LLM微调与部署</h1><div class=post-description>速通AI第五阶段。</div><div class=post-meta><style>i[id*=post_meta_style]{display:flex;align-items:center;margin:0 0 10px}.parent-post-meta{display:flex;flex-wrap:wrap;opacity:.8}</style><span class=parent-post-meta><span id=post_meta_style_1><span class="fa fa-calendar-check-o"></span>
+<span>2026-04-15
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_3><span class="fa fa-file-word-o"></span>
+<span>6649字
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_4><span class="fa fa-clock-o"></span>
+<span>14分钟
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_5><span class="fa fa-user-o"></span>
+<span>GopherDing
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_6><span class="fa fa-tags" style=opacity:.8></span>
+<span><span class=post-tags-meta><a href=https://gopherding.github.io/tags/artificial-intelligence/ style="color:var(--secondary) !important">Artificial Intelligence</a>
+&nbsp;<a href=https://gopherding.github.io/tags/llm/ style="color:var(--secondary) !important">LLM</a>
+&nbsp;<a href=https://gopherding.github.io/tags/%E8%BF%90%E7%BB%B4/ style="color:var(--secondary) !important">运维</a>
+</span></span></span></span><span style=opacity:.8><span id=post_meta_style_7>&nbsp;&nbsp;
+<span class="fa fa-eye"></span>
+<span><span id=busuanzi_container_page_pv><span id=busuanzi_value_page_pv></span></span>
+&nbsp;&nbsp;
+</span></span><span id=post_meta_style_8><span class="fa fa-commenting-o"></span>
+<span><script>window.addEventListener("load",function(){let t=document.documentURI,n="https://gopherding.github.io/",s=t.split(n),e=s[1];e[0]!=="/"&&(e="/"+e),twikoo.getCommentsCount({envId:null,region:null,urls:[e],includeReply:!1}).then(function(e){let t=e[0].count;const n=document.getElementById("comment_count");n.innerText=t}).catch(function(e){console.error(e)})})</script><span id=comment_count></span></span></span></span></div></header><aside id=toc-container class="toc-container wide"><div class=toc><details open><summary accesskey=c title="(Alt + C)"><span class=details>目录</span></summary><div class=inner><ul><li><a href=#%e6%9c%ac%e9%98%b6%e6%ae%b5%e7%9f%a5%e8%af%86%e4%be%9d%e8%b5%96%e5%9b%be aria-label=本阶段知识依赖图>本阶段知识依赖图</a></li><li><a href=#%e6%a8%a1%e5%9d%97%e4%b8%80peft%e5%8f%82%e6%95%b0%e9%ab%98%e6%95%88%e5%be%ae%e8%b0%83 aria-label=模块一：PEFT参数高效微调>模块一：PEFT参数高效微调</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e5%be%ae%e8%b0%83%e4%b8%89%e7%a7%8d%e9%80%82%e9%85%8d%e5%a4%a7%e6%a8%a1%e5%9e%8b%e7%9a%84%e6%96%b9%e6%b3%95 aria-label=为什么需要微调？——三种适配大模型的方法>为什么需要微调？——三种适配大模型的方法</a><ul><li><a href=#%e4%b8%89%e7%a7%8d%e6%96%b9%e6%b3%95%e7%9a%84%e8%af%a6%e7%bb%86%e5%af%b9%e6%af%94 aria-label=三种方法的详细对比>三种方法的详细对比</a></li><li><a href=#%e5%85%a8%e9%87%8f%e5%be%ae%e8%b0%83%e7%9a%84%e9%97%ae%e9%a2%98%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81peft aria-label=全量微调的问题——为什么需要PEFT？>全量微调的问题——为什么需要PEFT？</a></li></ul></li><li><a href=#bitfit%e6%9c%80%e7%ae%80%e5%8d%95%e7%9a%84%e5%be%ae%e8%b0%83%e6%96%b9%e6%b3%95 aria-label=BitFit——最简单的微调方法>BitFit——最简单的微调方法</a></li><li><a href=#prompt-tuning%e8%bd%af%e6%8f%90%e7%a4%ba%e5%ad%a6%e4%b9%a0 aria-label="Prompt Tuning——软提示学习">Prompt Tuning——软提示学习</a></li><li><a href=#p-tuning%e5%8f%af%e5%ad%a6%e4%b9%a0%e7%9a%84%e6%8f%90%e7%a4%ba%e7%bc%96%e7%a0%81%e5%99%a8 aria-label=P-Tuning——可学习的提示编码器>P-Tuning——可学习的提示编码器</a></li><li><a href=#prefix-tuning%e5%89%8d%e7%bc%80%e8%b0%83%e4%bc%98 aria-label="Prefix Tuning——前缀调优">Prefix Tuning——前缀调优</a></li><li><a href=#lora%e4%bd%8e%e7%a7%a9%e9%80%82%e9%85%8d--%e6%9c%80%e9%87%8d%e8%a6%81%e7%9a%84%e5%be%ae%e8%b0%83%e6%96%b9%e6%b3%95 aria-label="LoRA——低秩适配 ⭐⭐⭐ 最重要的微调方法">LoRA——低秩适配 ⭐⭐⭐ 最重要的微调方法</a><ul><li><a href=#%e6%a0%b8%e5%bf%83%e6%80%9d%e6%83%b3%e5%ad%a6%e4%b9%a0%e6%9d%83%e9%87%8d%e7%9a%84%e5%8f%98%e5%8c%96%e9%87%8f aria-label='核心思想——学习权重的"变化量"'>核心思想——学习权重的"变化量"</a></li><li><a href=#%e6%95%b0%e5%ad%a6%e6%8e%a8%e5%af%bc aria-label=数学推导>数学推导</a></li><li><a href=#lora%e7%9a%84%e5%ae%9e%e7%8e%b0 aria-label=LoRA的实现>LoRA的实现</a></li><li><a href=#lora%e7%9a%84%e5%85%b3%e9%94%ae%e5%8f%82%e6%95%b0%e5%a6%82%e4%bd%95%e9%80%89%e6%8b%a9 aria-label=LoRA的关键参数——如何选择？>LoRA的关键参数——如何选择？</a></li><li><a href=#lora%e6%a8%a1%e5%9e%8b%e8%9e%8d%e5%90%88merge aria-label=LoRA模型融合（Merge）>LoRA模型融合（Merge）</a></li></ul></li><li><a href=#ia3infused-adapter-by-inhibiting-and-amplifying-inner-activations aria-label="IA3——Infused Adapter by Inhibiting and Amplifying Inner Activations">IA3——Infused Adapter by Inhibiting and Amplifying Inner Activations</a></li><li><a href=#peft%e8%bf%9b%e9%98%b6%e6%93%8d%e4%bd%9c%e5%a4%9a%e9%80%82%e9%85%8d%e5%99%a8%e7%ae%a1%e7%90%86 aria-label=PEFT进阶操作——多适配器管理>PEFT进阶操作——多适配器管理</a></li></ul></li><li><a href=#%e6%a8%a1%e5%9d%97%e4%ba%8c%e6%a8%a1%e5%9e%8b%e9%87%8f%e5%8c%96%e8%ae%a9%e5%a4%a7%e6%a8%a1%e5%9e%8b%e5%9c%a8%e6%b6%88%e8%b4%b9%e7%ba%a7gpu%e4%b8%8a%e8%bf%90%e8%a1%8c aria-label=模块二：模型量化——让大模型在消费级GPU上运行>模块二：模型量化——让大模型在消费级GPU上运行</a><ul><li><a href=#%e4%b8%ba%e4%bb%80%e4%b9%88%e9%9c%80%e8%a6%81%e9%87%8f%e5%8c%96 aria-label=为什么需要量化？>为什么需要量化？</a></li><li><a href=#8-bit%e9%87%8f%e5%8c%96llmint8 aria-label=8-bit量化——LLM.int8()>8-bit量化——LLM.int8()</a><ul><li><a href=#%e6%a0%b8%e5%bf%83%e6%8c%91%e6%88%98%e7%a6%bb%e7%be%a4%e5%80%bc%e9%97%ae%e9%a2%98 aria-label=核心挑战：离群值问题>核心挑战：离群值问题</a></li><li><a href=#llmint8%e7%9a%84%e8%a7%a3%e5%86%b3%e6%96%b9%e6%a1%88%e6%b7%b7%e5%90%88%e7%b2%be%e5%ba%a6%e5%88%86%e8%a7%a3 aria-label=LLM.int8()的解决方案——混合精度分解>LLM.int8()的解决方案——混合精度分解</a></li></ul></li><li><a href=#4-bit%e9%87%8f%e5%8c%96%e6%9b%b4%e6%bf%80%e8%bf%9b%e7%9a%84%e5%8e%8b%e7%bc%a9 aria-label=4-bit量化——更激进的压缩>4-bit量化——更激进的压缩</a></li><li><a href=#qlora%e9%87%8f%e5%8c%96--lora--%e6%9c%80%e9%ab%98%e6%95%88%e7%9a%84%e5%be%ae%e8%b0%83%e6%96%b9%e6%a1%88- aria-label="QLoRA——量化 + LoRA = 最高效的微调方案 ⭐">QLoRA——量化 + LoRA = 最高效的微调方案 ⭐</a></li></ul></li><li><a href=#%e6%a8%a1%e5%9d%97%e4%b8%89%e5%a4%a7%e6%a8%a1%e5%9e%8b%e7%a7%81%e6%9c%89%e5%8c%96%e9%83%a8%e7%bd%b2 aria-label=模块三：大模型私有化部署>模块三：大模型私有化部署</a><ul><li><a href=#gpu%e6%98%be%e5%ad%98%e9%9c%80%e6%b1%82%e8%ae%a1%e7%ae%97%e5%bf%85%e9%a1%bb%e6%8e%8c%e6%8f%a1%e7%9a%84%e5%85%ac%e5%bc%8f aria-label=GPU显存需求计算——必须掌握的公式>GPU显存需求计算——必须掌握的公式</a></li><li><a href=#%e4%ba%91%e7%ab%af%e9%83%a8%e7%bd%b2%e5%ae%9e%e8%b7%b5 aria-label=云端部署实践>云端部署实践</a></li><li><a href=#%e5%af%b9%e5%a4%96%e6%8e%a5%e5%8f%a3%e5%bc%80%e5%8f%91fastapi aria-label=对外接口开发——FastAPI>对外接口开发——FastAPI</a></li></ul></li><li><a href=#-%e8%87%aa%e6%b5%8b%e9%a2%98 aria-label="📝 自测题">📝 自测题</a></li></ul></div></details></div></aside><script>let activeElement,elements;window.addEventListener("DOMContentLoaded",function(){checkTocPosition(),elements=document.querySelectorAll("h1[id],h2[id],h3[id],h4[id],h5[id],h6[id]"),activeElement=elements[0];const t=encodeURI(activeElement.getAttribute("id")).toLowerCase();document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active")},!1),window.addEventListener("resize",function(){checkTocPosition()},!1),window.addEventListener("scroll",()=>{elements&&(activeElement=Array.from(elements).find(e=>{if(getOffsetTop(e)-window.pageYOffset>0&&getOffsetTop(e)-window.pageYOffset<window.innerHeight/2)return e})||activeElement,elements.forEach(e=>{const t=encodeURI(e.getAttribute("id")).toLowerCase();e===activeElement?document.querySelector(`.inner ul li a[href="#${t}"]`).classList.add("active"):document.querySelector(`.inner ul li a[href="#${t}"]`).classList.remove("active")}))},!1);const main=parseInt(getComputedStyle(document.body).getPropertyValue("--article-width"),10),toc=parseInt(getComputedStyle(document.body).getPropertyValue("--toc-width"),10),gap=parseInt(getComputedStyle(document.body).getPropertyValue("--gap"),10);function checkTocPosition(){const e=document.body.scrollWidth;e-main-toc*2-gap*4>0?document.getElementById("toc-container").classList.add("wide"):document.getElementById("toc-container").classList.remove("wide")}function getOffsetTop(e){if(!e.getClientRects().length)return 0;let t=e.getBoundingClientRect(),n=e.ownerDocument.defaultView;return t.top+n.pageYOffset}</script><div class=post-content><blockquote><p>🎯 <strong>目标</strong>：掌握大模型微调技术（PEFT全系列）、模型量化（8-bit/4-bit/QLoRA）、私有化部署，能够独立完成大模型的微调和上线。
+📋 <strong>前置要求</strong>：阶段四（LLaMA架构理解、LangChain/RAG基础、PyTorch训练经验）</p></blockquote><hr><h2 id=本阶段知识依赖图>本阶段知识依赖图<a hidden class=anchor aria-hidden=true href=#本阶段知识依赖图>#</a></h2><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>阶段四基础（大模型架构理解 + 应用开发经验）
+</span></span><span style=display:flex><span>    │
+</span></span><span style=display:flex><span>    ├──→ 微调概述 ──→ 为什么需要微调？微调 vs RAG
+</span></span><span style=display:flex><span>    │
+</span></span><span style=display:flex><span>    ├──→ PEFT参数高效微调（⭐核心）
+</span></span><span style=display:flex><span>    │       ├── BitFit ──→ 最简单：只调偏置
+</span></span><span style=display:flex><span>    │       ├── Prompt Tuning ──→ 软提示学习
+</span></span><span style=display:flex><span>    │       ├── P-Tuning ──→ 提示编码器
+</span></span><span style=display:flex><span>    │       ├── Prefix Tuning ──→ 前缀调优
+</span></span><span style=display:flex><span>    │       ├── LoRA ⭐ ──→ 低秩分解（最常用）
+</span></span><span style=display:flex><span>    │       ├── IA3 ──→ 缩放激活值
+</span></span><span style=display:flex><span>    │       └── PEFT进阶 ──→ 多适配器/融合
+</span></span><span style=display:flex><span>    │
+</span></span><span style=display:flex><span>    ├──→ 模型量化
+</span></span><span style=display:flex><span>    │       ├── 8-bit量化 ──→ LLM.int8()
+</span></span><span style=display:flex><span>    │       ├── 4-bit量化 ──→ NF4/FP4
+</span></span><span style=display:flex><span>    │       └── QLoRA ⭐ ──→ 量化+LoRA
+</span></span><span style=display:flex><span>    │
+</span></span><span style=display:flex><span>    └──→ 私有化部署
+</span></span><span style=display:flex><span>            ├── 硬件选型 ──→ GPU/显存计算
+</span></span><span style=display:flex><span>            ├── 云端部署 ──→ AutoDL/云服务器
+</span></span><span style=display:flex><span>            └── 接口开发 ──→ FastAPI/vLLM
+</span></span></code></pre></div><hr><h2 id=模块一peft参数高效微调>模块一：PEFT参数高效微调<a hidden class=anchor aria-hidden=true href=#模块一peft参数高效微调>#</a></h2><h3 id=为什么需要微调三种适配大模型的方法>为什么需要微调？——三种适配大模型的方法<a hidden class=anchor aria-hidden=true href=#为什么需要微调三种适配大模型的方法>#</a></h3><p><strong>类比：让一个大学生帮你做事</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>方法1：提示词工程 = 直接告诉他怎么做
+</span></span><span style=display:flex><span>    &#34;你是一位律师，请帮我审查这份合同&#34;
+</span></span><span style=display:flex><span>    → 不需要培训，直接上手
+</span></span><span style=display:flex><span>    → 但他对你的公司业务不了解，可能遗漏细节
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>方法2：RAG = 给他参考资料
+</span></span><span style=display:flex><span>    &#34;先看这份合同模板和公司政策，然后帮我审查&#34;
+</span></span><span style=display:flex><span>    → 不需要培训，有资料就能做
+</span></span><span style=display:flex><span>    → 但他理解资料的方式还是通用的，不是专业化的
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>方法3：微调 = 给他做专业培训
+</span></span><span style=display:flex><span>    用公司1000份历史合同和审查报告来训练他
+</span></span><span style=display:flex><span>    → 需要时间和资源
+</span></span><span style=display:flex><span>    → 但他真正&#34;学会&#34;了公司的审查标准和风格
+</span></span><span style=display:flex><span>    → 推理时不需要额外资料，直接给出专业判断
+</span></span></code></pre></div><h4 id=三种方法的详细对比>三种方法的详细对比<a hidden class=anchor aria-hidden=true href=#三种方法的详细对比>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>方法              原理                    数据需求    计算需求    效果    适用场景
+</span></span><span style=display:flex><span>──────────────────────────────────────────────────────────────────────────────
+</span></span><span style=display:flex><span>提示词工程        设计好的输入格式         无需训练    极低        一般    快速原型、简单任务
+</span></span><span style=display:flex><span>RAG               检索相关知识辅助生成     无需训练    低          好      知识问答、文档查询
+</span></span><span style=display:flex><span>微调              用领域数据训练模型参数   需要数据    高          最好    专业领域、格式要求
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>什么时候用微调？
+</span></span><span style=display:flex><span>1. 需要模型&#34;学会&#34;特定领域的知识（如医疗、法律、金融）
+</span></span><span style=display:flex><span>2. 需要模型输出固定格式（如始终输出JSON）
+</span></span><span style=display:flex><span>3. 需要模型遵循特定行为准则（如客服话术）
+</span></span><span style=display:flex><span>4. RAG效果不够好（需要更深层的理解）
+</span></span><span style=display:flex><span>5. 推理时不能有额外延迟（RAG需要检索时间）
+</span></span></code></pre></div><h4 id=全量微调的问题为什么需要peft>全量微调的问题——为什么需要PEFT？<a hidden class=anchor aria-hidden=true href=#全量微调的问题为什么需要peft>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>全量微调 = 更新模型的所有参数
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>LLaMA-7B 的参数量：70亿
+</span></span><span style=display:flex><span>全量微调的显存需求：
+</span></span><span style=display:flex><span>    模型参数：7B × 4 bytes (float32) = 28 GB
+</span></span><span style=display:flex><span>    梯度：    7B × 4 bytes = 28 GB
+</span></span><span style=display:flex><span>    优化器状态（Adam）：7B × 8 bytes = 56 GB
+</span></span><span style=display:flex><span>    ─────────────────────────────────────
+</span></span><span style=display:flex><span>    总计：约 112 GB
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    → 需要 2张 A100 80GB 显卡！成本极高！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>PEFT的解决方案：
+</span></span><span style=display:flex><span>    只训练 0.1%-1% 的参数，冻结其余 99%
+</span></span><span style=display:flex><span>    LLaMA-7B + LoRA：只需训练约 400万参数
+</span></span><span style=display:flex><span>    → 显存需求降到 14-18 GB → 一张 RTX 3090 就够了！
+</span></span></code></pre></div><h3 id=bitfit最简单的微调方法>BitFit——最简单的微调方法<a hidden class=anchor aria-hidden=true href=#bitfit最简单的微调方法>#</a></h3><p><strong>核心思想：只调偏置，不调权重</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>一个Transformer层的参数：
+</span></span><span style=display:flex><span>    权重参数（占99.5%）：W_Q, W_K, W_V, W_O, W₁, W₂
+</span></span><span style=display:flex><span>    偏置参数（占0.5%）：b_Q, b_K, b_V, b_O, b₁, b₂
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>BitFit：冻结所有权重，只训练偏置
+</span></span><span style=display:flex><span>    → 只有 0.5% 的参数参与训练
+</span></span><span style=display:flex><span>    → 效果在某些任务上能达到全量微调的 90%！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>为什么只调偏置也有效？
+</span></span><span style=display:flex><span>    偏置虽然少，但它控制了每个神经元的&#34;激活阈值&#34;
+</span></span><span style=display:flex><span>    调整偏置 = 调整&#34;什么时候激活，什么时候不激活&#34;
+</span></span><span style=display:flex><span>    → 对于分类等任务，调整激活阈值就足够了
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> AutoModelForSequenceClassification
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> AutoModelForSequenceClassification<span style=color:#f92672>.</span>from_pretrained(<span style=color:#e6db74>&#34;bert-base-chinese&#34;</span>, num_labels<span style=color:#f92672>=</span><span style=color:#ae81ff>2</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 冻结所有参数</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> param <span style=color:#f92672>in</span> model<span style=color:#f92672>.</span>parameters():
+</span></span><span style=display:flex><span>    param<span style=color:#f92672>.</span>requires_grad <span style=color:#f92672>=</span> <span style=color:#66d9ef>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 只解冻偏置参数</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>for</span> name, param <span style=color:#f92672>in</span> model<span style=color:#f92672>.</span>named_parameters():
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>if</span> <span style=color:#e6db74>&#34;bias&#34;</span> <span style=color:#f92672>in</span> name:
+</span></span><span style=display:flex><span>        param<span style=color:#f92672>.</span>requires_grad <span style=color:#f92672>=</span> <span style=color:#66d9ef>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 查看可训练参数量</span>
+</span></span><span style=display:flex><span>trainable <span style=color:#f92672>=</span> sum(p<span style=color:#f92672>.</span>numel() <span style=color:#66d9ef>for</span> p <span style=color:#f92672>in</span> model<span style=color:#f92672>.</span>parameters() <span style=color:#66d9ef>if</span> p<span style=color:#f92672>.</span>requires_grad)
+</span></span><span style=display:flex><span>total <span style=color:#f92672>=</span> sum(p<span style=color:#f92672>.</span>numel() <span style=color:#66d9ef>for</span> p <span style=color:#f92672>in</span> model<span style=color:#f92672>.</span>parameters())
+</span></span><span style=display:flex><span>print(<span style=color:#e6db74>f</span><span style=color:#e6db74>&#34;可训练参数：</span><span style=color:#e6db74>{</span>trainable<span style=color:#e6db74>:</span><span style=color:#e6db74>,</span><span style=color:#e6db74>}</span><span style=color:#e6db74> / </span><span style=color:#e6db74>{</span>total<span style=color:#e6db74>:</span><span style=color:#e6db74>,</span><span style=color:#e6db74>}</span><span style=color:#e6db74> = </span><span style=color:#e6db74>{</span>trainable<span style=color:#f92672>/</span>total<span style=color:#e6db74>:</span><span style=color:#e6db74>.2%</span><span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#75715e># 可训练参数：约89,000 / 102,000,000 = 0.09%</span>
+</span></span></code></pre></div><h3 id=prompt-tuning软提示学习>Prompt Tuning——软提示学习<a hidden class=anchor aria-hidden=true href=#prompt-tuning软提示学习>#</a></h3><p><strong>核心思想：不改模型，只加"前缀"</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>类比：在演员上台前，给他一个&#34;提词器&#34;
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>原始输入：[CLS] 今天 天气 真 好 [SEP]
+</span></span><span style=display:flex><span>Prompt Tuning：[p₁ p₂ p₃ p₄] + [CLS] 今天 天气 真 好 [SEP]
+</span></span><span style=display:flex><span>                ↑
+</span></span><span style=display:flex><span>         这4个向量是可学习的（不是真实的词！）
+</span></span><span style=display:flex><span>         它们的作用是&#34;引导&#34;模型的注意力和行为
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>训练时：只更新 p₁, p₂, p₃, p₄ 这4个向量
+</span></span><span style=display:flex><span>推理时：不同任务用不同的前缀 → 同一个模型可以做不同任务！
+</span></span></code></pre></div><p><strong>Prompt Tuning的优势</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>1. 存储效率极高：每个任务只需保存4-20个向量（几KB！）
+</span></span><span style=display:flex><span>2. 多任务服务：一个基础模型 + 多个Prompt = 多个任务
+</span></span><span style=display:flex><span>3. 不改变模型结构：可以随时切换任务
+</span></span><span style=display:flex><span>4. 效果在大模型上很好（10B+参数时接近全量微调）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>局限：
+</span></span><span style=display:flex><span>- 在小模型上效果一般
+</span></span><span style=display:flex><span>- 对初始化敏感（不同的初始值效果差异大）
+</span></span><span style=display:flex><span>- 不如LoRA在大多数任务上的效果
+</span></span></code></pre></div><h3 id=p-tuning可学习的提示编码器>P-Tuning——可学习的提示编码器<a hidden class=anchor aria-hidden=true href=#p-tuning可学习的提示编码器>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Prompt Tuning的问题：p₁, p₂, p₃ 是独立的可学习向量
+</span></span><span style=display:flex><span>→ 它们之间没有&#34;联系&#34;，初始化敏感
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>P-Tuning的改进：用一个小的LSTM或MLP来生成这些向量
+</span></span><span style=display:flex><span>→ p₁, p₂, p₃ 由编码器生成，有相互依赖关系
+</span></span><span style=display:flex><span>→ 初始化更稳定，效果更好
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>P-Tuning v2：在每一层都添加可训练的前缀（而不只是输入层）
+</span></span><span style=display:flex><span>→ 效果更接近全量微调
+</span></span></code></pre></div><h3 id=prefix-tuning前缀调优>Prefix Tuning——前缀调优<a hidden class=anchor aria-hidden=true href=#prefix-tuning前缀调优>#</a></h3><p><strong>核心思想：在每一层的K和V前面都加"前缀"</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>原始Self-Attention：
+</span></span><span style=display:flex><span>    Q = X·W_Q, K = X·W_K, V = X·W_V
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Prefix Tuning：
+</span></span><span style=display:flex><span>    Q = X·W_Q
+</span></span><span style=display:flex><span>    K = [P_K; X·W_K]    ← P_K是可学习的前缀Key
+</span></span><span style=display:flex><span>    V = [P_V; X·W_V]    ← P_V是可学习的前缀Value
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：
+</span></span><span style=display:flex><span>原始Attention = 学生看黑板上的内容
+</span></span><span style=display:flex><span>Prefix Tuning = 学生同时看黑板和老师举的提示牌
+</span></span><span style=display:flex><span>              → 提示牌影响了学生&#34;关注什么&#34;
+</span></span></code></pre></div><p><strong>Prefix Tuning vs Prompt Tuning</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>Prompt Tuning：只在输入层添加前缀 → 影响力有限
+</span></span><span style=display:flex><span>Prefix Tuning：在每一层的K和V都添加前缀 → 影响力更大
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：
+</span></span><span style=display:flex><span>Prompt Tuning = 只在教室门口放一块提示牌
+</span></span><span style=display:flex><span>Prefix Tuning = 在教室的每一面墙都放提示牌 → 学生处处受影响
+</span></span></code></pre></div><h3 id=lora低秩适配--最重要的微调方法>LoRA——低秩适配 ⭐⭐⭐ 最重要的微调方法<a hidden class=anchor aria-hidden=true href=#lora低秩适配--最重要的微调方法>#</a></h3><h4 id=核心思想学习权重的变化量>核心思想——学习权重的"变化量"<a hidden class=anchor aria-hidden=true href=#核心思想学习权重的变化量>#</a></h4><p><strong>类比：学画画</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>全量微调 = 从零开始画一幅新画
+</span></span><span style=display:flex><span>    需要重新学所有技法，工作量巨大
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>LoRA = 在原画上做小幅修改
+</span></span><span style=display:flex><span>    原画已经很好了，只需要&#34;微调&#34;一些细节
+</span></span><span style=display:flex><span>    比如把天空的颜色调蓝一点，把树叶加几笔
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>LoRA的关键洞察：
+</span></span><span style=display:flex><span>    微调前的权重 W（768×768）已经学到了大量通用知识
+</span></span><span style=display:flex><span>    微调后的权重 W&#39; = W + ΔW
+</span></span><span style=display:flex><span>    ΔW 是&#34;需要改的部分&#34;，它远比 W 小（低秩）
+</span></span><span style=display:flex><span>    → 可以用两个小矩阵 A 和 B 来近似：ΔW ≈ A × B
+</span></span></code></pre></div><h4 id=数学推导>数学推导<a hidden class=anchor aria-hidden=true href=#数学推导>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>原始权重 W：(768, 768) — 589,824 个参数
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>LoRA分解：
+</span></span><span style=display:flex><span>    ΔW = A × B
+</span></span><span style=display:flex><span>    A：(768, r) — r通常为8或16
+</span></span><span style=display:flex><span>    B：(r, 768)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    当 r=8 时：
+</span></span><span style=display:flex><span>    A：(768, 8) = 6,144 个参数
+</span></span><span style=display:flex><span>    B：(8, 768) = 6,144 个参数
+</span></span><span style=display:flex><span>    总计：12,288 个参数
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    参数减少比例：12,288 / 589,824 = 2.1% → 减少了98%！
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>推理时：
+</span></span><span style=display:flex><span>    W&#39; = W + A × B
+</span></span><span style=display:flex><span>    可以把A×B合并回W → 推理时没有额外开销！
+</span></span></code></pre></div><p><strong>为什么低秩假设成立？</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>研究发现：大模型微调时，权重的变化量ΔW确实具有低秩特性
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>直觉理解：
+</span></span><span style=display:flex><span>    预训练模型已经学到了&#34;语言的通用知识&#34;（语法、语义、世界知识）
+</span></span><span style=display:flex><span>    微调只是教它&#34;新的任务特定知识&#34;（如医疗诊断、法律审查）
+</span></span><span style=display:flex><span>    通用知识的信息量 &gt;&gt; 任务特定知识的信息量
+</span></span><span style=display:flex><span>    → ΔW 的&#34;信息量&#34;远小于 W → 低秩假设成立
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>实验证据：
+</span></span><span style=display:flex><span>    Aghajanyan et al. (2021) 发现：
+</span></span><span style=display:flex><span>    预训练模型的内在维度（intrinsic dimensionality）远小于参数量
+</span></span><span style=display:flex><span>    一个768维的模型，内在维度可能只有几维
+</span></span><span style=display:flex><span>    → 用几维的低秩矩阵就能有效微调
+</span></span></code></pre></div><h4 id=lora的实现>LoRA的实现<a hidden class=anchor aria-hidden=true href=#lora的实现>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> peft <span style=color:#f92672>import</span> LoraConfig, get_peft_model, TaskType
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> AutoModelForCausalLM
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 加载预训练模型</span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(<span style=color:#e6db74>&#34;meta-llama/Llama-2-7b&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 配置LoRA</span>
+</span></span><span style=display:flex><span>lora_config <span style=color:#f92672>=</span> LoraConfig(
+</span></span><span style=display:flex><span>    task_type<span style=color:#f92672>=</span>TaskType<span style=color:#f92672>.</span>CAUSAL_LM,      <span style=color:#75715e># 任务类型</span>
+</span></span><span style=display:flex><span>    r<span style=color:#f92672>=</span><span style=color:#ae81ff>8</span>,                                <span style=color:#75715e># 秩（rank）：越小参数越少</span>
+</span></span><span style=display:flex><span>    lora_alpha<span style=color:#f92672>=</span><span style=color:#ae81ff>32</span>,                      <span style=color:#75715e># 缩放因子：通常设为r的2-4倍</span>
+</span></span><span style=display:flex><span>    lora_dropout<span style=color:#f92672>=</span><span style=color:#ae81ff>0.1</span>,                   <span style=color:#75715e># Dropout：防止过拟合</span>
+</span></span><span style=display:flex><span>    target_modules<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#34;q_proj&#34;</span>, <span style=color:#e6db74>&#34;v_proj&#34;</span>, <span style=color:#e6db74>&#34;k_proj&#34;</span>, <span style=color:#e6db74>&#34;o_proj&#34;</span>],  <span style=color:#75715e># 对哪些层应用LoRA</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 创建LoRA模型</span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> get_peft_model(model, lora_config)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 查看参数量</span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>print_trainable_parameters()
+</span></span><span style=display:flex><span><span style=color:#75715e># trainable params: 4,194,304 || all params: 6,742,609,920 || trainable%: 0.06%</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># → 只有0.06%的参数需要训练！</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 5. 正常训练（和普通模型一样）</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> Trainer, TrainingArguments
+</span></span><span style=display:flex><span>trainer <span style=color:#f92672>=</span> Trainer(model<span style=color:#f92672>=</span>model, args<span style=color:#f92672>=</span>training_args, <span style=color:#f92672>...</span>)
+</span></span><span style=display:flex><span>trainer<span style=color:#f92672>.</span>train()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 6. 保存LoRA权重（只有几MB！）</span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>save_pretrained(<span style=color:#e6db74>&#34;./my-lora&#34;</span>)
+</span></span></code></pre></div><h4 id=lora的关键参数如何选择>LoRA的关键参数——如何选择？<a hidden class=anchor aria-hidden=true href=#lora的关键参数如何选择>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>r（秩）——控制&#34;容量&#34;：
+</span></span><span style=display:flex><span>    r=4：参数最少，适合简单任务（如情感分类）
+</span></span><span style=display:flex><span>    r=8：默认值，大多数任务够用
+</span></span><span style=display:flex><span>    r=16-64：复杂任务（如代码生成、长文本摘要）
+</span></span><span style=display:flex><span>    r=128+：接近全量微调效果
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    类比：r就像&#34;修改画作时用的画笔粗细&#34;
+</span></span><span style=display:flex><span>         r=4 = 细画笔，只能做精细的小改动
+</span></span><span style=display:flex><span>         r=64 = 粗画笔，可以做大面积的修改
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>lora_alpha（缩放因子）——控制&#34;影响力&#34;：
+</span></span><span style=display:flex><span>    alpha/r = LoRA对原始权重的影响程度
+</span></span><span style=display:flex><span>    alpha=32, r=8 → 影响系数 = 32/8 = 4
+</span></span><span style=display:flex><span>    alpha=16, r=8 → 影响系数 = 16/8 = 2
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    通常设为 r 的2-4倍
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>target_modules——应用到哪些层：
+</span></span><span style=display:flex><span>    最常见：[&#34;q_proj&#34;, &#34;v_proj&#34;]（只改Q和V）
+</span></span><span style=display:flex><span>    更强：[&#34;q_proj&#34;, &#34;v_proj&#34;, &#34;k_proj&#34;, &#34;o_proj&#34;]（改所有Attention层）
+</span></span><span style=display:flex><span>    最强：加上FFN层 [&#34;gate_proj&#34;, &#34;up_proj&#34;, &#34;down_proj&#34;]
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    层越多 → 参数越多 → 效果越好 → 但显存需求也越大
+</span></span></code></pre></div><h4 id=lora模型融合merge>LoRA模型融合（Merge）<a hidden class=anchor aria-hidden=true href=#lora模型融合merge>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># 训练完成后，可以把LoRA权重合并回原始模型</span>
+</span></span><span style=display:flex><span>merged_model <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>merge_and_unload()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 合并后的模型和原始模型结构完全一样</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 不需要额外的LoRA组件 → 可以像普通模型一样部署</span>
+</span></span><span style=display:flex><span>merged_model<span style=color:#f92672>.</span>save_pretrained(<span style=color:#e6db74>&#34;./merged-model&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 合并的数学原理：</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># W&#39; = W + A × B</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 把A×B的结果直接加到W上，得到新的W&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 推理时只需要W&#39;，不需要单独存A和B</span>
+</span></span></code></pre></div><h3 id=ia3infused-adapter-by-inhibiting-and-amplifying-inner-activations>IA3——Infused Adapter by Inhibiting and Amplifying Inner Activations<a hidden class=anchor aria-hidden=true href=#ia3infused-adapter-by-inhibiting-and-amplifying-inner-activations>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>IA3的核心思想：不添加新参数，只用可学习的向量来&#34;缩放&#34;现有激活值
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>对K、V和FFN的激活值分别乘以一个可学习的向量：
+</span></span><span style=display:flex><span>    K&#39; = l_k ⊙ K      （l_k是可学习的缩放向量）
+</span></span><span style=display:flex><span>    V&#39; = l_v ⊙ V
+</span></span><span style=display:flex><span>    FFN&#39; = l_ff ⊙ FFN(x)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>参数量：只需要3个向量（比LoRA还少！）
+</span></span><span style=display:flex><span>    如果d_model=4096，IA3只需要 3 × 4096 = 12,288 个参数
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>效果：在某些任务上接近LoRA
+</span></span><span style=display:flex><span>局限：表达能力不如LoRA（只能&#34;缩放&#34;，不能&#34;变换&#34;）
+</span></span></code></pre></div><h3 id=peft进阶操作多适配器管理>PEFT进阶操作——多适配器管理<a hidden class=anchor aria-hidden=true href=#peft进阶操作多适配器管理>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> peft <span style=color:#f92672>import</span> PeftModel
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 加载基础模型 + LoRA适配器</span>
+</span></span><span style=display:flex><span>base_model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(<span style=color:#e6db74>&#34;base-model&#34;</span>)
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> PeftModel<span style=color:#f92672>.</span>from_pretrained(base_model, <span style=color:#e6db74>&#34;./my-lora-task-a&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 切换不同适配器</span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>set_adapter(<span style=color:#e6db74>&#34;lora-task-a&#34;</span>)   <span style=color:#75715e># 使用任务A的LoRA</span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>set_adapter(<span style=color:#e6db74>&#34;lora-task-b&#34;</span>)   <span style=color:#75715e># 切换到任务B的LoRA</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 禁用适配器（获取原始模型输出）</span>
+</span></span><span style=display:flex><span><span style=color:#66d9ef>with</span> model<span style=color:#f92672>.</span>disable_adapter():
+</span></span><span style=display:flex><span>    output <span style=color:#f92672>=</span> model(input)   <span style=color:#75715e># 使用原始模型</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 合并多个适配器</span>
+</span></span><span style=display:flex><span>model<span style=color:#f92672>.</span>add_weighted_adapter(
+</span></span><span style=display:flex><span>    adapters<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#34;lora-a&#34;</span>, <span style=color:#e6db74>&#34;lora-b&#34;</span>],
+</span></span><span style=display:flex><span>    weights<span style=color:#f92672>=</span>[<span style=color:#ae81ff>0.7</span>, <span style=color:#ae81ff>0.3</span>],       <span style=color:#75715e># 70%任务A + 30%任务B</span>
+</span></span><span style=display:flex><span>    adapter_name<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;merged&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p><strong>PEFT方法总结对比</strong>：</p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>方法            可训练参数占比    原理                    效果排名
+</span></span><span style=display:flex><span>──────────────────────────────────────────────────────────────
+</span></span><span style=display:flex><span>BitFit          0.1%            只调偏置                 低
+</span></span><span style=display:flex><span>Prompt Tuning   &lt;0.01%          输入层加可学习向量        中低
+</span></span><span style=display:flex><span>P-Tuning v2     0.1-1%          每层加可学习前缀          中
+</span></span><span style=display:flex><span>Prefix Tuning   0.1-1%          每层K/V加前缀            中
+</span></span><span style=display:flex><span>LoRA            0.1-1%          低秩分解权重变化量        高 ⭐
+</span></span><span style=display:flex><span>IA3             &lt;0.01%          缩放激活值               中
+</span></span><span style=display:flex><span>QLoRA           0.1-1%          量化+LoRA               高 ⭐
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>实际选择：
+</span></span><span style=display:flex><span>- 大多数任务 → LoRA
+</span></span><span style=display:flex><span>- 显存非常有限 → QLoRA
+</span></span><span style=display:flex><span>- 需要快速验证 → BitFit
+</span></span><span style=display:flex><span>- 需要多任务服务 → Prompt Tuning
+</span></span></code></pre></div><hr><h2 id=模块二模型量化让大模型在消费级gpu上运行>模块二：模型量化——让大模型在消费级GPU上运行<a hidden class=anchor aria-hidden=true href=#模块二模型量化让大模型在消费级gpu上运行>#</a></h2><h3 id=为什么需要量化>为什么需要量化？<a hidden class=anchor aria-hidden=true href=#为什么需要量化>#</a></h3><p><strong>类比：图片压缩</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>原始图片：10MB的高清照片（float32模型参数）
+</span></span><span style=display:flex><span>压缩后：1MB的JPEG照片（int8量化参数）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>虽然JPEG有轻微失真，但肉眼几乎看不出来。
+</span></span><span style=display:flex><span>同样，int8量化的模型精度损失很小（通常&lt;1%），但体积减小4倍！
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>LLaMA-7B 的存储需求：
+</span></span><span style=display:flex><span>    float32：7B × 4 bytes = 28 GB  → 需要 A100
+</span></span><span style=display:flex><span>    float16：7B × 2 bytes = 14 GB  → 需要 RTX 4090
+</span></span><span style=display:flex><span>    int8：   7B × 1 byte  = 7 GB   → RTX 3070 就能跑
+</span></span><span style=display:flex><span>    int4：   7B × 0.5 byte = 3.5 GB → RTX 3060 就能跑
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>量化 = 降低精度 → 减少显存 → 能用更便宜的GPU → 更多人能用大模型！
+</span></span></code></pre></div><h3 id=8-bit量化llmint8>8-bit量化——LLM.int8()<a hidden class=anchor aria-hidden=true href=#8-bit量化llmint8>#</a></h3><h4 id=核心挑战离群值问题>核心挑战：离群值问题<a hidden class=anchor aria-hidden=true href=#核心挑战离群值问题>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>问题：直接把float32转为int8会导致精度严重下降
+</span></span><span style=display:flex><span>原因：大模型的激活值中存在&#34;离群值&#34;（outlier）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>正常激活值：[-0.5, 0.3, -0.2, 0.1, 0.4]  → 范围小，量化误差小
+</span></span><span style=display:flex><span>存在离群值：[-0.5, 0.3, -0.2, 100.0, 0.4] → 为了容纳100.0，其他值的精度严重损失
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：
+</span></span><span style=display:flex><span>正常情况：一个班的成绩在60-100分之间
+</span></span><span style=display:flex><span>存在离群值：一个班的成绩在60-100之间，但有一个学生考了10000分
+</span></span><span style=display:flex><span>→ 如果用同一个评分标准，其他学生的成绩差异就看不出来了
+</span></span></code></pre></div><h4 id=llmint8的解决方案混合精度分解>LLM.int8()的解决方案——混合精度分解<a hidden class=anchor aria-hidden=true href=#llmint8的解决方案混合精度分解>#</a></h4><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>步骤：
+</span></span><span style=display:flex><span>1. 找出激活值中的离群值（绝对值 &gt; 6 的通道）
+</span></span><span style=display:flex><span>2. 离群值用 float16 计算（保持精度）
+</span></span><span style=display:flex><span>3. 非离群值用 int8 计算（节省显存）
+</span></span><span style=display:flex><span>4. 合并两部分结果
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>效果：几乎无损！模型性能下降 &lt; 1%
+</span></span><span style=display:flex><span>显存：减半（float16 → 混合 int8/float16）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：
+</span></span><span style=display:flex><span>把那个考10000分的学生单独处理（用float16）
+</span></span><span style=display:flex><span>其他学生用正常标准评分（用int8）
+</span></span><span style=display:flex><span>→ 所有学生的成绩都能准确表示
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> BitsAndBytesConfig, AutoModelForCausalLM
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 8-bit量化配置</span>
+</span></span><span style=display:flex><span>bnb_config <span style=color:#f92672>=</span> BitsAndBytesConfig(load_in_8bit<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 加载8-bit模型</span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;meta-llama/Llama-2-7b&#34;</span>,
+</span></span><span style=display:flex><span>    quantization_config<span style=color:#f92672>=</span>bnb_config,
+</span></span><span style=display:flex><span>    device_map<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;auto&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><h3 id=4-bit量化更激进的压缩>4-bit量化——更激进的压缩<a hidden class=anchor aria-hidden=true href=#4-bit量化更激进的压缩>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>两种4-bit格式：
+</span></span><span style=display:flex><span>- FP4：标准的4-bit浮点数
+</span></span><span style=display:flex><span>- NF4（Normal Float 4）：专为正态分布设计
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>为什么NF4更好？
+</span></span><span style=display:flex><span>    大模型的权重分布近似正态分布（大部分值在0附近，极少数值很大）
+</span></span><span style=display:flex><span>    NF4的量化区间是根据正态分布设计的
+</span></span><span style=display:flex><span>    → 在正态分布数据上，NF4的量化误差最小
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>类比：
+</span></span><span style=display:flex><span>FP4 = 均匀划分的尺子（每个刻度间距相同）
+</span></span><span style=display:flex><span>NF4 = 根据数据分布调整的尺子（中间刻度密，两边刻度疏）
+</span></span><span style=display:flex><span>    → 对正态分布数据，NF4的测量精度更高
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>bnb_config <span style=color:#f92672>=</span> BitsAndBytesConfig(
+</span></span><span style=display:flex><span>    load_in_4bit<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,                       <span style=color:#75715e># 启用4-bit量化</span>
+</span></span><span style=display:flex><span>    bnb_4bit_quant_type<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;nf4&#34;</span>,              <span style=color:#75715e># 使用NF4格式</span>
+</span></span><span style=display:flex><span>    bnb_4bit_compute_dtype<span style=color:#f92672>=</span>torch<span style=color:#f92672>.</span>bfloat16,  <span style=color:#75715e># 计算时用bf16</span>
+</span></span><span style=display:flex><span>    bnb_4bit_use_double_quant<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,         <span style=color:#75715e># 二次量化（进一步压缩）</span>
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;meta-llama/Llama-2-7b&#34;</span>,
+</span></span><span style=display:flex><span>    quantization_config<span style=color:#f92672>=</span>bnb_config,
+</span></span><span style=display:flex><span>    device_map<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;auto&#34;</span>
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><h3 id=qlora量化--lora--最高效的微调方案->QLoRA——量化 + LoRA = 最高效的微调方案 ⭐<a hidden class=anchor aria-hidden=true href=#qlora量化--lora--最高效的微调方案->#</a></h3><p><strong>QLoRA的核心思想：先压缩，再微调</strong></p><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>类比：在一个压缩过的画布上做小幅修改
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>步骤：
+</span></span><span style=display:flex><span>1. 用4-bit量化加载大模型（压缩画布 → 节省空间）
+</span></span><span style=display:flex><span>2. 在量化模型上添加LoRA适配器（准备小幅修改的工具）
+</span></span><span style=display:flex><span>3. 只训练LoRA参数（在压缩画布上做精细修改）
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>显存对比（LLaMA-7B微调）：
+</span></span><span style=display:flex><span>    全量微调 float32：~112 GB  → 需要 2张 A100 80GB
+</span></span><span style=display:flex><span>    全量微调 float16：~56 GB   → 需要 1张 A100 80GB
+</span></span><span style=display:flex><span>    LoRA float16：    ~18 GB   → 需要 1张 RTX 4090
+</span></span><span style=display:flex><span>    QLoRA (4-bit)：   ~6 GB    → 1张 RTX 3060 就够了！
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> peft <span style=color:#f92672>import</span> prepare_model_for_kbit_training, LoraConfig, get_peft_model
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> BitsAndBytesConfig, AutoModelForCausalLM
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 1. 4-bit量化加载</span>
+</span></span><span style=display:flex><span>bnb_config <span style=color:#f92672>=</span> BitsAndBytesConfig(
+</span></span><span style=display:flex><span>    load_in_4bit<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>,
+</span></span><span style=display:flex><span>    bnb_4bit_quant_type<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;nf4&#34;</span>,
+</span></span><span style=display:flex><span>    bnb_4bit_compute_dtype<span style=color:#f92672>=</span>torch<span style=color:#f92672>.</span>bfloat16,
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(
+</span></span><span style=display:flex><span>    <span style=color:#e6db74>&#34;meta-llama/Llama-2-7b&#34;</span>,
+</span></span><span style=display:flex><span>    quantization_config<span style=color:#f92672>=</span>bnb_config,
+</span></span><span style=display:flex><span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 2. 准备量化模型用于训练</span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> prepare_model_for_kbit_training(model)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 3. 添加LoRA</span>
+</span></span><span style=display:flex><span>lora_config <span style=color:#f92672>=</span> LoraConfig(r<span style=color:#f92672>=</span><span style=color:#ae81ff>16</span>, lora_alpha<span style=color:#f92672>=</span><span style=color:#ae81ff>32</span>, target_modules<span style=color:#f92672>=</span>[<span style=color:#e6db74>&#34;q_proj&#34;</span>,<span style=color:#e6db74>&#34;v_proj&#34;</span>])
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> get_peft_model(model, lora_config)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 4. 正常训练</span>
+</span></span><span style=display:flex><span>trainer <span style=color:#f92672>=</span> Trainer(model<span style=color:#f92672>=</span>model, args<span style=color:#f92672>=</span>training_args, train_dataset<span style=color:#f92672>=</span>dataset)
+</span></span><span style=display:flex><span>trainer<span style=color:#f92672>.</span>train()
+</span></span></code></pre></div><hr><h2 id=模块三大模型私有化部署>模块三：大模型私有化部署<a hidden class=anchor aria-hidden=true href=#模块三大模型私有化部署>#</a></h2><h3 id=gpu显存需求计算必须掌握的公式>GPU显存需求计算——必须掌握的公式<a hidden class=anchor aria-hidden=true href=#gpu显存需求计算必须掌握的公式>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback><span style=display:flex><span>推理显存（模型加载）：
+</span></span><span style=display:flex><span>    显存 ≈ 参数量 × 每参数字节数
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    LLaMA-7B  (float16)：7B  × 2 bytes = 14 GB
+</span></span><span style=display:flex><span>    LLaMA-13B (float16)：13B × 2 bytes = 26 GB
+</span></span><span style=display:flex><span>    LLaMA-70B (4-bit)：  70B × 0.5 bytes = 35 GB
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>训练显存（远大于推理）：
+</span></span><span style=display:flex><span>    显存 ≈ 参数量 × (模型精度 + 梯度 + 优化器状态)
+</span></span><span style=display:flex><span>         ≈ 参数量 × (2 + 2 + 4 + 4) bytes  ← Adam优化器
+</span></span><span style=display:flex><span>         ≈ 参数量 × 12 bytes (float16混合精度)
+</span></span><span style=display:flex><span>    
+</span></span><span style=display:flex><span>    LLaMA-7B：7B × 12 bytes ≈ 84 GB
+</span></span><span style=display:flex><span>    LLaMA-7B + LoRA：7B × 2 + 4M × 4 ≈ 14 GB
+</span></span><span style=display:flex><span>    LLaMA-7B + QLoRA：~6 GB
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>选择GPU的快速参考：
+</span></span><span style=display:flex><span>    RTX 3060 (12GB)：可以运行7B-4bit推理，QLoRA微调7B
+</span></span><span style=display:flex><span>    RTX 3090 (24GB)：可以运行7B-fp16推理，LoRA微调7B
+</span></span><span style=display:flex><span>    RTX 4090 (24GB)：同3090但更快
+</span></span><span style=display:flex><span>    A100 (40GB)：可以运行13B-fp16推理，LoRA微调13B
+</span></span><span style=display:flex><span>    A100 (80GB)：可以运行70B-4bit推理
+</span></span></code></pre></div><h3 id=云端部署实践>云端部署实践<a hidden class=anchor aria-hidden=true href=#云端部署实践>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span><span style=color:#75715e># 使用ModelScope下载模型（国内镜像，速度快）</span>
+</span></span><span style=display:flex><span>from modelscope import snapshot_download
+</span></span><span style=display:flex><span>model_dir <span style=color:#f92672>=</span> snapshot_download<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;LLM-Research/Meta-Llama-3-8B-Instruct&#39;</span><span style=color:#f92672>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 或使用HuggingFace</span>
+</span></span><span style=display:flex><span>from huggingface_hub import snapshot_download
+</span></span><span style=display:flex><span>model_dir <span style=color:#f92672>=</span> snapshot_download<span style=color:#f92672>(</span><span style=color:#e6db74>&#39;meta-llama/Llama-2-7b-chat-hf&#39;</span><span style=color:#f92672>)</span>
+</span></span></code></pre></div><h3 id=对外接口开发fastapi>对外接口开发——FastAPI<a hidden class=anchor aria-hidden=true href=#对外接口开发fastapi>#</a></h3><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> fastapi <span style=color:#f92672>import</span> FastAPI
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> fastapi.responses <span style=color:#f92672>import</span> StreamingResponse
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> transformers <span style=color:#f92672>import</span> AutoModelForCausalLM, AutoTokenizer
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> torch
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>app <span style=color:#f92672>=</span> FastAPI()
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># 加载模型</span>
+</span></span><span style=display:flex><span>model <span style=color:#f92672>=</span> AutoModelForCausalLM<span style=color:#f92672>.</span>from_pretrained(<span style=color:#e6db74>&#34;./model&#34;</span>, device_map<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;auto&#34;</span>)
+</span></span><span style=display:flex><span>tokenizer <span style=color:#f92672>=</span> AutoTokenizer<span style=color:#f92672>.</span>from_pretrained(<span style=color:#e6db74>&#34;./model&#34;</span>)
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.post</span>(<span style=color:#e6db74>&#34;/chat&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>chat</span>(prompt: str, max_tokens: int <span style=color:#f92672>=</span> <span style=color:#ae81ff>512</span>):
+</span></span><span style=display:flex><span>    inputs <span style=color:#f92672>=</span> tokenizer(prompt, return_tensors<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;pt&#34;</span>)<span style=color:#f92672>.</span>to(model<span style=color:#f92672>.</span>device)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>with</span> torch<span style=color:#f92672>.</span>no_grad():
+</span></span><span style=display:flex><span>        outputs <span style=color:#f92672>=</span> model<span style=color:#f92672>.</span>generate(<span style=color:#f92672>**</span>inputs, max_new_tokens<span style=color:#f92672>=</span>max_tokens)
+</span></span><span style=display:flex><span>    response <span style=color:#f92672>=</span> tokenizer<span style=color:#f92672>.</span>decode(outputs[<span style=color:#ae81ff>0</span>], skip_special_tokens<span style=color:#f92672>=</span><span style=color:#66d9ef>True</span>)
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> {<span style=color:#e6db74>&#34;response&#34;</span>: response}
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#a6e22e>@app.post</span>(<span style=color:#e6db74>&#34;/chat/stream&#34;</span>)
+</span></span><span style=display:flex><span><span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>chat_stream</span>(prompt: str):
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>async</span> <span style=color:#66d9ef>def</span> <span style=color:#a6e22e>generate</span>():
+</span></span><span style=display:flex><span>        inputs <span style=color:#f92672>=</span> tokenizer(prompt, return_tensors<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;pt&#34;</span>)<span style=color:#f92672>.</span>to(model<span style=color:#f92672>.</span>device)
+</span></span><span style=display:flex><span>        <span style=color:#75715e># 流式生成逻辑...</span>
+</span></span><span style=display:flex><span>        <span style=color:#66d9ef>yield</span> token
+</span></span><span style=display:flex><span>    <span style=color:#66d9ef>return</span> StreamingResponse(generate(), media_type<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;text/event-stream&#34;</span>)
+</span></span></code></pre></div><hr><h2 id=-自测题>📝 自测题<a hidden class=anchor aria-hidden=true href=#-自测题>#</a></h2><ol><li><strong>微调对比</strong>：用"让大学生做事"的类比，解释提示词工程、RAG、微调的区别</li><li><strong>LoRA</strong>：用"画画修改"的类比解释LoRA的低秩假设，为什么ΔW可以用A×B来近似？</li><li><strong>LoRA参数</strong>：r、alpha、target_modules分别如何影响微调效果？</li><li><strong>QLoRA</strong>：解释QLoRA的工作流程，为什么4-bit量化后仍能微调？</li><li><strong>量化</strong>：解释LLM.int8()的混合精度分解原理，为什么需要处理离群值？</li><li><strong>NF4</strong>：为什么NF4比FP4更适合量化大模型？</li><li><strong>显存计算</strong>：计算LLaMA-13B使用QLoRA微调需要多少显存</li><li><strong>PEFT对比</strong>：BitFit、Prompt Tuning、Prefix Tuning、LoRA、IA3各自的优缺点</li><li><strong>部署</strong>：设计一个大模型API服务的架构方案</li><li><strong>综合</strong>：给定一张RTX 3090(24GB)，能微调多大的模型？用什么方法？</li></ol></div><footer class=post-footer><nav class=paginav><a class=prev href=https://gopherding.github.io/posts/tech/agent%E4%B8%8E%E9%AB%98%E7%BA%A7%E5%BA%94%E7%94%A8/><span class=title>« 上一页</span><br><span>学习阶段六_Agent与高级应用</span>
+</a><a class=next href=https://gopherding.github.io/posts/tech/llm%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91/><span class=title>下一页 »</span><br><span>LLM应用开发</span></a></nav></footer></div><style>.comments_details summary::marker{font-size:20px;content:'👉展开评论';color:var(--content)}.comments_details[open] summary::marker{font-size:20px;content:'👇关闭评论';color:var(--content)}</style><div><details class=comments_details><summary style="cursor:pointer;margin:50px 0 20px;width:130px"><span style=font-size:20px;color:var(--content)>...</span></summary><div id=tcomment></div></details><script>window.addEventListener("load",function(){twikoo.init({envId:null,el:"#tcomment",lang:"zh-CN",region:null,path:window.TWIKOO_MAGIC_PATH||window.location.pathname})})</script></div></article></main><footer class=footer><span>Copyright
+&copy;
+2021-2026
+<a href=https://gopherding.github.io/ style=color:#939393;text-decoration:none;border-bottom:none;box-shadow:none>GopherDing's Blog</a>
+All Rights Reserved. Generated with
+<a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none;border-bottom:none;box-shadow:none>Hugo</a>
+.Version 0.147.9.</span><br><span id=busuanzi_container><span class="fa fa-user"></span> <span id=busuanzi_value_site_uv></span>
+<span class="fa fa-eye"></span> <span id=busuanzi_value_site_pv></span></span></footer><script src=/js/typewriter.js></script><script>document.addEventListener("scroll",function(){const t=document.getElementById("read_progress"),n=document.documentElement.scrollHeight,s=document.documentElement.clientHeight,o=document.documentElement.scrollTop||document.body.scrollTop;t.innerText=((o/(n-s)).toFixed(2)*100).toFixed(0)})</script><script>let menu=document.getElementById("menu");menu&&(menu.scrollLeft=localStorage.getItem("menu-scroll-position"),menu.onscroll=function(){localStorage.setItem("menu-scroll-position",menu.scrollLeft)}),document.querySelectorAll('a[href^="#"]').forEach(e=>{e.addEventListener("click",function(e){e.preventDefault();var t=this.getAttribute("href").substr(1);window.matchMedia("(prefers-reduced-motion: reduce)").matches?document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView():document.querySelector(`[id='${decodeURIComponent(t)}']`).scrollIntoView({behavior:"smooth"}),t==="top"?history.replaceState(null,null," "):history.pushState(null,null,`#${t}`)})})</script><script>document.getElementById("theme-toggle").addEventListener("click",()=>{document.body.className.includes("dark")?(document.body.classList.remove("dark"),localStorage.setItem("pref-theme","light")):(document.body.classList.add("dark"),localStorage.setItem("pref-theme","dark"))})</script><script>document.body.addEventListener("copy",function(e){if(window.getSelection().toString()&&window.getSelection().toString().length>100){let t=e.clipboardData||window.clipboardData;if(t){e.preventDefault();let n=window.getSelection().toString()+`\r
+
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href,s=window.getSelection().toString()+`\r
+
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;t.setData("text/html",n),t.setData("text/plain",s)}}})</script><script>document.querySelectorAll("pre > code").forEach(e=>{const n=e.parentNode.parentNode,t=document.createElement("button");t.classList.add("copy-code"),t.innerText="复制";function s(){t.innerText="已复制！",setTimeout(()=>{t.innerText="复制"},2e3)}t.addEventListener("click",t=>{if("clipboard"in navigator){let t=e.textContent+`\r
+————————————————\r
+版权声明：本文为「GopherDing's Blog」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。\r
+原文链接：`+location.href;navigator.clipboard.writeText(t),s();return}const n=document.createRange();n.selectNodeContents(e);const o=window.getSelection();o.removeAllRanges(),o.addRange(n);try{document.execCommand("copy"),s()}catch{}o.removeRange(n)}),n.classList.contains("highlight")?n.appendChild(t):n.parentNode.firstChild==n||(e.parentNode.parentNode.parentNode.parentNode.parentNode.nodeName=="TABLE"?e.parentNode.parentNode.parentNode.parentNode.parentNode.appendChild(t):e.parentNode.appendChild(t))})</script></body></html>
