@@ -138,7 +138,7 @@ flowchart TD
     ZeRO --&gt; FSDP[&#34;FSDP&lt;br/&gt;2022&#34;]
     MP[&#34;模型并行&#34;] --&gt; TP[&#34;张量并行&#34;]
     MP --&gt; PP[&#34;流水线并行&#34;]
-</pre><p>从上图可以看出，工程技巧的发展遵循一条清晰的脉络：</p><ol><li><strong>单卡优化期</strong>：梯度裁剪、梯度累积——解决单卡训练的基本问题</li><li><strong>精度优化期</strong>：AMP、BF16——用低精度换取速度和内存</li><li><strong>显存优化期</strong>：梯度检查点——用计算换显存</li><li><strong>多卡扩展期</strong>：DDP、ZeRO、FSDP——将训练扩展到多张 GPU</li></ol><p>理解了这条演进脉络，就掌握了工程训练技巧设计的核心哲学：<strong>在计算速度、显存占用、训练精度三者之间寻找最佳平衡点</strong>。</p></div><footer class=post-footer><nav class=paginav><a class=prev href=../../../posts/life/%E6%84%BF%E4%BD%A0%E5%81%9A%E4%B8%80%E7%89%87%E4%BB%8E%E5%AE%B9%E8%87%AA%E6%B4%BD%E7%9A%84%E6%B5%81%E5%BD%A2/><span class=title>« 上一页</span><br><span>愿我们做一片从容自洽的流形</span>
+</pre><p>从上图可以看出，工程技巧的发展遵循一条清晰的脉络：</p><ol><li><strong>单卡优化期</strong>：梯度裁剪、梯度累积——解决单卡训练的基本问题</li><li><strong>精度优化期</strong>：AMP、BF16——用低精度换取速度和内存</li><li><strong>显存优化期</strong>：梯度检查点——用计算换显存</li><li><strong>多卡扩展期</strong>：DDP、ZeRO、FSDP——将训练扩展到多张 GPU</li></ol><p>理解了这条演进脉络，就掌握了工程训练技巧设计的核心哲学：<strong>在计算速度、显存占用、训练精度三者之间寻找最佳平衡点</strong>。</p></div><footer class=post-footer><nav class=paginav><a class=prev href=../../../posts/life/%E6%84%BF%E6%88%91%E4%BB%AC%E5%81%9A%E4%B8%80%E7%89%87%E4%BB%8E%E5%AE%B9%E8%87%AA%E6%B4%BD%E7%9A%84%E6%B5%81%E5%BD%A2/><span class=title>« 上一页</span><br><span>愿我们做一片从容自洽的流形</span>
 </a><a class=next href=../../../posts/tech/%E6%AD%A3%E5%88%99%E5%8C%96%E6%8A%80%E6%9C%AF%E5%90%88%E9%9B%86/><span class=title>下一页 »</span><br><span>正则化技术合集</span></a></nav></footer></div></article></main><footer class=footer><span>Copyright
 &copy;
 2021-2026
