@@ -128,7 +128,7 @@ flowchart TD
 </pre><p><img loading=lazy src=../../../img/optimizers/optimizer_trajectories.svg alt=优化器优化轨迹对比></p><p>从上图可以看出，优化器的发展遵循一条清晰的脉络：</p><ol><li><strong>朴素梯度下降期</strong>：BGD、SGD、Mini-batch GD——只用当前梯度</li><li><strong>动量法时期</strong>：Momentum、Nesterov——引入历史梯度信息，加速收敛</li><li><strong>自适应学习率时期</strong>：AdaGrad、RMSprop、Adam——为每个参数自动调整学习率</li><li><strong>Adam 修正期</strong>：AdamW、RAdam、LAMB——修正 Adam 的缺陷（权重衰减、方差不稳定、大批量）</li></ol><p>理解了这条演进脉络，就掌握了优化器设计的核心哲学：<strong>在更新方向的准确性（用更多历史信息）和步长的自适应性（为每个参数调学习率）之间寻找最佳平衡点</strong>。</p></div><footer class=post-footer><nav class=paginav><a class=prev href=../../../posts/tech/%E5%AD%A6%E4%B9%A0%E7%8E%87%E8%B0%83%E5%BA%A6%E5%99%A8%E5%90%88%E9%9B%86/><span class=title>« 上一页</span><br><span>学习率调度器合集</span>
 </a><a class=next href=../../../posts/tech/%E5%BD%92%E4%B8%80%E5%8C%96%E6%8A%80%E6%9C%AF%E5%90%88%E9%9B%86/><span class=title>下一页 »</span><br><span>归一化技术合集</span></a></nav></footer></div></article></main><footer class=footer><span>Copyright
 &copy;
-2021-2026
+2020-2026
 <a href=../../../ style=color:#939393;text-decoration:none;border-bottom:none;box-shadow:none>GopherDing's Blog</a>
 All Rights Reserved. Generated with
 <a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none;border-bottom:none;box-shadow:none>Hugo</a>

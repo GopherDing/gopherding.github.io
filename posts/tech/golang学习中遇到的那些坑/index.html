@@ -73,7 +73,7 @@
 </span></span></code></pre></div><p>其中 value 是接口类型的变量，type 或 T 是要转换成的类型。</p><p>如果类型断言成功，它将返回转换后的值和一个布尔值，表示转换是否成功；如果断言失败，str将继续存在且为字符串类型，但将拥有零值——即空字符串。</p></li><li><p>断言成功的两种情况：两种动态类型是相同的；断言接口值实现了目标接口的所有方法（结构体类型的断言）。</p></li><li><p>[对于指针接收器和值接收器方法的一些拙见.md](C:\Users\GEORGE DING\Desktop!\BLOG\Golang\对于指针接收器和值接收器方法的一些拙见.md)</p></li><li><p>new 和 make 均是用于分配内存：new用于值类型的内存分配，并且置为零值。make只用于slice、map以及channel这三种引用数据类型的内存分配和初始化。new(T) 分配类型 T 的零值并返回其地址，也就是指向类型 T 的指针。make(T) 它返回类型T的值（不是* T）。</p></li><li><p>panic可以在任何地方引发，但是recover只能在defer的函数中有效。recover只能捕获同一goroutine内发生的panic，对于其他goroutine引发的panic无能为力。</p></li></ol></div><footer class=post-footer><nav class=paginav><a class=prev href=../../../posts/tech/golang%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%88%86%E9%85%8D%E6%9C%BA%E5%88%B6/><span class=title>« 上一页</span><br><span>Golang内存模型与分配机制</span>
 </a><a class=next href=../../../posts/tech/goroutinechannel%E4%B8%93%E9%A2%98/><span class=title>下一页 »</span><br><span>Goroutine&amp;Channel专题</span></a></nav></footer></div></article></main><footer class=footer><span>Copyright
 &copy;
-2021-2026
+2020-2026
 <a href=../../../ style=color:#939393;text-decoration:none;border-bottom:none;box-shadow:none>GopherDing's Blog</a>
 All Rights Reserved. Generated with
 <a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none;border-bottom:none;box-shadow:none>Hugo</a>

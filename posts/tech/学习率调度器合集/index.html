@@ -141,7 +141,7 @@ flowchart TD
 </pre><p><img loading=lazy src=../../../img/lr-schedulers/scheduler_comparison.svg alt=调度器曲线对比></p><p>从上图可以看出，调度器的发展遵循一条清晰的脉络：</p><ol><li><strong>固定规则期</strong>：StepLR、ExponentialLR——简单但不灵活</li><li><strong>自适应期</strong>：ReduceLROnPlateau——根据验证指标智能衰减</li><li><strong>平滑衰减期</strong>：CosineAnnealingLR——余弦曲线平滑衰减，成为主流</li><li><strong>组合策略期</strong>：Warmup + Cosine、OneCycleLR——多种策略组合，效果最优</li></ol><p>理解了这条演进脉络，就掌握了调度器设计的核心哲学：<strong>在衰减的平滑性（避免突变）和自适应性（根据训练状态调整）之间寻找最佳平衡点</strong>。</p></div><footer class=post-footer><nav class=paginav><a class=prev href=../../../posts/tech/%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E5%90%88%E9%9B%86/><span class=title>« 上一页</span><br><span>损失函数合集</span>
 </a><a class=next href=../../../posts/tech/%E4%BC%98%E5%8C%96%E5%99%A8%E5%90%88%E9%9B%86/><span class=title>下一页 »</span><br><span>优化器合集</span></a></nav></footer></div></article></main><footer class=footer><span>Copyright
 &copy;
-2021-2026
+2020-2026
 <a href=../../../ style=color:#939393;text-decoration:none;border-bottom:none;box-shadow:none>GopherDing's Blog</a>
 All Rights Reserved. Generated with
 <a href=https://gohugo.io/ rel="nofollow noopener" target=_blank style=text-decoration:none;border-bottom:none;box-shadow:none>Hugo</a>
